@@ -124,6 +124,12 @@
     }
   }
 
+  const defaults = Object.fromEntries(ids.map((k) => [k, $(k).value]));
+  $('reset').addEventListener('click', () => {
+    ids.forEach((k) => { $(k).value = defaults[k]; });
+    $('win').checked = true;
+    render();
+  });
   ids.forEach((k) => $(k).addEventListener('input', render));
   $('win').addEventListener('change', render);
   window.addEventListener('resize', render);

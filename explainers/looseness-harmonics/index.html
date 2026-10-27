@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why Looseness Makes Harmonics · Nodal</title>
+  <meta name="description" content="Interactive explainer: how a clipped, non-linear response turns one running-speed frequency into a family of harmonics and half-orders.">
+  <meta property="og:title" content="Why looseness makes harmonics">
+  <meta property="og:description" content="Clip a sine wave and watch harmonics appear. Interactive vibration explainer.">
+  <meta property="og:image" content="https://myasir111.github.io/website/assets/og.png">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../" class="active">Explainers</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow">Explainer · Diagnostics</p>
+    <h1>Why looseness makes harmonics</h1>
+    <p class="meta">October 2026 · 6 min read</p>
+  </section>
+
+  <div class="prose">
+    <p>A perfectly balanced, perfectly tight machine running at speed shows one clean peak in its spectrum: <span class="c-accent">1X</span>, once per revolution. Loosen a bolt, crack a pedestal or let a bearing get sloppy in its housing, and suddenly the spectrum fills with peaks at 2X, 3X, 4X… sometimes even at 1.5X and 2.5X.</p>
+    <p>Nothing in the machine is turning at three times running speed. So where do those peaks come from?</p>
+    <p class="callout">The short answer: the force is still a clean sine wave. It's the <em>response</em> that stops being one. When a loose part hits a stop, its motion gets cut off, and any waveform that isn't a pure sine wave is, mathematically, a sum of sine waves at multiples of its base frequency.</p>
+    <p>Try it. The <span class="c-ghost">grey</span> curve is the motion a tight machine would have. The <span class="c-accent">teal</span> curve is what happens when the motion is limited by a clearance, with the part hitting a stop. Drag the limits in and watch the <span class="c-accent2">spectrum</span>.</p>
+  </div>
+
+  <div class="sim">
+    <div class="sim-head">
+      <div class="seg" role="group" aria-label="Preset">
+        <button data-preset="tight" class="on">Tight</button>
+        <button data-preset="sym">Both sides</button>
+        <button data-preset="one">One side</button>
+        <button data-preset="alt">Every other rev</button>
+      </div>
+      <button class="btn-small" id="reset">Reset</button>
+    </div>
+    <div class="sim-label">Displacement over 4 revolutions</div>
+    <canvas id="time"></canvas>
+    <div class="sim-label">Spectrum in orders of running speed</div>
+    <canvas id="freq" style="height:220px"></canvas>
+    <div class="controls">
+      <label>Upper stop <span class="val" id="upv"></span><input type="range" id="up" min="0.2" max="1" step="0.01" value="1"></label>
+      <label>Lower stop <span class="val" id="lov"></span><input type="range" id="lo" min="0.2" max="1" step="0.01" value="1"></label>
+      <label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="alt"> Hit only every other revolution</label>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>Three things to notice</h2>
+    <h3>1. Clip both sides equally → odd harmonics only</h3>
+    <p>Choose <strong>Both sides</strong>. You get 1X, 3X, 5X, but no 2X. A waveform that's symmetric top-to-bottom (the second half of each cycle is an upside-down copy of the first) can only contain odd harmonics. The even ones cancel out exactly.</p>
+    <h3>2. Clip one side → even harmonics appear</h3>
+    <p>Choose <strong>One side</strong>. Now the motion is limited only in one direction, like a foot lifting off and slapping back down on a loose baseplate. The symmetry is broken, and <strong>2X</strong> shows up straight away, often as the biggest harmonic. This is why a strong 2X is one of the classic signs of structural looseness.</p>
+    <h3>3. Hit every other revolution → half-orders</h3>
+    <p>Choose <strong>Every other rev</strong>. If the impact only happens on alternate revolutions, the pattern now repeats every <em>two</em> revolutions. Its fundamental is therefore 0.5X, and the spectrum fills with 0.5X, 1.5X, 2.5X… This matches the field picture of advanced looseness (bearing loose in its housing, worn fits): a forest of harmonics plus half-orders and a raised noise floor.</p>
+
+    <h2>What this means in the field</h2>
+    <ul>
+      <li><strong>Harmonics don't mean something is spinning faster.</strong> They mean the motion has a shape that isn't a pure sine, so check the time waveform as well as the spectrum.</li>
+      <li><strong>Look at which harmonics.</strong> Mostly odd suggests a symmetric limit; strong 2X suggests a one-sided limit; half-orders suggest something that rattles loose every other revolution.</li>
+      <li><strong>Other faults make harmonics too.</strong> Misalignment, rubs and bearing defects all distort the waveform. The harmonic pattern is a clue, not a diagnosis. Phase readings, the time waveform and the machine's history do the rest.</li>
+    </ul>
+
+    <h2>The maths, briefly</h2>
+    <p>Any waveform that repeats every revolution can be written as a Fourier series, <code>x(t) = Σ aₙ sin(nΩt + φₙ)</code>, with <code>n = 1, 2, 3…</code>. A pure sine has only <code>a₁</code>. Clip it, and energy moves into the higher <code>aₙ</code>. If the waveform satisfies <code>x(t + T/2) = −x(t)</code> (half-wave symmetry), every even <code>aₙ</code> is zero. And if the pattern only repeats every two revolutions, the series is built on <code>Ω/2</code> instead, which is where the half-orders come from.</p>
+
+    <h2>Downloads</h2>
+    <ul class="downloads">
+      <li><a href="looseness_demo.py" download>looseness_demo.py</a> <span class="muted">· the same three cases in Python (NumPy + Matplotlib)</span></li>
+    </ul>
+
+    <h2>Further reading</h2>
+    <ul class="downloads">
+      <li><a href="https://www.acoem.com/en/?p=1172">Acoem: 3 types of mechanical looseness</a> <span class="muted">· structural, pedestal and fit-related looseness and their signatures</span></li>
+      <li><a href="../../resources.html">Resources page</a> <span class="muted">· books and standards I recommend</span></li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir Ali Khan</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+
+<script src="looseness-demo.js"></script>
+</body>
+</html>

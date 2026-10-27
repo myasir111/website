@@ -47,7 +47,8 @@ img { max-width: 100%; }
 .nav a:hover, .nav a.active { color: var(--ink); text-decoration: none; }
 
 /* hero */
-.hero { padding: 72px 0 40px; }
+.hero { padding: 72px 0 8px; }
+.hero + h2 { margin-top: 32px; }
 .eyebrow { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin: 0 0 14px; }
 h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(32px, 5vw, 48px); line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 18px; }
 h2 { font-family: var(--serif); font-weight: 600; font-size: 28px; line-height: 1.2; margin: 56px 0 16px; }
@@ -92,6 +93,20 @@ code { font-family: var(--mono); font-size: 0.9em; background: var(--code-bg); p
 .controls label { font-size: 14px; display: flex; flex-direction: column; gap: 4px; }
 .controls .val { font-family: var(--mono); color: var(--accent); }
 .controls input[type=range] { width: 100%; accent-color: var(--accent); }
+
+.sim-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.btn-small { font: 13px var(--mono); padding: 5px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.btn-small:hover { border-color: var(--accent); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { font: 13px var(--mono); padding: 6px 12px; border: 0; background: var(--bg); color: var(--muted); cursor: pointer; }
+.seg button.on { background: var(--accent); color: #fff; }
+.c-accent { color: var(--accent); font-weight: 600; }
+.c-accent2 { color: var(--accent-2); font-weight: 600; }
+.c-ghost { color: var(--muted); font-weight: 600; }
+.callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; margin: 20px 0; color: var(--ink); }
+.ref-list { list-style: none; padding: 0; }
+.ref-list li { padding: 14px 0; border-top: 1px solid var(--line); }
+.ref-list .what { display: block; color: var(--muted); font-size: 15px; margin-top: 2px; }
 
 .downloads { list-style: none; padding: 0; }
 .downloads li { padding: 10px 0; border-top: 1px solid var(--line); font-size: 15px; }

@@ -3,7 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Explainers · Muhammad Yasir Ali Khan</title>
+  <title>Explainers · Nodal</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:image" content="https://myasir111.github.io/website/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
@@ -11,10 +14,11 @@
 <body>
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="../">yasir<span>.</span>vdn</a>
+    <a class="brand" href="../">nodal<span>.</span></a>
     <nav class="nav">
       <a href="./" class="active">Explainers</a>
       <a href="../projects.html">Projects</a>
+      <a href="../resources.html">Resources</a>
       <a href="../about.html">About</a>
     </nav>
   </div>
@@ -29,17 +33,16 @@
 
   <h2>All explainers</h2>
   <div class="cards">
+    <a class="card" href="looseness-harmonics/">
+      <span class="tag">Diagnostics</span>
+      <h3>Why looseness makes harmonics</h3>
+      <p>Clip a sine wave and watch 2X, 3X and half-orders appear.</p>
+    </a>
     <a class="card" href="fft-intuition/">
       <span class="tag">Signal processing</span>
       <h3>What an FFT actually sees</h3>
       <p>Build a signal from sine waves, add noise, and watch the spectrum pick it apart.</p>
     </a>
-    <div class="card">
-      <span class="tag">Diagnostics</span>
-      <h3>Why looseness makes harmonics</h3>
-      <p>A clipped, non-linear response turns one frequency into a whole family.</p>
-      <span class="soon">Coming soon</span>
-    </div>
     <div class="card">
       <span class="tag">Time–frequency</span>
       <h3>Wavelets for engineers</h3>
