@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://myasir111.github.io/website/sitemap.xml
+Sitemap: https://nodallab.dev/sitemap.xml
