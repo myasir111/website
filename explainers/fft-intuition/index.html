@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What an FFT Sees · Muhammad Yasir Ali Khan</title>
+  <meta name="description" content="Interactive explainer: build a vibration signal from sine waves and see how the FFT separates it.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">yasir<span>.</span>vdn</a>
+    <nav class="nav">
+      <a href="../" class="active">Explainers</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow">Explainer · Signal processing</p>
+    <h1>What an FFT actually sees</h1>
+    <p class="meta">October 2026</p>
+  </section>
+
+  <div class="prose">
+    <p>A vibration signal from a machine looks like a mess in the time domain. But most of that mess is a handful of sine waves stacked on top of each other: running speed, its harmonics, blade pass, gear mesh. The FFT's job is to pull those sine waves apart and tell you how big each one is.</p>
+    <p>Below is a signal built from two components plus random noise. Change them and watch both views update. A few things to try:</p>
+    <ul>
+      <li>Push the noise up until the time waveform is unreadable. The peaks in the spectrum stay clear long after the waveform stops making sense.</li>
+      <li>Set a frequency that doesn't land exactly on a bin, then toggle the Hann window. Without a window, energy smears into the neighbouring bins (leakage).</li>
+      <li>Move the two frequencies close together. When they're closer than the bin spacing, the FFT can no longer separate them.</li>
+    </ul>
+  </div>
+
+  <div class="sim" id="sim">
+    <div class="sim-label">Time waveform</div>
+    <canvas id="time"></canvas>
+    <div class="sim-label">Spectrum (FFT magnitude)</div>
+    <canvas id="freq"></canvas>
+    <div class="controls">
+      <label>Component 1 frequency <span class="val" id="f1v"></span><input type="range" id="f1" min="5" max="200" step="0.5" value="25"></label>
+      <label>Component 1 amplitude <span class="val" id="a1v"></span><input type="range" id="a1" min="0" max="2" step="0.05" value="1"></label>
+      <label>Component 2 frequency <span class="val" id="f2v"></span><input type="range" id="f2" min="5" max="200" step="0.5" value="75"></label>
+      <label>Component 2 amplitude <span class="val" id="a2v"></span><input type="range" id="a2" min="0" max="2" step="0.05" value="0.4"></label>
+      <label>Noise level <span class="val" id="nv"></span><input type="range" id="n" min="0" max="2" step="0.05" value="0.3"></label>
+      <label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="win" checked> Hann window</label>
+    </div>
+    <p class="meta" style="margin-top:14px">Sample rate 1000 Hz · 1024 samples · bin spacing ≈ 0.98 Hz</p>
+  </div>
+
+  <div class="prose">
+    <h2>The idea in one line</h2>
+    <p>The FFT compares your signal against a sine wave at every bin frequency. Where the signal and the sine line up, the comparison gives a big number; where they don't, it averages out to nearly zero. Noise is random, so it doesn't line up with anything for long, which is why it spreads thinly across all bins instead of forming peaks.</p>
+
+    <h2>Why it matters in the field</h2>
+    <p>The bin spacing is the sample rate divided by the number of samples, so resolution costs measurement time. Separating two close frequencies (say running speed and line frequency on a 2-pole motor) means a longer capture, not a faster one. And without a window, a peak that falls between bins reads lower than it really is, which can make a real defect look smaller than it is.</p>
+
+    <h2>Downloads</h2>
+    <ul class="downloads">
+      <li><a href="fft_demo.py" download>fft_demo.py</a> <span class="muted">· the same experiment in Python (NumPy + Matplotlib)</span></li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir Ali Khan</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+
+<script src="fft-demo.js"></script>
+</body>
+</html>

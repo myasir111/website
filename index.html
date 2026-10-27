@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Muhammad Yasir Ali Khan · Vibration & Dynamics</title>
+  <meta name="description" content="Vibration, dynamics and noise engineering: explainers, simulations and tools by Muhammad Yasir Ali Khan.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="./">yasir<span>.</span>vdn</a>
+    <nav class="nav">
+      <a href="explainers/">Explainers</a>
+      <a href="projects.html">Projects</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Vibration · Dynamics · Noise</p>
+    <h1>Making machines and pipes make sense.</h1>
+    <p class="lede">I'm Muhammad Yasir Ali Khan, a vibration engineer working on flow- and acoustic-induced vibration and rotating machinery diagnostics. This is where my LinkedIn explainers live in full, with the simulations, code and data behind them.</p>
+    <div class="btn-row">
+      <a class="btn primary" href="explainers/">Read the explainers</a>
+      <a class="btn" href="about.html">About me</a>
+    </div>
+    <svg class="hero-wave" viewBox="0 0 900 90" preserveAspectRatio="none" aria-hidden="true">
+      <path id="wave" fill="none" stroke="var(--accent)" stroke-width="2"/>
+    </svg>
+  </section>
+
+  <h2>Latest explainers</h2>
+  <div class="cards">
+    <a class="card" href="explainers/fft-intuition/">
+      <span class="tag">Signal processing</span>
+      <h3>What an FFT actually sees</h3>
+      <p>Build a signal from sine waves, add noise, and watch the spectrum pick it apart.</p>
+    </a>
+    <div class="card">
+      <span class="tag">Diagnostics</span>
+      <h3>Why looseness makes harmonics</h3>
+      <p>A clipped, non-linear response turns one frequency into a whole family.</p>
+      <span class="soon">Coming soon</span>
+    </div>
+    <div class="card">
+      <span class="tag">Time–frequency</span>
+      <h3>Wavelets for engineers</h3>
+      <p>When the FFT's assumption of a steady signal breaks down.</p>
+      <span class="soon">Coming soon</span>
+    </div>
+  </div>
+
+  <h2>Projects</h2>
+  <div class="cards">
+    <a class="card" href="projects.html#skipper">
+      <span class="tag">Software</span>
+      <h3>Skipper Vibration Analysis Suite</h3>
+      <p>An offline desktop app for vibration screening and analysis.</p>
+    </a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir Ali Khan</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+  // Hero: a decaying beat, drawn once, animated gently.
+  (function () {
+    const p = document.getElementById('wave');
+    if (!p) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let t = 0;
+    function draw() {
+      let d = '';
+      for (let x = 0; x <= 900; x += 3) {
+        const u = x / 900;
+        const y = 45 + 32 * Math.sin(2 * Math.PI * (u * 9) - t) * Math.cos(2 * Math.PI * (u * 1.2) - t * 0.3) * Math.exp(-u * 0.9);
+        d += (x ? 'L' : 'M') + x + ' ' + y.toFixed(1);
+      }
+      p.setAttribute('d', d);
+      t += 0.03;
+      if (!reduce) requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+</script>
+</body>
+</html>
