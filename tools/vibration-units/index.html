@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vibration Unit Converter · Nodal</title>
+  <meta name="description" content="Convert vibration amplitude between acceleration, velocity and displacement at a given frequency, in peak, RMS or peak-to-peak, metric and imperial.">
+  <meta property="og:title" content="Vibration Unit Converter · Nodal">
+  <meta property="og:description" content="Convert vibration amplitude between acceleration, velocity and displacement at a given frequency, in peak, RMS or peak-to-peak, metric and imperial.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Measurement</p>
+    <h1>Vibration unit converter</h1>
+    <p class="lede">Enter one amplitude and a frequency. Get every other unit, for a single-frequency (sinusoidal) vibration.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Amplitude</span><input id="val" type="number" value="10" step="any"></label>
+      <div class="row2">
+        <label class="field"><span>Unit</span>
+          <select id="unit">
+            <optgroup label="Acceleration">
+              <option value="g">g</option>
+              <option value="ms2">m/s²</option>
+              <option value="ins2">in/s²</option>
+            </optgroup>
+            <optgroup label="Velocity">
+              <option value="mms" selected>mm/s</option>
+              <option value="ins">in/s</option>
+            </optgroup>
+            <optgroup label="Displacement">
+              <option value="um">µm</option>
+              <option value="mm">mm</option>
+              <option value="mil">mil</option>
+            </optgroup>
+          </select>
+        </label>
+        <label class="field"><span>Measured as</span>
+          <select id="det">
+            <option value="rms" selected>RMS</option>
+            <option value="pk">Peak</option>
+            <option value="pp">Peak-to-peak</option>
+          </select>
+        </label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Frequency</span><input id="f" type="number" value="50" step="any" min="0"></label>
+        <label class="field"><span>Units</span>
+          <select id="funit"><option value="hz">Hz</option><option value="cpm">CPM / RPM</option></select>
+        </label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>Quantity</th><th>Peak</th><th>RMS</th><th>Peak-to-peak</th></tr></thead>
+        <tbody id="out"></tbody>
+      </table>
+      <p class="note" style="margin-top:14px">Valid for a single-frequency sine (peak = √2 × RMS). A broadband overall value can't be converted between units this way, because each frequency in it scales differently.</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p>For a sinusoid at angular frequency ω = 2πf, each integration divides by ω:</p>
+    <p class="formula">v = a / (2πf) &nbsp;&nbsp;&nbsp; d = v / (2πf) = a / (2πf)²<br>peak = √2 × RMS &nbsp;&nbsp;&nbsp; peak-to-peak = 2 × peak</p>
+    <p>That's why the same machine looks very different in different units. Acceleration emphasises high frequencies (bearings, gears), displacement emphasises low ones (unbalance on slow machines), and velocity sits in between. That's why velocity is the usual unit for overall severity on most industrial machines.</p>
+    <p class="note">Conventions: velocity is usually reported as RMS (ISO) or peak (often in the US), displacement as peak-to-peak, and acceleration as peak or RMS. Always check which one your instrument shows. 1 g = 9.80665 m/s².</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  const G = 9.80665;
+  // Factor to convert each unit to SI base (m/s², m/s, m).
+  const U = {
+    g: ['a', G], ms2: ['a', 1], ins2: ['a', 0.0254],
+    mms: ['v', 1e-3], ins: ['v', 0.0254],
+    um: ['d', 1e-6], mm: ['d', 1e-3], mil: ['d', 0.0254e-3],
+  };
+  const DET = { pk: 1, rms: Math.SQRT2, pp: 0.5 }; // multiply to get peak
+  const rows = [
+    ['Acceleration', 'g', 'a', 1 / G], ['Acceleration', 'm/s²', 'a', 1], ['Acceleration', 'in/s²', 'a', 1 / 0.0254],
+    ['Velocity', 'mm/s', 'v', 1e3], ['Velocity', 'in/s', 'v', 1 / 0.0254],
+    ['Displacement', 'µm', 'd', 1e6], ['Displacement', 'mm', 'd', 1e3], ['Displacement', 'mil', 'd', 1 / 0.0254e-3],
+  ];
+  function calc() {
+    const val = T.num('val'), [q, k] = U[T.$('unit').value];
+    let f = T.num('f'); if (T.$('funit').value === 'cpm') f /= 60;
+    const w = 2 * Math.PI * f;
+    const pk = val * k * DET[T.$('det').value];
+    const si = q === 'a' ? { a: pk, v: pk / w, d: pk / (w * w) }
+             : q === 'v' ? { a: pk * w, v: pk, d: pk / w }
+             : { a: pk * w * w, v: pk * w, d: pk };
+    T.$('out').innerHTML = rows.map(([name, unit, qq, s]) => {
+      const p = si[qq] * s;
+      return `<tr><td>${name} <span class="note">(${unit})</span></td><td class="num">${T.fmt(p)}</td><td class="num">${T.fmt(p / Math.SQRT2)}</td><td class="num">${T.fmt(2 * p)}</td></tr>`;
+    }).join('');
+  }
+  T.live(calc);
+})();
+</script>
+</body>
+</html>

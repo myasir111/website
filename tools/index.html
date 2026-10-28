@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vibration Calculators · Nodal</title>
+  <meta name="description" content="Free browser-based vibration calculators: unit conversion, SDOF response, pipe span natural frequency, bearing defect frequencies, vortex shedding and Miles' equation.">
+  <meta property="og:title" content="Vibration Calculators · Nodal">
+  <meta property="og:description" content="Free browser-based vibration calculators: unit conversion, SDOF response, pipe span natural frequency, bearing defect frequencies, vortex shedding and Miles' equation.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../explainers/">Explainers</a>
+      <a href="../tools/" class="active">Tools</a>
+      <a href="../projects.html">Projects</a>
+      <a href="../resources.html">Resources</a>
+      <a href="../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow">Tools</p>
+    <h1>Vibration calculators</h1>
+    <p class="lede">Quick engineering calculators that run in your browser. No install, no sign-up, nothing sent anywhere. Each one shows the formula it uses so you can check it.</p>
+  </section>
+
+  <div class="tool-group">
+    <h2>Measurement &amp; signal</h2>
+    <div class="cards">
+      <a class="card" href="vibration-units/">
+        <span class="tag">Conversion</span>
+        <h3>Vibration unit converter</h3>
+        <p>Acceleration, velocity and displacement at any frequency, in peak, RMS or peak-to-peak.</p>
+      </a>
+      <a class="card" href="bearing-frequencies/">
+        <span class="tag">Diagnostics</span>
+        <h3>Bearing defect frequencies</h3>
+        <p>BPFO, BPFI, BSF and FTF from bearing geometry and shaft speed, with harmonics.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tool-group">
+    <h2>Structural dynamics</h2>
+    <div class="cards">
+      <a class="card" href="sdof/">
+        <span class="tag">SDOF</span>
+        <h3>SDOF natural frequency &amp; transmissibility</h3>
+        <p>Natural frequency from stiffness and mass, and the response to a forcing frequency, with a live plot.</p>
+      </a>
+      <a class="card" href="beam-frequency/">
+        <span class="tag">Piping / beams</span>
+        <h3>Pipe span natural frequency</h3>
+        <p>First four bending modes of a pipe or beam span, with contents and insulation, plus animated mode shapes.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tool-group">
+    <h2>Flow &amp; random vibration</h2>
+    <div class="cards">
+      <a class="card" href="vortex-shedding/">
+        <span class="tag">FIV</span>
+        <h3>Vortex shedding frequency</h3>
+        <p>Strouhal shedding frequency for a cylinder in flow, compared against a structure's natural frequency.</p>
+      </a>
+      <a class="card" href="miles-equation/">
+        <span class="tag">Random</span>
+        <h3>Miles' equation</h3>
+        <p>RMS response of an SDOF system to flat random base excitation.</p>
+      </a>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top:40px">These are for quick checks and preliminary estimates. For design decisions, use your own verified methods and the applicable standards. Spotted a bug or want a calculator added? Message me on <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>.</p>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+
+</body>
+</html>

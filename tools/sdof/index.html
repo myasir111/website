@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SDOF Natural Frequency & Transmissibility · Nodal</title>
+  <meta name="description" content="Single degree of freedom calculator: natural frequency from stiffness and mass, dynamic amplification and transmissibility at a forcing frequency, with a live plot.">
+  <meta property="og:title" content="SDOF Natural Frequency & Transmissibility · Nodal">
+  <meta property="og:description" content="Single degree of freedom calculator: natural frequency from stiffness and mass, dynamic amplification and transmissibility at a forcing frequency, with a live plot.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Structural dynamics</p>
+    <h1>SDOF natural frequency &amp; transmissibility</h1>
+    <p class="lede">The mass-on-a-spring model behind most resonance checks. Find the natural frequency, then see how hard a forcing frequency drives it.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Define the system by</span>
+        <select id="mode"><option value="km">Stiffness &amp; mass</option><option value="fn">Natural frequency</option><option value="defl">Static deflection</option></select>
+      </label>
+      <div id="g-km">
+        <label class="field"><span>Stiffness, k (N/mm)</span><input id="k" type="number" value="500" step="any" min="0"></label>
+        <label class="field"><span>Mass, m (kg)</span><input id="m" type="number" value="50" step="any" min="0"></label>
+      </div>
+      <div id="g-fn" hidden>
+        <label class="field"><span>Natural frequency, f<sub>n</sub> (Hz)</span><input id="fn" type="number" value="15" step="any" min="0"></label>
+      </div>
+      <div id="g-defl" hidden>
+        <label class="field"><span>Static deflection under self-weight (mm)</span><input id="dst" type="number" value="1" step="any" min="0"></label>
+      </div>
+      <label class="field"><span>Damping ratio, ζ</span><input id="z" type="number" value="0.05" step="0.005" min="0.001" max="1"></label>
+      <label class="field"><span>Forcing frequency (Hz)</span><input id="ff" type="number" value="24.75" step="any" min="0"></label>
+      <p class="note">Typical damping: welded steel structures and piping 0.01–0.05; bolted structures 0.03–0.07.</p>
+    </div>
+
+    <div class="panel">
+      <div class="row2" style="margin-bottom:10px">
+        <div><div class="note">Natural frequency</div><div class="big" id="o-fn">—<small>Hz</small></div></div>
+        <div><div class="note">Frequency ratio r = f / f<sub>n</sub></div><div class="big" id="o-r">—</div></div>
+      </div>
+      <table class="results">
+        <tbody>
+          <tr><td>Natural frequency</td><td class="num" id="o-fncpm"></td></tr>
+          <tr><td>Quality factor Q = 1/2ζ (peak amplification)</td><td class="num" id="o-q"></td></tr>
+          <tr><td>Dynamic amplification (force → displacement)</td><td class="num" id="o-daf"></td></tr>
+          <tr><td>Transmissibility (base → mass, or force → support)</td><td class="num" id="o-t"></td></tr>
+          <tr><td>Separation from f<sub>n</sub></td><td class="num" id="o-sep"></td></tr>
+        </tbody>
+      </table>
+      <div id="o-msg"></div>
+      <canvas id="plot" style="margin-top:16px"></canvas>
+      <p class="note" style="margin:6px 0 0">Transmissibility vs frequency ratio (log scale). The dot is your operating point.</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">f<sub>n</sub> = (1/2π)·√(k/m) = (1/2π)·√(g/δ<sub>st</sub>)<br>DAF = 1 / √((1−r²)² + (2ζr)²)<br>T &nbsp;&nbsp;= √(1 + (2ζr)²) / √((1−r²)² + (2ζr)²)</p>
+    <p>Below resonance (r &lt; 1) the response follows the force. Near r = 1 it's amplified by roughly Q. Above √2·f<sub>n</sub> the transmissibility drops below 1, which is the principle behind vibration isolation.</p>
+    <p>For resonance avoidance, many design practices aim to keep natural frequencies clear of forcing frequencies by a margin, commonly around ±20% (for example in API 618 for pulsation-related piping mechanical response). Check the margin required by the standard you work to.</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  const g = 9.80665;
+  function fnHz() {
+    const mode = T.$('mode').value;
+    ['km', 'fn', 'defl'].forEach((k) => { T.$('g-' + k).hidden = k !== mode; });
+    if (mode === 'km') return Math.sqrt(T.num('k') * 1000 / T.num('m')) / (2 * Math.PI);
+    if (mode === 'fn') return T.num('fn');
+    return Math.sqrt(g / (T.num('dst') / 1000)) / (2 * Math.PI);
+  }
+  const daf = (r, z) => 1 / Math.sqrt((1 - r * r) ** 2 + (2 * z * r) ** 2);
+  const tr = (r, z) => Math.sqrt(1 + (2 * z * r) ** 2) * daf(r, z);
+
+  function calc() {
+    const fn = fnHz(), z = T.num('z'), ff = T.num('ff'), r = ff / fn;
+    T.$('o-fn').innerHTML = `${T.fmt(fn)}<small>Hz</small>`;
+    T.$('o-r').textContent = T.fmt(r, 3);
+    T.$('o-fncpm').textContent = `${T.fmt(fn * 60)} CPM`;
+    T.$('o-q').textContent = T.fmt(1 / (2 * z), 3);
+    T.$('o-daf').textContent = T.fmt(daf(r, z), 3) + ' ×';
+    T.$('o-t').textContent = T.fmt(tr(r, z), 3) + ' ×';
+    const sep = (ff - fn) / fn * 100;
+    T.$('o-sep').textContent = `${sep >= 0 ? '+' : ''}${T.fmt(sep, 3)} %`;
+    T.$('o-msg').innerHTML = Math.abs(sep) < 20
+      ? `<div class="warn">Forcing frequency is within ±20% of the natural frequency. Resonance risk: check the margin your standard requires, and consider stiffening, detuning or adding damping.</div>`
+      : r > Math.SQRT2
+        ? `<div class="ok">Above √2·f<sub>n</sub>: the system is isolating (transmissibility below 1).</div>`
+        : `<div class="ok">More than ±20% away from the natural frequency.</div>`;
+    plot(r, z);
+  }
+
+  function plot(r0, z) {
+    const { ctx, w, h } = T.canvas(T.$('plot'));
+    const pad = { l: 40, r: 10, t: 10, b: 26 }, rMax = 3;
+    const yMin = -1.5, yMax = Math.max(1.2, Math.log10(1 / (2 * z)) + 0.2); // log10(T)
+    const X = (r) => pad.l + r / rMax * (w - pad.l - pad.r);
+    const Y = (t) => h - pad.b - (Math.log10(Math.max(t, 1e-6)) - yMin) / (yMax - yMin) * (h - pad.t - pad.b);
+    ctx.font = '11px ' + T.css('--mono'); ctx.fillStyle = T.css('--muted'); ctx.strokeStyle = T.css('--line'); ctx.lineWidth = 1;
+    for (let e = Math.ceil(yMin); e <= yMax; e++) {
+      ctx.beginPath(); ctx.moveTo(pad.l, Y(10 ** e)); ctx.lineTo(w - pad.r, Y(10 ** e)); ctx.stroke();
+      ctx.textAlign = 'right'; ctx.fillText(e >= 0 ? String(10 ** e) : (10 ** e).toString(), pad.l - 6, Y(10 ** e) + 4);
+    }
+    ctx.textAlign = 'center';
+    for (let r = 0; r <= rMax; r += 0.5) { ctx.fillText(r.toFixed(1), X(r), h - 8); }
+    // isolation threshold and T = 1
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(X(Math.SQRT2), pad.t); ctx.lineTo(X(Math.SQRT2), h - pad.b); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle = T.css('--accent'); ctx.lineWidth = 2; ctx.beginPath();
+    for (let i = 0; i <= 600; i++) { const r = i / 600 * rMax, y = Y(tr(r, z)); i ? ctx.lineTo(X(r), y) : ctx.moveTo(X(r), y); }
+    ctx.stroke();
+    if (r0 <= rMax && isFinite(r0)) {
+      ctx.fillStyle = T.css('--accent-2');
+      ctx.beginPath(); ctx.arc(X(r0), Y(tr(r0, z)), 5, 0, 2 * Math.PI); ctx.fill();
+    }
+  }
+  T.live(calc);
+})();
+</script>
+</body>
+</html>

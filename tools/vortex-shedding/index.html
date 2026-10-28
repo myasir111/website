@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vortex Shedding Frequency · Nodal</title>
+  <meta name="description" content="Strouhal vortex shedding frequency for a cylinder in cross-flow, with Reynolds number, reduced velocity and comparison against a structural natural frequency.">
+  <meta property="og:title" content="Vortex Shedding Frequency · Nodal">
+  <meta property="og:description" content="Strouhal vortex shedding frequency for a cylinder in cross-flow, with Reynolds number, reduced velocity and comparison against a structural natural frequency.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Flow-induced vibration</p>
+    <h1>Vortex shedding frequency</h1>
+    <p class="lede">Flow past a cylinder (a thermowell, a pipe in wind or current, a tube in a bundle) sheds vortices at a predictable frequency. If that lands on a natural frequency, it can lock in and drive large vibration.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Flow velocity, V (m/s)</span><input id="V" type="number" value="5" step="any" min="0"></label>
+      <label class="field"><span>Cylinder diameter, D (mm)</span><input id="D" type="number" value="25" step="any" min="0"></label>
+      <label class="field"><span>Strouhal number, St</span><input id="St" type="number" value="0.2" step="0.01" min="0"></label>
+      <div class="row2">
+        <label class="field"><span>Fluid density (kg/m³)</span><input id="rho" type="number" value="1000" step="any" min="0"></label>
+        <label class="field"><span>Dynamic viscosity (mPa·s)</span><input id="mu" type="number" value="1" step="any" min="0"></label>
+      </div>
+      <label class="field"><span>Structure natural frequency, f<sub>n</sub> (Hz)</span><input id="fn" type="number" value="60" step="any" min="0"></label>
+      <p class="note">St ≈ 0.2 for a circular cylinder over a wide subcritical Reynolds range (roughly 300 to 2×10⁵).</p>
+    </div>
+
+    <div class="panel">
+      <div class="row2" style="margin-bottom:10px">
+        <div><div class="note">Shedding frequency (cross-flow)</div><div class="big" id="o-fs">—<small>Hz</small></div></div>
+        <div><div class="note">Ratio f<sub>s</sub> / f<sub>n</sub></div><div class="big" id="o-ratio">—</div></div>
+      </div>
+      <table class="results">
+        <tbody>
+          <tr><td>In-line (drag) shedding frequency, 2·f<sub>s</sub></td><td class="num" id="o-fil"></td></tr>
+          <tr><td>Reynolds number</td><td class="num" id="o-re"></td></tr>
+          <tr><td>Reduced velocity V / (f<sub>n</sub>·D)</td><td class="num" id="o-vr"></td></tr>
+          <tr><td>Velocity for cross-flow lock-in (f<sub>s</sub> = f<sub>n</sub>)</td><td class="num" id="o-vc"></td></tr>
+        </tbody>
+      </table>
+      <div id="o-msg"></div>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">f<sub>s</sub> = St · V / D &nbsp;&nbsp; Re = ρVD / μ &nbsp;&nbsp; V<sub>r</sub> = V / (f<sub>n</sub>·D)</p>
+    <p>Vortices shed alternately from each side, so the lift force (cross-flow) oscillates at f<sub>s</sub> while the drag force (in-line) oscillates at about 2·f<sub>s</sub>. In-line vibration can therefore start at roughly half the velocity needed for cross-flow lock-in, which matters for thermowells in liquid service.</p>
+    <p class="note">This is a screening check. Lock-in depends on mass ratio, damping and the actual geometry, and thermowells have their own dedicated method (ASME PTC 19.3 TW). Use those for design.</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  function calc() {
+    const V = T.num('V'), D = T.num('D') / 1000, St = T.num('St'), rho = T.num('rho'), mu = T.num('mu') / 1000, fn = T.num('fn');
+    const fs = St * V / D, ratio = fs / fn;
+    T.$('o-fs').innerHTML = `${T.fmt(fs)}<small>Hz</small>`;
+    T.$('o-ratio').textContent = T.fmt(ratio, 3);
+    T.$('o-fil').textContent = `${T.fmt(2 * fs)} Hz`;
+    T.$('o-re').textContent = T.fmt(rho * V * D / mu, 3);
+    T.$('o-vr').textContent = T.fmt(V / (fn * D), 3);
+    T.$('o-vc').textContent = `${T.fmt(fn * D / St)} m/s`;
+    const near = (r) => r > 0.8 && r < 1.2;
+    T.$('o-msg').innerHTML = near(ratio)
+      ? `<div class="warn">Cross-flow shedding is within ±20% of the natural frequency. High risk of lock-in.</div>`
+      : near(2 * ratio)
+        ? `<div class="warn">In-line (2·f<sub>s</sub>) shedding is within ±20% of the natural frequency. Check in-line vibration, especially in dense fluids.</div>`
+        : `<div class="ok">Neither cross-flow nor in-line shedding is within ±20% of f<sub>n</sub>.</div>`;
+  }
+  T.live(calc);
+})();
+</script>
+</body>
+</html>

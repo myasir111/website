@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bearing Defect Frequencies · Nodal</title>
+  <meta name="description" content="Calculate rolling element bearing defect frequencies BPFO, BPFI, BSF and FTF from geometry and shaft speed.">
+  <meta property="og:title" content="Bearing Defect Frequencies · Nodal">
+  <meta property="og:description" content="Calculate rolling element bearing defect frequencies BPFO, BPFI, BSF and FTF from geometry and shaft speed.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Diagnostics</p>
+    <h1>Bearing defect frequencies</h1>
+    <p class="lede">Where to look in the spectrum for outer race, inner race, rolling element and cage defects on a rolling element bearing.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <div class="row2">
+        <label class="field"><span>Shaft speed</span><input id="rpm" type="number" value="1490" step="any" min="0"></label>
+        <label class="field"><span>Units</span><select id="sunit"><option value="rpm">RPM</option><option value="hz">Hz</option></select></label>
+      </div>
+      <label class="field"><span>Number of rolling elements, n</span><input id="n" type="number" value="9" step="1" min="1"></label>
+      <label class="field"><span>Rolling element diameter, d (mm)</span><input id="d" type="number" value="7.94" step="any" min="0"></label>
+      <label class="field"><span>Pitch diameter, D (mm)</span><input id="D" type="number" value="39.04" step="any" min="0"></label>
+      <label class="field"><span>Contact angle, θ (degrees)</span><input id="th" type="number" value="0" step="any" min="0" max="89"></label>
+      <p class="note">Defaults are approximate figures for a 6205 deep-groove ball bearing. Get exact geometry from the manufacturer.</p>
+    </div>
+
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>Frequency</th><th>Hz</th><th>CPM</th><th>Orders (×)</th></tr></thead>
+        <tbody id="out"></tbody>
+      </table>
+      <h3 style="margin:22px 0 8px;font-size:15px">Harmonics (Hz)</h3>
+      <table class="results">
+        <thead><tr><th></th><th>1×</th><th>2×</th><th>3×</th><th>4×</th></tr></thead>
+        <tbody id="harm"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">FTF  = (f<sub>r</sub>/2) · (1 − (d/D)cosθ)<br>BPFO = (n·f<sub>r</sub>/2) · (1 − (d/D)cosθ)<br>BPFI = (n·f<sub>r</sub>/2) · (1 + (d/D)cosθ)<br>BSF  = (D/2d) · f<sub>r</sub> · (1 − ((d/D)cosθ)²)</p>
+    <p>These assume pure rolling with no slip. In practice the measured peaks usually sit slightly off the calculated values (a percent or two), so look for a peak <em>near</em> the line with its harmonics and sidebands rather than an exact match.</p>
+    <ul>
+      <li><strong>BPFO</strong> (outer race): usually a clean series of harmonics, since a stationary outer-race defect is always in the load zone.</li>
+      <li><strong>BPFI</strong> (inner race): the defect rotates in and out of the load zone, so expect sidebands at 1× shaft speed.</li>
+      <li><strong>BSF</strong> (rolling element): often appears at 2×BSF, because a ball defect hits both races each spin, with sidebands at FTF.</li>
+      <li><strong>FTF</strong> (cage): sub-synchronous, usually around 0.4× shaft speed. Rarely a peak on its own; shows up as sideband spacing.</li>
+    </ul>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  function calc() {
+    let fr = T.num('rpm'); if (T.$('sunit').value === 'rpm') fr /= 60;
+    const n = T.num('n'), d = T.num('d'), D = T.num('D'), th = T.num('th') * Math.PI / 180;
+    const r = (d / D) * Math.cos(th);
+    const f = {
+      'BPFO · outer race': n * fr / 2 * (1 - r),
+      'BPFI · inner race': n * fr / 2 * (1 + r),
+      'BSF · rolling element': D / (2 * d) * fr * (1 - r * r),
+      'FTF · cage': fr / 2 * (1 - r),
+    };
+    T.$('out').innerHTML = Object.entries(f).map(([k, v]) =>
+      `<tr><td>${k}</td><td class="num">${T.fmt(v)}</td><td class="num">${T.fmt(v * 60)}</td><td class="num">${T.fmt(v / fr, 3)}</td></tr>`).join('');
+    T.$('harm').innerHTML = Object.entries(f).map(([k, v]) =>
+      `<tr><td>${k.split(' ')[0]}</td>${[1, 2, 3, 4].map((h) => `<td class="num">${T.fmt(v * h)}</td>`).join('')}</tr>`).join('');
+  }
+  T.live(calc);
+})();
+</script>
+</body>
+</html>

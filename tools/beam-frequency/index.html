@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pipe Span Natural Frequency · Nodal</title>
+  <meta name="description" content="Natural frequencies and mode shapes of a pipe or beam span (Euler-Bernoulli) for common support conditions, including contents and insulation mass.">
+  <meta property="og:title" content="Pipe Span Natural Frequency · Nodal">
+  <meta property="og:description" content="Natural frequencies and mode shapes of a pipe or beam span (Euler-Bernoulli) for common support conditions, including contents and insulation mass.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Structural dynamics</p>
+    <h1>Pipe span natural frequency</h1>
+    <p class="lede">First four bending modes of a straight pipe span between supports, the quick check behind span-length decisions in piping vibration work.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Support condition</span>
+        <select id="bc">
+          <option value="pp">Pinned – pinned (simply supported)</option>
+          <option value="ff">Fixed – fixed</option>
+          <option value="fp">Fixed – pinned</option>
+          <option value="cf">Fixed – free (cantilever)</option>
+          <option value="free">Free – free</option>
+        </select>
+      </label>
+      <label class="field"><span>Span length, L (m)</span><input id="L" type="number" value="3" step="any" min="0"></label>
+      <div class="row2">
+        <label class="field"><span>Outside diameter (mm)</span><input id="od" type="number" value="168.3" step="any" min="0"></label>
+        <label class="field"><span>Wall thickness (mm)</span><input id="wt" type="number" value="7.11" step="any" min="0"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Young's modulus (GPa)</span><input id="E" type="number" value="200" step="any" min="0"></label>
+        <label class="field"><span>Pipe density (kg/m³)</span><input id="rho" type="number" value="7850" step="any" min="0"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Contents density (kg/m³)</span><input id="rhof" type="number" value="1000" step="any" min="0"></label>
+        <label class="field"><span>Insulation / extra (kg/m)</span><input id="mx" type="number" value="0" step="any" min="0"></label>
+      </div>
+      <p class="note">Defaults: 6" Sch 40 carbon steel, water-filled. For gas service set contents density to the gas density (or 0).</p>
+    </div>
+
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>Mode</th><th>λL</th><th>Frequency (Hz)</th><th>CPM</th></tr></thead>
+        <tbody id="out"></tbody>
+      </table>
+      <p class="note" style="margin-top:10px" id="props"></p>
+      <div class="sim-head" style="margin-top:16px">
+        <div class="seg" id="modes" role="group" aria-label="Mode to animate">
+          <button data-m="0" class="on">Mode 1</button><button data-m="1">Mode 2</button><button data-m="2">Mode 3</button><button data-m="3">Mode 4</button>
+        </div>
+      </div>
+      <canvas id="shape" style="height:170px;margin-top:10px"></canvas>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">f<sub>i</sub> = ((λ<sub>i</sub>L)² / 2πL²) · √(EI / m)<br>I = π(D<sub>o</sub>⁴ − D<sub>i</sub>⁴)/64 &nbsp;&nbsp; m = pipe + contents + insulation mass per metre</p>
+    <p>λL comes from each support condition's frequency equation: <code>nπ</code> for pinned–pinned, <code>cosh·cos = 1</code> for fixed–fixed and free–free, <code>cosh·cos = −1</code> for a cantilever, <code>tan = tanh</code> for fixed–pinned.</p>
+    <p>Real pipe supports are neither perfectly pinned nor perfectly fixed, so the true first mode usually sits between the pinned–pinned and fixed–fixed results. That band is a useful sanity check against FEA or a field measurement. Heavy valves or flanges in the span, bends, and support flexibility all pull the frequency down; for those, use FEA.</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  const BL = {
+    pp: [1, 2, 3, 4].map((n) => n * Math.PI),
+    ff: [4.730041, 7.853205, 10.995608, 14.137165],
+    fp: [3.926602, 7.068583, 10.210176, 13.351769],
+    cf: [1.875104, 4.694091, 7.854757, 10.995541],
+    free: [4.730041, 7.853205, 10.995608, 14.137165],
+  };
+  const { cosh, cos, sinh, sin } = Math;
+  // Normalised mode shape at x in [0, 1].
+  function shape(bc, b, x) {
+    if (bc === 'pp') return sin(b * x);
+    if (bc === 'ff' || bc === 'fp') { const s = (cosh(b) - cos(b)) / (sinh(b) - sin(b)); return cosh(b * x) - cos(b * x) - s * (sinh(b * x) - sin(b * x)); }
+    if (bc === 'cf') { const s = (cosh(b) + cos(b)) / (sinh(b) + sin(b)); return cosh(b * x) - cos(b * x) - s * (sinh(b * x) - sin(b * x)); }
+    const s = (cosh(b) - cos(b)) / (sinh(b) - sin(b)); return cosh(b * x) + cos(b * x) - s * (sinh(b * x) + sin(b * x));
+  }
+  let mode = 0, t = 0, freqs = [];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function calc() {
+    const bc = T.$('bc').value, L = T.num('L');
+    const Do = T.num('od') / 1000, Di = Do - 2 * T.num('wt') / 1000;
+    const I = Math.PI / 64 * (Do ** 4 - Di ** 4);
+    const mPipe = Math.PI / 4 * (Do ** 2 - Di ** 2) * T.num('rho');
+    const mFluid = Math.PI / 4 * Di ** 2 * T.num('rhof');
+    const m = mPipe + mFluid + T.num('mx');
+    const EI = T.num('E') * 1e9 * I;
+    freqs = BL[bc].map((b) => b * b / (2 * Math.PI * L * L) * Math.sqrt(EI / m));
+    T.$('out').innerHTML = freqs.map((f, i) =>
+      `<tr><td>${i + 1}</td><td class="num">${BL[bc][i].toFixed(4)}</td><td class="num">${T.fmt(f)}</td><td class="num">${T.fmt(f * 60)}</td></tr>`).join('');
+    T.$('props').textContent = `I = ${T.fmt(I * 1e12 / 1e4)} cm⁴ · mass = ${T.fmt(m)} kg/m (pipe ${T.fmt(mPipe)}, contents ${T.fmt(mFluid)}, extra ${T.fmt(T.num('mx'))})`
+      + (Di <= 0 ? ' · check wall thickness' : '');
+    if (reduce) draw();
+  }
+
+  function draw() {
+    const bc = T.$('bc').value, b = BL[bc][mode];
+    const { ctx, w, h } = T.canvas(T.$('shape'));
+    const pad = 24, mid = h / 2, amp = h / 2 - 22;
+    const N = 200, ys = [];
+    let mx = 0;
+    for (let i = 0; i <= N; i++) { const y = shape(bc, b, i / N); ys.push(y); mx = Math.max(mx, Math.abs(y)); }
+    const X = (i) => pad + i / N * (w - 2 * pad);
+    // supports
+    ctx.fillStyle = T.css('--muted'); ctx.strokeStyle = T.css('--muted'); ctx.lineWidth = 2;
+    const sup = { pp: ['pin', 'pin'], ff: ['fix', 'fix'], fp: ['fix', 'pin'], cf: ['fix', null], free: [null, null] }[bc];
+    [[0, sup[0]], [N, sup[1]]].forEach(([i, kind]) => {
+      if (!kind) return;
+      const x = X(i);
+      if (kind === 'pin') { ctx.beginPath(); ctx.moveTo(x, mid); ctx.lineTo(x - 8, mid + 14); ctx.lineTo(x + 8, mid + 14); ctx.closePath(); ctx.fill(); }
+      else { ctx.fillRect(i ? x : x - 6, mid - 26, 6, 52); }
+    });
+    // rest line
+    ctx.strokeStyle = T.css('--line'); ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(X(0), mid); ctx.lineTo(X(N), mid); ctx.stroke(); ctx.setLineDash([]);
+    // shape
+    const c = reduce ? 1 : Math.cos(t);
+    ctx.strokeStyle = T.css('--accent'); ctx.lineWidth = 3; ctx.beginPath();
+    ys.forEach((y, i) => { const Y = mid - c * y / mx * amp; i ? ctx.lineTo(X(i), Y) : ctx.moveTo(X(i), Y); });
+    ctx.stroke();
+    ctx.fillStyle = T.css('--muted'); ctx.font = '11px ' + T.css('--mono'); ctx.textAlign = 'right';
+    ctx.fillText(`${T.fmt(freqs[mode] || 0)} Hz`, w - 4, 14);
+  }
+  function loop() { t += 0.06; draw(); requestAnimationFrame(loop); }
+
+  T.$('modes').addEventListener('click', (e) => {
+    const bt = e.target.closest('button'); if (!bt) return;
+    mode = +bt.dataset.m;
+    T.$('modes').querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === bt));
+    if (reduce) draw();
+  });
+  T.live(calc);
+  if (!reduce) loop();
+})();
+</script>
+</body>
+</html>

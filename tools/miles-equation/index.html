@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Miles' Equation · Nodal</title>
+  <meta name="description" content="RMS acceleration response of a single degree of freedom system to flat random base excitation using Miles' equation, with 3-sigma peak and RMS displacement.">
+  <meta property="og:title" content="Miles' Equation · Nodal">
+  <meta property="og:description" content="RMS acceleration response of a single degree of freedom system to flat random base excitation using Miles' equation, with 3-sigma peak and RMS displacement.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Random vibration</p>
+    <h1>Miles' equation</h1>
+    <p class="lede">A quick estimate of how hard a component responds to broadband random vibration, as long as the input spectrum is roughly flat around its natural frequency.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Natural frequency, f<sub>n</sub> (Hz)</span><input id="fn" type="number" value="100" step="any" min="0"></label>
+      <label class="field"><span>Quality factor, Q</span><input id="Q" type="number" value="10" step="any" min="0"></label>
+      <label class="field"><span>Input acceleration PSD at f<sub>n</sub> (g²/Hz)</span><input id="psd" type="number" value="0.04" step="any" min="0"></label>
+      <p class="note">Q = 1/(2ζ). Q = 10 (ζ = 5%) is a common default when damping is unknown.</p>
+    </div>
+
+    <div class="panel">
+      <div class="row2" style="margin-bottom:10px">
+        <div><div class="note">RMS acceleration response</div><div class="big" id="o-g">—<small>G rms</small></div></div>
+        <div><div class="note">3σ peak</div><div class="big" id="o-3s">—<small>G</small></div></div>
+      </div>
+      <table class="results">
+        <tbody>
+          <tr><td>Damping ratio ζ</td><td class="num" id="o-z"></td></tr>
+          <tr><td>RMS relative displacement</td><td class="num" id="o-d"></td></tr>
+          <tr><td>3σ relative displacement</td><td class="num" id="o-d3"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">G<sub>rms</sub> = √( (π/2) · f<sub>n</sub> · Q · PSD(f<sub>n</sub>) )<br>z<sub>rms</sub> ≈ G<sub>rms</sub> · g / (2πf<sub>n</sub>)²</p>
+    <p>The (π/2)·f<sub>n</sub>/Q term is the effective noise bandwidth of the resonance, so the formula is just "input density × bandwidth × amplification²". Peaks in a Gaussian random response are commonly taken at 3σ (3 × RMS), which covers 99.7% of the time.</p>
+    <p class="note">Assumes a single dominant mode and a flat input PSD around f<sub>n</sub>. If the PSD slopes steeply near the resonance, or several modes contribute, integrate the full response PSD instead.</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  const g = 9.80665;
+  function calc() {
+    const fn = T.num('fn'), Q = T.num('Q'), psd = T.num('psd');
+    const G = Math.sqrt(Math.PI / 2 * fn * Q * psd);
+    const z = G * g / (2 * Math.PI * fn) ** 2 * 1000; // mm
+    T.$('o-g').innerHTML = `${T.fmt(G, 3)}<small>G rms</small>`;
+    T.$('o-3s').innerHTML = `${T.fmt(3 * G, 3)}<small>G</small>`;
+    T.$('o-z').textContent = T.fmt(1 / (2 * Q), 3);
+    T.$('o-d').textContent = `${T.fmt(z, 3)} mm`;
+    T.$('o-d3').textContent = `${T.fmt(3 * z, 3)} mm`;
+  }
+  T.live(calc);
+})();
+</script>
+</body>
+</html>
