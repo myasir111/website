@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why We See Harmonics · Nodal</title>
+  <meta name="description" content="Why harmonics appear in vibration spectra: Fourier series, symmetry, smoothness and nonlinearity, with an interactive harmonic builder and functions you can check yourself.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Why do we see harmonics? A mathematical answer">
+  <meta property="og:description" content="Square, sawtooth, triangle, a clipped sine and a real machine signal, pulled apart into their harmonics. Interactive, with the maths.">
+  <meta property="og:image" content="https://nodallab.dev/explainers/why-harmonics/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    .slides { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 2px 14px; margin: 24px 0 6px; }
+    .slides a { flex: 0 0 auto; scroll-snap-align: start; }
+    .slides img { width: 240px; height: auto; border-radius: 8px; border: 1px solid var(--line); display: block; }
+    @media (max-width: 560px) { .slides img { width: 72vw; } }
+    .eq { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+    .readout { display: flex; gap: 24px; flex-wrap: wrap; align-items: baseline; margin-top: 14px; font-size: 14px; }
+    .readout b { font-family: var(--mono); color: var(--accent); }
+    #formula { overflow-x: auto; overflow-y: hidden; margin-top: 8px; }
+    .sim .seg { flex-wrap: wrap; }
+    table.ex { border-collapse: collapse; width: 100%; font-size: 15px; margin: 12px 0; }
+    table.ex th, table.ex td { text-align: left; padding: 8px 10px; border-top: 1px solid var(--line); vertical-align: top; }
+    table.ex th { font: 12px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .table-wrap { overflow-x: auto; }
+    pre { background: var(--code-bg); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font: 13.5px/1.55 var(--mono); }
+    .series-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; font-size: 15px; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../" class="active">Explainers</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow">Harmonics series · Part 2</p>
+    <h1>Why do we see harmonics?</h1>
+    <p class="lede">A mathematical answer, with functions you can check yourself. This is the full version of the LinkedIn carousel.</p>
+    <p class="meta" style="margin-top:14px">October 2026 · 10 min read · interactive</p>
+  </section>
+
+  <h2>The carousel</h2>
+  <div class="slides" aria-label="Carousel slides">
+    <a href="slides/s-01.jpg"><img src="slides/s-01.jpg" alt="Slide 1: Why do we see harmonics?" loading="lazy"></a>
+    <a href="slides/s-02.jpg"><img src="slides/s-02.jpg" alt="Slide 2: Start with one assumption, f(t+T)=f(t)" loading="lazy"></a>
+    <a href="slides/s-03.jpg"><img src="slides/s-03.jpg" alt="Slide 3: Which sines and cosines are allowed?" loading="lazy"></a>
+    <a href="slides/s-04.jpg"><img src="slides/s-04.jpg" alt="Slide 4: The Fourier series" loading="lazy"></a>
+    <a href="slides/s-05.jpg"><img src="slides/s-05.jpg" alt="Slide 5: Example 1, a pure sine" loading="lazy"></a>
+    <a href="slides/s-06.jpg"><img src="slides/s-06.jpg" alt="Slide 6: Example 2, a square wave" loading="lazy"></a>
+    <a href="slides/s-07.jpg"><img src="slides/s-07.jpg" alt="Slide 7: Why only odd? Symmetry" loading="lazy"></a>
+    <a href="slides/s-08.jpg"><img src="slides/s-08.jpg" alt="Slide 8: Example 3, a sawtooth" loading="lazy"></a>
+    <a href="slides/s-09.jpg"><img src="slides/s-09.jpg" alt="Slide 9: Example 4, a triangle wave" loading="lazy"></a>
+    <a href="slides/s-10.jpg"><img src="slides/s-10.jpg" alt="Slide 10: Sharper shape, more harmonics" loading="lazy"></a>
+    <a href="slides/s-11.jpg"><img src="slides/s-11.jpg" alt="Slide 11: Example 5, cut a sine on one side" loading="lazy"></a>
+    <a href="slides/s-12.jpg"><img src="slides/s-12.jpg" alt="Slide 12: Example 6, a real machine signal" loading="lazy"></a>
+    <a href="slides/s-13.jpg"><img src="slides/s-13.jpg" alt="Slide 13: Where harmonics are born, nonlinearity" loading="lazy"></a>
+    <a href="slides/s-14.jpg"><img src="slides/s-14.jpg" alt="Slide 14: What the FFT actually computes" loading="lazy"></a>
+    <a href="slides/s-15.jpg"><img src="slides/s-15.jpg" alt="Slide 15: What this means for the analyst" loading="lazy"></a>
+    <a href="slides/s-16.jpg"><img src="slides/s-16.jpg" alt="Slide 16: Sources and further reading" loading="lazy"></a>
+    <a href="slides/s-17.jpg"><img src="slides/s-17.jpg" alt="Slide 17: Now watch them come apart" loading="lazy"></a>
+  </div>
+  <p class="meta">Scroll sideways · tap a slide to enlarge · <a href="why-we-see-harmonics.pdf">open the PDF</a></p>
+
+  <h2>Try it: build a signal from its harmonics</h2>
+  <div class="prose"><p>Pick a shape, then add harmonics one at a time. The solid line is the sum so far, the dashed line is the shape you are aiming for, and the spectrum shows each harmonic's amplitude (faded bars are the ones you haven't added yet).</p></div>
+
+  <div class="sim">
+    <div class="sim-head">
+      <div class="seg" role="group" aria-label="Signal">
+        <button data-sig="sine">Sine</button>
+        <button data-sig="square" class="on">Square</button>
+        <button data-sig="sawtooth">Sawtooth</button>
+        <button data-sig="triangle">Triangle</button>
+        <button data-sig="cut">Cut sine</button>
+        <button data-sig="real">Real machine</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-small" id="play">▶ Build it</button>
+        <button class="btn-small" id="reset">Reset</button>
+      </div>
+    </div>
+    <div class="sim-label">Time: two periods</div>
+    <canvas id="time"></canvas>
+    <div class="sim-label">Spectrum: amplitude of each harmonic</div>
+    <canvas id="freq"></canvas>
+    <div class="controls">
+      <label>Harmonics included <span class="val" id="nhv"></span><input type="range" id="nh" min="1" max="25" step="1" value="1"></label>
+      <label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="comps"> Show the individual sines</label>
+    </div>
+    <div class="readout"><span>Energy captured: <b id="energy"></b></span></div>
+    <div id="formula"></div>
+    <p class="muted" id="note" style="font-size:15px;margin:6px 0 0"></p>
+  </div>
+
+  <div class="prose">
+    <h2>The argument in seven steps</h2>
+
+    <h3>1. One assumption</h3>
+    <p>A machine at constant speed produces motion that repeats every revolution. Mathematically the signal is periodic, with period \(T\) (one revolution):</p>
+    <div class="eq">$$f(t+T) = f(t), \qquad \omega_0 = \frac{2\pi}{T}$$</div>
+    <p>Nothing is assumed about the shape: smooth, flattened, spiky or lopsided. Only that it repeats.</p>
+
+    <h3>2. Only whole multiples fit</h3>
+    <p>If a sine or cosine at frequency \(\omega\) is part of that signal, it has to repeat after \(T\) as well:</p>
+    <div class="eq">$$\sin\big(\omega(t+T)\big) = \sin(\omega t) \;\Rightarrow\; \omega T = 2\pi n \;\Rightarrow\; \omega = n\,\omega_0,\quad n = 1,2,3,\dots$$</div>
+    <p class="callout">Harmonics sit at exact integer multiples of running speed, not by convention, but because nothing else fits.</p>
+
+    <h3>3. The Fourier series</h3>
+    <p>Fourier (1822) showed that any reasonable periodic function is a sum of exactly those allowed sines and cosines:</p>
+    <div class="eq">$$f(t) = a_0 + \sum_{n=1}^{\infty}\Big[a_n\cos(n\omega_0 t) + b_n\sin(n\omega_0 t)\Big]$$</div>
+    <p>Each coefficient measures how much the signal looks like that harmonic, a projection over one period:</p>
+    <div class="eq">$$a_n = \frac{2}{T}\int_0^T f(t)\cos(n\omega_0 t)\,dt, \qquad b_n = \frac{2}{T}\int_0^T f(t)\sin(n\omega_0 t)\,dt$$</div>
+    <p>The peak at \(n\)X on your spectrum is \(|c_n| = \sqrt{a_n^2 + b_n^2}\). That is all a harmonic is.</p>
+
+    <h3>4. Worked examples</h3>
+    <div class="table-wrap">
+    <table class="ex">
+      <tr><th>Shape</th><th>Series</th><th>What you see</th></tr>
+      <tr><td>Pure sine</td><td>\(\sin(\omega_0 t)\)</td><td>One peak at 1X</td></tr>
+      <tr><td>Square</td><td>\(\frac{4}{\pi}\sum_{n\ \text{odd}}\frac{\sin(n\omega_0 t)}{n}\)</td><td>Odd only, 1.27, 0.42, 0.25, … (falls as \(1/n\))</td></tr>
+      <tr><td>Sawtooth</td><td>\(\frac{2}{\pi}\sum_{n}(-1)^{n+1}\frac{\sin(n\omega_0 t)}{n}\)</td><td>Every harmonic, 0.64, 0.32, 0.21, … (\(1/n\))</td></tr>
+      <tr><td>Triangle</td><td>\(\frac{8}{\pi^2}\sum_{n\ \text{odd}}(-1)^{\frac{n-1}{2}}\frac{\sin(n\omega_0 t)}{n^2}\)</td><td>Odd only, falls as \(1/n^2\): 3X is 1/9 of 1X</td></tr>
+      <tr><td>Sine cut on one side</td><td>\(\frac{1}{\pi}+\frac{1}{2}\sin\omega_0 t-\frac{2}{\pi}\sum_{n\ \text{even}}\frac{\cos(n\omega_0 t)}{n^2-1}\)</td><td>1X plus even harmonics, and a DC offset of \(1/\pi\)</td></tr>
+    </table>
+    </div>
+
+    <h3>5. Symmetry decides odd vs even</h3>
+    <p>A square wave has half-wave symmetry: the second half-cycle is the first one flipped upside down, \(f(t+T/2) = -f(t)\). Shift an even harmonic by half a period and it lands on itself:</p>
+    <div class="eq">$$\sin\big(n\omega_0(t + T/2)\big) = \sin(n\omega_0 t + n\pi) = +\sin(n\omega_0 t)\quad (n\ \text{even})$$</div>
+    <p>It doesn't flip, so it can't help build a shape that does: its coefficient is forced to zero. Odd harmonics flip, so they survive. <b>Symmetric distortion gives odd harmonics only; break the symmetry and the evens appear.</b></p>
+
+    <h3>6. Sharpness decides how far they extend</h3>
+    <p>Integrate the coefficient formula by parts and each step pulls out a factor \(1/n\), until you hit a discontinuity. So a jump in the waveform gives harmonics that decay like \(1/n\), a corner gives \(1/n^2\), and smoother shapes decay faster still. Sharp features in time live at high frequency, which is why impacts push energy far up the harmonic series.</p>
+
+    <h3>7. Where harmonics are born: nonlinearity</h3>
+    <p>A linear system driven at \(\omega_0\) responds only at \(\omega_0\). Harmonics need a response that isn't proportional to the input. Two identities you can check by hand:</p>
+    <div class="eq">$$\sin^2\omega_0 t = \tfrac12 - \tfrac12\cos 2\omega_0 t, \qquad \sin^3\omega_0 t = \tfrac34\sin\omega_0 t - \tfrac14\sin 3\omega_0 t$$</div>
+    <p>A squared (asymmetric) term creates 2X and a DC shift; a cubed (symmetric) term creates 3X. Clearances, impacts and stiffness that differs in each direction are all nonlinearities, which is why looseness and rubs show harmonic families.</p>
+
+    <h2>Real signals</h2>
+    <p>A real machine signal has no neat formula: some imbalance, some misalignment, an impact every revolution that rings and decays. But it still repeats, so it is still a Fourier series. Imbalance lands on 1X, misalignment on 2X, and the ringing impact spreads energy across 4X–7X. Select <b>Real machine</b> in the builder above to see it.</p>
+    <p class="callout">If something repeats and isn't a pure sine, you will see harmonics. They aren't extra signals: they're the shape of one repeating motion, written as sines and cosines.</p>
+
+    <h2>A note on the FFT</h2>
+    <p>Your analyser doesn't see a formula, it sees samples. If the record holds a whole number of periods, harmonic \(n\) lands exactly on an FFT bin and \(\tfrac{2}{N}|X[k]|\) equals \(|c_n|\): the same numbers as the series. Two things break that in practice: <b>leakage</b> (a non-integer number of periods smears peaks into neighbouring bins; a window such as Hanning controls it) and <b>aliasing</b> (harmonics above half the sample rate fold back to false frequencies; anti-alias filtering prevents it). Before blaming the machine, rule out the measurement: a saturated sensor, a loose mount or a clipped input range also distort the waveform and create harmonics.</p>
+
+    <h2>Check it yourself</h2>
+    <p>The script below compares every series on this page with an FFT of the same function. The largest difference is about \(10^{-4}\), from sampling the jumps.</p>
+    <pre>python verify_harmonics.py
+
+function                                         n      FFT  formula
+square     sgn(sin w0 t)                         1   1.2732   1.2732
+                                                 3   0.4244   0.4244
+                                                 5   0.2546   0.2546
+...</pre>
+
+    <h2>Downloads</h2>
+    <ul class="downloads">
+      <li><a href="why-we-see-harmonics.pdf" download>why-we-see-harmonics.pdf</a> <span class="muted">· the 17-slide carousel</span></li>
+      <li><a href="verify_harmonics.py" download>verify_harmonics.py</a> <span class="muted">· checks every formula against an FFT (needs NumPy)</span></li>
+      <li><a href="harmonics_carousel.py" download>harmonics_carousel.py</a> <span class="muted">· the script that builds the carousel (Matplotlib)</span></li>
+    </ul>
+
+    <h2>Sources and further reading</h2>
+    <ul class="ref-list">
+      <li>J. Fourier (1822). <i>Théorie analytique de la chaleur.</i> Paris: Firmin Didot.</li>
+      <li>J. W. Cooley &amp; J. W. Tukey (1965). An algorithm for the machine calculation of complex Fourier series. <i>Mathematics of Computation</i> 19(90), 297–301.</li>
+      <li>R. N. Bracewell. <i>The Fourier Transform and Its Applications.</i> McGraw-Hill.</li>
+      <li>E. O. Brigham (1988). <i>The Fast Fourier Transform and Its Applications.</i> Prentice Hall.</li>
+      <li>E. M. Stein &amp; R. Shakarchi (2003). <i>Fourier Analysis: An Introduction.</i> Princeton University Press.<span class="what">Decay of coefficients vs smoothness.</span></li>
+      <li>R. B. Randall. <i>Vibration-based Condition Monitoring: Industrial, Automotive and Aerospace Applications.</i> Wiley.</li>
+    </ul>
+
+    <div class="series-nav">
+      <a href="../what-the-fft-shows/">← Part 1: What the FFT shows</a>
+      <span class="muted">Part 3, the video, coming soon</span>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<script defer src="harmonics-builder.js"></script>
+</body>
+</html>

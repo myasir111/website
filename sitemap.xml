@@ -2,6 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://nodallab.dev/</loc></url>
   <url><loc>https://nodallab.dev/explainers/</loc></url>
+  <url><loc>https://nodallab.dev/explainers/what-the-fft-shows/</loc></url>
+  <url><loc>https://nodallab.dev/explainers/why-harmonics/</loc></url>
   <url><loc>https://nodallab.dev/explainers/looseness-harmonics/</loc></url>
   <url><loc>https://nodallab.dev/explainers/fft-intuition/</loc></url>
   <url><loc>https://nodallab.dev/projects.html</loc></url>

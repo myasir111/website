@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What the FFT Shows · Nodal</title>
+  <meta name="description" content="A 3D animation of a signal pulled apart into its sine waves: the spectrum is the same function, seen from the side.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="What is the FFT actually showing you?">
+  <meta property="og:description" content="One signal, pulled apart into its sine waves in 3D. Look from the side and you get the spectrum.">
+  <meta property="og:image" content="https://nodallab.dev/explainers/what-the-fft-shows/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    .video { width: 100%; border-radius: 12px; border: 1px solid var(--line); background: #111110; display: block; margin: 28px 0 8px; }
+    .eq { overflow-x: auto; padding: 4px 0; }
+    .series-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; font-size: 15px; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../" class="active">Explainers</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow">Harmonics series · Part 1</p>
+    <h1>What is the FFT actually showing you?</h1>
+    <p class="meta">October 2026 · 72-second video</p>
+  </section>
+
+  <video class="video" controls playsinline preload="metadata" poster="poster.jpg">
+    <source src="what-the-fft-shows.mp4" type="video/mp4">
+    Your browser can't play this video. <a href="what-the-fft-shows.mp4">Download it</a> instead.
+  </video>
+  <p class="meta">The video from the LinkedIn post. Silent; captions are on screen.</p>
+
+  <div class="prose">
+    <h2>The idea</h2>
+    <p>Put a signal in a 3D space with three axes: <b>time</b>, <b>frequency</b> and <b>amplitude</b>.</p>
+    <ul>
+      <li>Look at it from the <b>front</b> and you see the waveform, the thing your sensor records.</li>
+      <li>Pull it apart and every sine wave it is made of slides back into its own <b>frequency lane</b>.</li>
+      <li>Turn to look from the <b>side</b>: time disappears and each sine collapses to a single height. That row of heights is the <b>spectrum</b>.</li>
+    </ul>
+    <p class="callout">The spectrum isn't a different signal. It is the same function, viewed along the time axis. Nothing is added or lost, which is why you can push the sines back together and get the original shape.</p>
+
+    <h2>The maths behind it</h2>
+    <p>Any signal that repeats with period \(T\) can be written as a sum of sines and cosines at whole multiples of the base frequency \(\omega_0 = 2\pi/T\):</p>
+    <div class="eq">$$f(t) = a_0 + \sum_{n=1}^{\infty}\Big[a_n\cos(n\omega_0 t) + b_n\sin(n\omega_0 t)\Big]$$</div>
+    <p>Each lane in the animation is one term of that sum. The height you see from the side is the amplitude of that term:</p>
+    <div class="eq">$$|c_n| = \sqrt{a_n^2 + b_n^2}$$</div>
+    <p>and that is exactly the number your analyser plots at \(n\times\) running speed. The FFT is just a fast way to compute those numbers from sampled data.</p>
+
+    <h3>The signal in the video</h3>
+    <p>It is the first ten terms of a sawtooth wave, chosen because every harmonic is present and they shrink steadily:</p>
+    <div class="eq">$$f(t) = \frac{2}{\pi}\sum_{n=1}^{10} (-1)^{n+1}\,\frac{\sin(n\omega_0 t)}{n}$$</div>
+    <p>So the lanes hold sines with amplitudes \(\tfrac{2}{\pi}, \tfrac{2}{2\pi}, \tfrac{2}{3\pi}, \dots\): falling as \(1/n\). The <a href="../why-harmonics/">next post</a> explains why some shapes fill every lane and others only the odd ones.</p>
+
+    <h2>Downloads</h2>
+    <ul class="downloads">
+      <li><a href="fourier_3d.py" download>fourier_3d.py</a> <span class="muted">· the script that renders the video (Python, NumPy, Matplotlib, ffmpeg)</span></li>
+      <li><a href="what-the-fft-shows.mp4" download>what-the-fft-shows.mp4</a> <span class="muted">· the video, 1080p</span></li>
+    </ul>
+
+    <h2>Further reading</h2>
+    <ul class="ref-list">
+      <li>J. Fourier (1822). <i>Théorie analytique de la chaleur.</i><span class="what">Where the idea that any repeating function is a sum of sines comes from.</span></li>
+      <li>J. W. Cooley &amp; J. W. Tukey (1965). An algorithm for the machine calculation of complex Fourier series. <i>Mathematics of Computation</i> 19(90), 297–301.<span class="what">The paper that made the FFT practical.</span></li>
+      <li>E. O. Brigham (1988). <i>The Fast Fourier Transform and Its Applications.</i> Prentice Hall.<span class="what">A readable engineering treatment of the FFT.</span></li>
+      <li>R. B. Randall. <i>Vibration-based Condition Monitoring.</i> Wiley.<span class="what">How all of this is used on real machines.</span></li>
+    </ul>
+
+    <div class="series-nav">
+      <span class="muted">Part 1 of the harmonics series</span>
+      <a href="../why-harmonics/">Part 2: Why we see harmonics →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+</body>
+</html>
