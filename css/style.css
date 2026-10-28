@@ -105,6 +105,8 @@ code { font-family: var(--mono); font-size: 0.9em; background: var(--code-bg); p
 .c-ghost { color: var(--muted); font-weight: 600; }
 .callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; margin: 20px 0; color: var(--ink); }
 .ref-list { list-style: none; padding: 0; }
+.jump { font-size: 14px; line-height: 2; margin-top: 18px; color: var(--muted); max-width: 760px; }
+section[id] { scroll-margin-top: 20px; }
 .ref-list li { padding: 14px 0; border-top: 1px solid var(--line); }
 .ref-list .what { display: block; color: var(--muted); font-size: 15px; margin-top: 2px; }
 
