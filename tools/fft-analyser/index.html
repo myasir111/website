@@ -94,7 +94,7 @@
     <h2>What's under the hood</h2>
     <p class="formula">X<sub>k</sub> = Σ x<sub>n</sub>·w<sub>n</sub>·e<sup>−2πikn/N</sup> &nbsp;&nbsp; A<sub>k</sub> = 2|X<sub>k</sub>| / Σw<sub>n</sub> &nbsp;&nbsp; (peak, amplitude-corrected)</p>
     <p>The amplitude is corrected for the window's coherent gain, so a sine that lands exactly on a bin reads its true amplitude. Between bins, Hann can under-read by up to about 15%, flat top by under 0.1%. That's why flat top is the choice for amplitude accuracy. The overall RMS is calculated from the time signal itself (mean removed), so you can compare it with your instrument's overall reading.</p>
-    <p>Related: the <a href="../fft-setup/">FFT setup planner</a> works out sample rate, lines and acquisition time before you measure, and the explainer <a href="../../explainers/fft-intuition/">What an FFT actually sees</a> covers leakage and resolution interactively.</p>
+    <p>Related: the <a href="../fft-setup/">FFT setup planner</a> works out sample rate, lines and acquisition time before you measure, and the explainer <a href="../../explainers/what-the-fft-shows/">What the FFT actually shows</a> shows what a spectrum is in 3D.</p>
   </div>
 
   <section class="method" id="method">
