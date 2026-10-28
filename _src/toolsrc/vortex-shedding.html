@@ -1,0 +1,45 @@
+title: Vortex Shedding Frequency
+desc: Strouhal vortex shedding frequency for a cylinder in cross-flow, with Reynolds number, reduced velocity and comparison against a structural natural frequency.
+---
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Flow-induced vibration</p>
+    <h1>Vortex shedding frequency</h1>
+    <p class="lede">Flow past a cylinder (a thermowell, a pipe in wind or current, a tube in a bundle) sheds vortices at a predictable frequency. If that lands on a natural frequency, it can lock in and drive large vibration.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Flow velocity, V (m/s)</span><input id="V" type="number" value="5" step="any" min="0"></label>
+      <label class="field"><span>Cylinder diameter, D (mm)</span><input id="D" type="number" value="25" step="any" min="0"></label>
+      <label class="field"><span>Strouhal number, St</span><input id="St" type="number" value="0.2" step="0.01" min="0"></label>
+      <div class="row2">
+        <label class="field"><span>Fluid density (kg/m³)</span><input id="rho" type="number" value="1000" step="any" min="0"></label>
+        <label class="field"><span>Dynamic viscosity (mPa·s)</span><input id="mu" type="number" value="1" step="any" min="0"></label>
+      </div>
+      <label class="field"><span>Structure natural frequency, f<sub>n</sub> (Hz)</span><input id="fn" type="number" value="60" step="any" min="0"></label>
+      <p class="note">St ≈ 0.2 for a circular cylinder over a wide subcritical Reynolds range (roughly 300 to 2×10⁵).</p>
+    </div>
+
+    <div class="panel">
+      <div class="row2" style="margin-bottom:10px">
+        <div><div class="note">Shedding frequency (cross-flow)</div><div class="big" id="o-fs">—<small>Hz</small></div></div>
+        <div><div class="note">Ratio f<sub>s</sub> / f<sub>n</sub></div><div class="big" id="o-ratio">—</div></div>
+      </div>
+      <table class="results">
+        <tbody>
+          <tr><td>In-line (drag) shedding frequency, 2·f<sub>s</sub></td><td class="num" id="o-fil"></td></tr>
+          <tr><td>Reynolds number</td><td class="num" id="o-re"></td></tr>
+          <tr><td>Reduced velocity V / (f<sub>n</sub>·D)</td><td class="num" id="o-vr"></td></tr>
+          <tr><td>Velocity for cross-flow lock-in (f<sub>s</sub> = f<sub>n</sub>)</td><td class="num" id="o-vc"></td></tr>
+        </tbody>
+      </table>
+      <div id="o-msg"></div>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">f<sub>s</sub> = St · V / D &nbsp;&nbsp; Re = ρVD / μ &nbsp;&nbsp; V<sub>r</sub> = V / (f<sub>n</sub>·D)</p>
+    <p>Vortices shed alternately from each side, so the lift force (cross-flow) oscillates at f<sub>s</sub> while the drag force (in-line) oscillates at about 2·f<sub>s</sub>. In-line vibration can therefore start at roughly half the velocity needed for cross-flow lock-in, which matters for thermowells in liquid service.</p>
+    <p class="note">This is a screening check. Lock-in depends on mass ratio, damping and the actual geometry, and thermowells have their own dedicated method (ASME PTC 19.3 TW). Use those for design.</p>
+  </div>

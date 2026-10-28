@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Resources · Nodal</title>
-  <meta name="description" content="58 books, standards, papers and free tools on piping vibration (FIV/AIV), machinery diagnostics, signal processing, structural dynamics, rotordynamics and fatigue, curated by a working vibration engineer.">
+  <meta name="description" content="64 books, standards, papers and free tools on piping vibration (FIV/AIV), machinery diagnostics, signal processing, structural dynamics, rotordynamics and fatigue, curated by a working vibration engineer.">
   <meta property="og:title" content="Vibration resources · Nodal">
   <meta property="og:description" content="Books, standards, papers and free tools for vibration engineers.">
   <meta property="og:image" content="https://nodallab.dev/assets/og.png">
@@ -31,7 +31,7 @@
   <section class="hero" style="padding-bottom:0">
     <p class="eyebrow">Resources</p>
     <h1>What I read and recommend</h1>
-    <p class="lede">58 books, standards, papers and free tools, most of them gathered while building and verifying the calculations in <a href="tools/#skipper">Skipper</a> and the <a href="tools/">tools</a> on this site.</p>
+    <p class="lede">64 books, standards, papers and free tools, most of them gathered while building and verifying the calculations in <a href="tools/#skipper">Skipper</a> and the <a href="tools/">tools</a> on this site.</p>
     <p class="jump"><a href="#start">Start here</a> · <a href="#piping">Piping vibration</a> · <a href="#examples">Worked examples to check your calculations</a> · <a href="#machinery">Machinery diagnostics &amp; condition monitoring</a> · <a href="#signal">Signal processing</a> · <a href="#structural">Structural dynamics &amp; finite elements</a> · <a href="#rotor">Rotordynamics &amp; bearings</a> · <a href="#codes">Piping codes &amp; components</a> · <a href="#fatigue">Fatigue</a> · <a href="#software">Open-source software &amp; free libraries</a></p>
   </section>
 
@@ -42,15 +42,15 @@
     <p class="muted">If you only read a handful of things, make it these.</p>
 
     <ul class="ref-list">
-      <li><a href="https://www.energyinst.org/technical/publications/topics/asset-integrity/guidelines-for-the-avoidance-of-vibration-induced-fatigue-failure-in-process-pipework"><strong>Energy Institute (2008). Guidelines for the avoidance of vibration induced fatigue failure in process pipework, 2nd edition</strong></a> <span class="meta">Guideline</span>
+      <li id="ref-ei08"><a href="https://www.energyinst.org/technical/publications/topics/asset-integrity/guidelines-for-the-avoidance-of-vibration-induced-fatigue-failure-in-process-pipework"><strong>Energy Institute (2008). Guidelines for the avoidance of vibration induced fatigue failure in process pipework, 2nd edition</strong></a> <span class="meta">Guideline</span>
         <span class="what">The industry&#x27;s go-to screening method for FIV, AIV, pulsation and small-bore connections. If you assess piping vibration, you&#x27;ll live in this.</span></li>
-      <li><strong>Randall, R. B. (2011). Vibration-based condition monitoring: industrial, aerospace and automotive applications. Wiley</strong> <span class="meta">Book</span>
+      <li id="ref-randall11"><strong>Randall, R. B. (2011). Vibration-based condition monitoring: industrial, aerospace and automotive applications. Wiley</strong> <span class="meta">Book</span>
         <span class="what">The best single book on the signal processing behind machine diagnostics: envelope analysis, cepstrum, order tracking, bearing and gear faults.</span></li>
-      <li><strong>Den Hartog, J. P. Mechanical vibrations. Dover</strong> <span class="meta">Book</span>
+      <li id="ref-denhartog"><strong>Den Hartog, J. P. Mechanical vibrations. Dover</strong> <span class="meta">Book</span>
         <span class="what">Old, cheap and still one of the clearest books on the subject. Physical intuition first, maths second.</span></li>
-      <li><strong>Blevins, R. D. (1979, reprinted 2001). Formulas for natural frequency and mode shape. Krieger</strong> <span class="meta">Book</span>
+      <li id="ref-blevins"><strong>Blevins, R. D. (1979, reprinted 2001). Formulas for natural frequency and mode shape. Krieger</strong> <span class="meta">Book</span>
         <span class="what">The handbook for hand calculations: beam, plate, shell and acoustic natural frequencies for almost every boundary condition. Behind several of the tools on this site.</span></li>
-      <li><a href="https://www.youtube.com/watch?v=spUNpyF58BY"><strong>3Blue1Brown: But what is the Fourier Transform? A visual introduction</strong></a> <span class="meta">Video</span>
+      <li id="ref-3b1b"><a href="https://www.youtube.com/watch?v=spUNpyF58BY"><strong>3Blue1Brown: But what is the Fourier Transform? A visual introduction</strong></a> <span class="meta">Video</span>
         <span class="what">The &quot;winding a signal around a circle&quot; intuition. The best 20 minutes you can spend on the Fourier transform.</span></li>
     </ul>
     </section>
@@ -59,20 +59,24 @@
     <h2>Piping vibration: FIV, AIV and pulsation</h2>
 
     <ul class="ref-list">
-      <li><a href="https://oaktrust.library.tamu.edu"><strong>Wachel, J. C., Morton, S. J. and Atkins, K. E. (1990). Piping vibration analysis. Proceedings of the 19th Turbomachinery Symposium, Texas A&amp;M University, 119-134</strong></a> <span class="meta">Paper</span>
+      <li id="ref-wachel90"><a href="https://oaktrust.library.tamu.edu"><strong>Wachel, J. C., Morton, S. J. and Atkins, K. E. (1990). Piping vibration analysis. Proceedings of the 19th Turbomachinery Symposium, Texas A&amp;M University, 119-134</strong></a> <span class="meta">Paper</span>
         <span class="what">Field-proven practice: span frequency corrections, the velocity-to-stress relationship and how to screen measured piping vibration.</span></li>
-      <li><strong>Blevins, R. D. Flow-induced vibration, 2nd edition. Krieger</strong> <span class="meta">Book</span>
+      <li id="ref-blevinsfiv"><strong>Blevins, R. D. Flow-induced vibration, 2nd edition. Krieger</strong> <span class="meta">Book</span>
         <span class="what">The classic text on vortex shedding, galloping and flow-excited structures. Heavy, but it&#x27;s where the physics behind the screening rules lives.</span></li>
-      <li><strong>Carucci, V. A. and Mueller, R. T. (1982). Acoustically induced piping vibration in high capacity pressure reducing systems. ASME paper 82-WA/PVP-8</strong> <span class="meta">Paper</span>
-        <span class="what">Where the AIV sound power equation comes from, built on failure data from real let-down systems. Used in the AIV tool on this site.</span></li>
-      <li><a href="https://doi.org/10.1115/1.2842319"><strong>Eisinger, F. L. (1997). Designing piping systems against acoustically induced structural fatigue. Journal of Pressure Vessel Technology 119(3), 379-383</strong></a> <span class="meta">Paper</span>
+      <li id="ref-fiv08branch"><a href="https://eng-web77-v02.ocio.monash.edu/intranet/proceedings/fiv2008/html/pdf/291.pdf"><strong>Flow-excited acoustic resonance in ducts with closed side branches. Proceedings of the 9th International Conference on Flow-Induced Vibration (FIV 2008), paper 291</strong></a> <span class="meta">Paper</span>
+        <span class="what">Experiments showing the Strouhal range (about 0.27 to 0.55) over which closed side branches lock onto their acoustic modes.</span></li>
+      <li id="ref-carucci82"><strong>Carucci, V. A. and Mueller, R. T. (1982). Acoustically induced piping vibration in high capacity pressure reducing systems. ASME paper 82-WA/PVP-8</strong> <span class="meta">Paper</span>
+        <span class="what">Where the AIV sound power equation comes from, built on failure data from real let-down systems.</span></li>
+      <li id="ref-eisinger97"><a href="https://doi.org/10.1115/1.2842319"><strong>Eisinger, F. L. (1997). Designing piping systems against acoustically induced structural fatigue. Journal of Pressure Vessel Technology 119(3), 379-383</strong></a> <span class="meta">Paper</span>
         <span class="what">Turns the Carucci–Mueller data into a design limit on sound power as a function of pipe D/t.</span></li>
-      <li><a href="https://www.asme.org"><strong>ASME OM Part 3. Requirements for preoperational and initial start-up vibration testing of piping systems</strong></a> <span class="meta">Standard</span>
+      <li id="ref-asmeom3"><a href="https://www.asme.org"><strong>ASME OM Part 3. Requirements for preoperational and initial start-up vibration testing of piping systems</strong></a> <span class="meta">Standard</span>
         <span class="what">Velocity-based screening of piping vibration and the relation between vibration velocity and stress for beam-type modes.</span></li>
-      <li><a href="https://www.api.org"><strong>API Standard 618, 5th edition. Reciprocating compressors for petroleum, chemical and gas industry services</strong></a> <span class="meta">Standard</span>
+      <li id="ref-api618"><a href="https://www.api.org"><strong>API Standard 618, 5th edition. Reciprocating compressors for petroleum, chemical and gas industry services</strong></a> <span class="meta">Standard</span>
         <span class="what">Pulsation and mechanical response design for reciprocating compressor systems, including the common 20% separation margin.</span></li>
-      <li><a href="https://patents.google.com/patent/US7430914B2"><strong>US Patent 7,430,914 B2 (2008)</strong></a> <span class="meta">Patent</span>
+      <li id="ref-us7430914"><a href="https://patents.google.com/patent/US7430914B2"><strong>US Patent 7,430,914 B2 (2008)</strong></a> <span class="meta">Patent</span>
         <span class="what">A publicly available document that reproduces the EI main-line screening line equations. Handy for checking your own implementation.</span></li>
+      <li id="ref-ptc193"><a href="https://www.asme.org"><strong>ASME PTC 19.3 TW-2016. Thermowells</strong></a> <span class="meta">Standard</span>
+        <span class="what">The dedicated method for thermowell vortex-shedding and stress checks.</span></li>
     </ul>
     </section>
 
@@ -82,13 +86,13 @@
     <p class="muted">Published worked examples I&#x27;ve used to verify FIV and AIV calculations against hand results.</p>
 
     <ul class="ref-list">
-      <li><a href="https://sta.uwi.edu/eng/wije"><strong>Bachoo, R. (2021). Flow induced vibrations of oil and gas piping systems. The West Indian Journal of Engineering 43(2), 54-68</strong></a> <span class="meta">Paper</span>
+      <li id="ref-bachoo21"><a href="https://sta.uwi.edu/eng/wije"><strong>Bachoo, R. (2021). Flow induced vibrations of oil and gas piping systems. The West Indian Journal of Engineering 43(2), 54-68</strong></a> <span class="meta">Paper</span>
         <span class="what">A complete EI FIV likelihood-of-failure example on a 3-inch line with medium supports.</span></li>
-      <li><a href="https://docs.aft.com/fathom13/Examples/Content/Flow-Induced-Vibration-Calculations.html"><strong>AFT Fathom 13 documentation. Example: flow induced vibration calculations</strong></a> <span class="meta">Worked example</span>
+      <li id="ref-aftfiv"><a href="https://docs.aft.com/fathom13/Examples/Content/Flow-Induced-Vibration-Calculations.html"><strong>AFT Fathom 13 documentation. Example: flow induced vibration calculations</strong></a> <span class="meta">Worked example</span>
         <span class="what">An EI FIV example on an 18-inch water line with stiff supports, step by step.</span></li>
-      <li><a href="https://gasprocessingnews.com/articles/2020/06/calculate-likelihood-of-piping-failure-from-high-frequency-acoustic-vibration/"><strong>Gas Processing &amp; LNG (2020). Calculate likelihood of piping failure from high-frequency acoustic vibration</strong></a> <span class="meta">Article</span>
+      <li id="ref-gpn20"><a href="https://gasprocessingnews.com/articles/2020/06/calculate-likelihood-of-piping-failure-from-high-frequency-acoustic-vibration/"><strong>Gas Processing &amp; LNG (2020). Calculate likelihood of piping failure from high-frequency acoustic vibration</strong></a> <span class="meta">Article</span>
         <span class="what">Worked AIV examples, including sound power and attenuation along the line.</span></li>
-      <li><a href="https://www.ijisrt.com"><strong>Best practice to analyze vibration in piping systems (2025). International Journal of Innovative Science and Research Technology, IJISRT25OCT1557</strong></a> <span class="meta">Paper</span>
+      <li id="ref-ijisrt25"><a href="https://www.ijisrt.com"><strong>Best practice to analyze vibration in piping systems (2025). International Journal of Innovative Science and Research Technology, IJISRT25OCT1557</strong></a> <span class="meta">Paper</span>
         <span class="what">A recent overview of piping vibration assessment practice, including support classification for FIV screening.</span></li>
     </ul>
     </section>
@@ -97,9 +101,9 @@
     <h2>Machinery diagnostics &amp; condition monitoring</h2>
 
     <ul class="ref-list">
-      <li><a href="https://www.iso.org"><strong>ISO 20816-3:2022. Mechanical vibration: measurement and evaluation of machine vibration. Part 3: industrial machinery</strong></a> <span class="meta">Standard</span>
+      <li id="ref-iso20816_3"><a href="https://www.iso.org"><strong>ISO 20816-3:2022. Mechanical vibration: measurement and evaluation of machine vibration. Part 3: industrial machinery</strong></a> <span class="meta">Standard</span>
         <span class="what">Evaluation zones for industrial machines measured on non-rotating parts. Replaces ISO 10816-3:2009, with the same zone boundaries for groups 1 and 2.</span></li>
-      <li><a href="https://www.iso.org"><strong>ISO 18436-2. Condition monitoring and diagnostics of machines: requirements for qualification and assessment of personnel. Part 2: vibration condition monitoring and diagnostics</strong></a> <span class="meta">Standard</span>
+      <li id="ref-iso18436"><a href="https://www.iso.org"><strong>ISO 18436-2. Condition monitoring and diagnostics of machines: requirements for qualification and assessment of personnel. Part 2: vibration condition monitoring and diagnostics</strong></a> <span class="meta">Standard</span>
         <span class="what">The competence requirements behind vibration analyst certification (Categories I–IV). A useful map of what a complete analyst should know.</span></li>
     </ul>
     </section>
@@ -108,15 +112,19 @@
     <h2>Signal processing</h2>
 
     <ul class="ref-list">
-      <li><a href="https://doi.org/10.1109/PROC.1978.10837"><strong>Harris, F. J. (1978). On the use of windows for harmonic analysis with the discrete Fourier transform. Proceedings of the IEEE 66(1), 51-83</strong></a> <span class="meta">Paper</span>
+      <li id="ref-harris78"><a href="https://doi.org/10.1109/PROC.1978.10837"><strong>Harris, F. J. (1978). On the use of windows for harmonic analysis with the discrete Fourier transform. Proceedings of the IEEE 66(1), 51-83</strong></a> <span class="meta">Paper</span>
         <span class="what">The reference on window functions: noise bandwidth, scalloping loss and leakage for every common window.</span></li>
-      <li><a href="https://www.bksv.com"><strong>Gade, S. and Herlufsen, H. (1987). Use of weighting functions in DFT/FFT analysis, parts I and II. Brüel &amp; Kjær Technical Review 3 and 4</strong></a> <span class="meta">Technical review</span>
+      <li id="ref-gade87"><a href="https://www.bksv.com"><strong>Gade, S. and Herlufsen, H. (1987). Use of weighting functions in DFT/FFT analysis, parts I and II. Brüel &amp; Kjær Technical Review 3 and 4</strong></a> <span class="meta">Technical review</span>
         <span class="what">Practical window corrections for tones versus broadband signals: why amplitude and energy corrections differ.</span></li>
-      <li><a href="https://doi.org/10.1109/TIM.1983.4315077"><strong>Grandke, T. (1983). Interpolation algorithms for discrete Fourier transforms of weighted signals. IEEE Transactions on Instrumentation and Measurement 32(2), 350-355</strong></a> <span class="meta">Paper</span>
+      <li id="ref-grandke83"><a href="https://doi.org/10.1109/TIM.1983.4315077"><strong>Grandke, T. (1983). Interpolation algorithms for discrete Fourier transforms of weighted signals. IEEE Transactions on Instrumentation and Measurement 32(2), 350-355</strong></a> <span class="meta">Paper</span>
         <span class="what">How to estimate a peak&#x27;s true frequency between FFT bins.</span></li>
-      <li><a href="https://jackschaedler.github.io/circles-sines-signals/"><strong>Jack Schaedler: Seeing circles, sines and signals</strong></a> <span class="meta">Interactive</span>
+      <li id="ref-welch67"><a href="https://doi.org/10.1109/TAU.1967.1161901"><strong>Welch, P. D. (1967). The use of fast Fourier transform for the estimation of power spectra: a method based on time averaging over short, modified periodograms. IEEE Transactions on Audio and Electroacoustics 15(2), 70-73</strong></a> <span class="meta">Paper</span>
+        <span class="what">The overlapped, windowed, averaged spectrum that every data collector (and the FFT analyser here) uses.</span></li>
+      <li id="ref-matlabflattop"><a href="https://www.mathworks.com/help/signal/ref/flattopwin.html"><strong>MathWorks. flattopwin: flat top weighted window (documentation)</strong></a> <span class="meta">Software docs</span>
+        <span class="what">The five-term flat-top window coefficients used by the FFT analyser.</span></li>
+      <li id="ref-schaedler"><a href="https://jackschaedler.github.io/circles-sines-signals/"><strong>Jack Schaedler: Seeing circles, sines and signals</strong></a> <span class="meta">Interactive</span>
         <span class="what">An interactive primer on sampling, aliasing and the DFT. A big inspiration for the explainers on this site.</span></li>
-      <li><a href="https://ciechanow.ski/"><strong>Bartosz Ciechanowski</strong></a> <span class="meta">Interactive essays</span>
+      <li id="ref-ciechanowski"><a href="https://ciechanow.ski/"><strong>Bartosz Ciechanowski</strong></a> <span class="meta">Interactive essays</span>
         <span class="what">Not about vibration, but the gold standard for teaching physical systems with interactive figures.</span></li>
     </ul>
     </section>
@@ -125,20 +133,24 @@
     <h2>Structural dynamics &amp; finite elements</h2>
 
     <ul class="ref-list">
-      <li><strong>Rao, S. S. Mechanical vibrations. Pearson</strong> <span class="meta">Book</span>
+      <li id="ref-rao"><strong>Rao, S. S. Mechanical vibrations. Pearson</strong> <span class="meta">Book</span>
         <span class="what">The standard university textbook: thorough, well-structured, lots of worked examples.</span></li>
-      <li><a href="https://ntrs.nasa.gov/citations/19730016958"><strong>Leissa, A. W. (1973). Vibration of shells. NASA SP-288</strong></a> <span class="meta">Free report</span>
+      <li id="ref-leissa69"><a href="https://ntrs.nasa.gov/citations/19700009156"><strong>Leissa, A. W. (1969). Vibration of plates. NASA SP-160</strong></a> <span class="meta">Free report</span>
+        <span class="what">The definitive survey of plate vibration for every shape and edge condition, free from NASA.</span></li>
+      <li id="ref-leissa73"><a href="https://ntrs.nasa.gov/citations/19730016958"><strong>Leissa, A. W. (1973). Vibration of shells. NASA SP-288</strong></a> <span class="meta">Free report</span>
         <span class="what">The definitive survey of shell vibration, free from NASA. Pipe shell modes matter for AIV and high-frequency vibration.</span></li>
-      <li><strong>Soedel, W. (2004). Vibrations of shells and plates, 3rd edition. Marcel Dekker</strong> <span class="meta">Book</span>
+      <li id="ref-soedel04"><strong>Soedel, W. (2004). Vibrations of shells and plates, 3rd edition. Marcel Dekker</strong> <span class="meta">Book</span>
         <span class="what">Shell and plate modes, including the added mass of contents.</span></li>
-      <li><strong>Przemieniecki, J. S. (1968). Theory of matrix structural analysis. McGraw-Hill</strong> <span class="meta">Book</span>
+      <li id="ref-przem68"><strong>Przemieniecki, J. S. (1968). Theory of matrix structural analysis. McGraw-Hill</strong> <span class="meta">Book</span>
         <span class="what">Classic derivations of frame element stiffness and mass matrices, including shear-deformable (Timoshenko) beams.</span></li>
-      <li><a href="https://doi.org/10.1115/1.3625046"><strong>Cowper, G. R. (1966). The shear coefficient in Timoshenko beam theory. Journal of Applied Mechanics 33(2), 335-340</strong></a> <span class="meta">Paper</span>
+      <li id="ref-cowper66"><a href="https://doi.org/10.1115/1.3625046"><strong>Cowper, G. R. (1966). The shear coefficient in Timoshenko beam theory. Journal of Applied Mechanics 33(2), 335-340</strong></a> <span class="meta">Paper</span>
         <span class="what">Shear coefficients for common sections, including hollow circular pipe.</span></li>
-      <li><strong>Bathe, K.-J. (2014). Finite element procedures, 2nd edition</strong> <span class="meta">Book</span>
+      <li id="ref-bathe"><strong>Bathe, K.-J. (2014). Finite element procedures, 2nd edition</strong> <span class="meta">Book</span>
         <span class="what">The rigorous FE reference: element formulations, solvers and eigenvalue methods.</span></li>
-      <li><a href="https://doi.org/10.1145/800195.805928"><strong>Cuthill, E. and McKee, J. (1969). Reducing the bandwidth of sparse symmetric matrices. Proceedings of the 24th ACM National Conference, 157-172</strong></a> <span class="meta">Paper</span>
+      <li id="ref-cuthill69"><a href="https://doi.org/10.1145/800195.805928"><strong>Cuthill, E. and McKee, J. (1969). Reducing the bandwidth of sparse symmetric matrices. Proceedings of the 24th ACM National Conference, 157-172</strong></a> <span class="meta">Paper</span>
         <span class="what">Node renumbering that makes FE solvers fast. Useful if you write your own solver.</span></li>
+      <li id="ref-miles54"><a href="https://doi.org/10.2514/8.3199"><strong>Miles, J. W. (1954). On structural fatigue under random loading. Journal of the Aeronautical Sciences 21(11), 753-762</strong></a> <span class="meta">Paper</span>
+        <span class="what">The origin of Miles&#x27; equation for the RMS response of a resonator to random excitation.</span></li>
     </ul>
     </section>
 
@@ -146,23 +158,23 @@
     <h2>Rotordynamics &amp; bearings</h2>
 
     <ul class="ref-list">
-      <li><a href="https://doi.org/10.1017/CBO9780511780509"><strong>Friswell, M. I., Penny, J. E. T., Garvey, S. D. and Lees, A. W. (2010). Dynamics of rotating machines. Cambridge University Press</strong></a> <span class="meta">Book</span>
+      <li id="ref-friswell10"><a href="https://doi.org/10.1017/CBO9780511780509"><strong>Friswell, M. I., Penny, J. E. T., Garvey, S. D. and Lees, A. W. (2010). Dynamics of rotating machines. Cambridge University Press</strong></a> <span class="meta">Book</span>
         <span class="what">The modern rotordynamics textbook: rotor elements, gyroscopics, bearings, unbalance response and stability, with MATLAB examples.</span></li>
-      <li><strong>Childs, D. (1993). Turbomachinery rotordynamics: phenomena, modeling and analysis. Wiley</strong> <span class="meta">Book</span>
+      <li id="ref-childs93"><strong>Childs, D. (1993). Turbomachinery rotordynamics: phenomena, modeling and analysis. Wiley</strong> <span class="meta">Book</span>
         <span class="what">Bearing and seal coefficients, cross-coupled stiffness and stability in depth.</span></li>
-      <li><a href="https://www.api.org"><strong>API Recommended Practice 684, 2nd edition. Rotordynamic tutorial</strong></a> <span class="meta">Recommended practice</span>
+      <li id="ref-api684"><a href="https://www.api.org"><strong>API Recommended Practice 684, 2nd edition. Rotordynamic tutorial</strong></a> <span class="meta">Recommended practice</span>
         <span class="what">Amplification factor, separation margins, stability screening and torsional analysis practice for API machines.</span></li>
-      <li><a href="https://www.api.org"><strong>API Standard 617, 9th edition (2022). Axial and centrifugal compressors and expander-compressors</strong></a> <span class="meta">Standard</span>
+      <li id="ref-api617"><a href="https://www.api.org"><strong>API Standard 617, 9th edition (2022). Axial and centrifugal compressors and expander-compressors</strong></a> <span class="meta">Standard</span>
         <span class="what">Lateral analysis and stability acceptance criteria for compressors.</span></li>
-      <li><a href="https://www.api.org"><strong>API Standard 610, 12th edition (2021). Centrifugal pumps for petroleum, petrochemical and natural gas industries</strong></a> <span class="meta">Standard</span>
+      <li id="ref-api610"><a href="https://www.api.org"><strong>API Standard 610, 12th edition (2021). Centrifugal pumps for petroleum, petrochemical and natural gas industries</strong></a> <span class="meta">Standard</span>
         <span class="what">Pump lateral analysis (Annex I): damping, separation margins and clearance limits.</span></li>
-      <li><a href="https://doi.org/10.1115/1.3678270"><strong>Alford, J. S. (1965). Protecting turbomachinery from self-excited rotor whirl. Journal of Engineering for Power 87(4), 333-344</strong></a> <span class="meta">Paper</span>
+      <li id="ref-alford65"><a href="https://doi.org/10.1115/1.3678270"><strong>Alford, J. S. (1965). Protecting turbomachinery from self-excited rotor whirl. Journal of Engineering for Power 87(4), 333-344</strong></a> <span class="meta">Paper</span>
         <span class="what">The origin of aerodynamic cross-coupling at impellers, still used (in modified form) in API 684.</span></li>
-      <li><a href="https://ntrs.nasa.gov"><strong>Ocvirk, F. W. (1952). Short-bearing approximation for full journal bearings. NACA Technical Note 2808</strong></a> <span class="meta">Free report</span>
+      <li id="ref-ocvirk52"><a href="https://ntrs.nasa.gov"><strong>Ocvirk, F. W. (1952). Short-bearing approximation for full journal bearings. NACA Technical Note 2808</strong></a> <span class="meta">Free report</span>
         <span class="what">The short-bearing theory behind quick journal bearing calculations.</span></li>
-      <li><a href="https://www.astm.org"><strong>ASTM D341. Viscosity-temperature equations and charts for liquid petroleum products</strong></a> <span class="meta">Standard</span>
+      <li id="ref-astmd341"><a href="https://www.astm.org"><strong>ASTM D341. Viscosity-temperature equations and charts for liquid petroleum products</strong></a> <span class="meta">Standard</span>
         <span class="what">How lubricant viscosity changes with temperature: needed for bearing calculations.</span></li>
-      <li><a href="https://www.iso.org"><strong>ISO 3448:1992. Industrial liquid lubricants: ISO viscosity classification</strong></a> <span class="meta">Standard</span>
+      <li id="ref-iso3448"><a href="https://www.iso.org"><strong>ISO 3448:1992. Industrial liquid lubricants: ISO viscosity classification</strong></a> <span class="meta">Standard</span>
         <span class="what">The ISO VG grades.</span></li>
     </ul>
     </section>
@@ -171,15 +183,15 @@
     <h2>Piping codes &amp; components</h2>
 
     <ul class="ref-list">
-      <li><a href="https://www.asme.org"><strong>ASME B31.3 Process piping</strong></a> <span class="meta">Code</span>
+      <li id="ref-b313"><a href="https://www.asme.org"><strong>ASME B31.3 Process piping</strong></a> <span class="meta">Code</span>
         <span class="what">The process piping code. Its Appendix D flexibility factors moved to ASME B31J in later editions.</span></li>
-      <li><a href="https://www.asme.org"><strong>ASME B31J-2017. Stress intensification factors and flexibility factors for metallic piping components</strong></a> <span class="meta">Code</span>
+      <li id="ref-b31j"><a href="https://www.asme.org"><strong>ASME B31J-2017. Stress intensification factors and flexibility factors for metallic piping components</strong></a> <span class="meta">Code</span>
         <span class="what">The current home of SIFs and k-factors for elbows, tees and branches.</span></li>
-      <li><a href="https://www.asme.org"><strong>ASME B36.10M. Welded and seamless wrought steel pipe</strong></a> <span class="meta">Code</span>
+      <li id="ref-b3610"><a href="https://www.asme.org"><strong>ASME B36.10M. Welded and seamless wrought steel pipe</strong></a> <span class="meta">Code</span>
         <span class="what">Pipe outside diameters and wall thicknesses by schedule.</span></li>
-      <li><a href="https://www.asme.org"><strong>ASME B16.9. Factory-made wrought buttwelding fittings</strong></a> <span class="meta">Code</span>
+      <li id="ref-b169"><a href="https://www.asme.org"><strong>ASME B16.9. Factory-made wrought buttwelding fittings</strong></a> <span class="meta">Code</span>
         <span class="what">Elbow, tee and reducer dimensions.</span></li>
-      <li><a href="https://docs.hexagonppm.com"><strong>Hexagon. CAESAR II user guide and technical reference</strong></a> <span class="meta">Software docs</span>
+      <li id="ref-caesar"><a href="https://docs.hexagonppm.com"><strong>Hexagon. CAESAR II user guide and technical reference</strong></a> <span class="meta">Software docs</span>
         <span class="what">How the industry-standard pipe stress program models restraints, hangers, rigid elements and bends.</span></li>
     </ul>
     </section>
@@ -188,27 +200,27 @@
     <h2>Fatigue</h2>
 
     <ul class="ref-list">
-      <li><a href="https://www.dnv.com"><strong>DNV-RP-C203. Fatigue design of offshore steel structures</strong></a> <span class="meta">Recommended practice</span>
+      <li id="ref-dnvc203"><a href="https://www.dnv.com"><strong>DNV-RP-C203. Fatigue design of offshore steel structures</strong></a> <span class="meta">Recommended practice</span>
         <span class="what">S-N curves, thickness effects and mean-stress treatment. Free to download from DNV.</span></li>
-      <li><a href="https://www.bsigroup.com"><strong>BS 7608:2014+A1:2015. Guide to fatigue design and assessment of steel products</strong></a> <span class="meta">Standard</span>
+      <li id="ref-bs7608"><a href="https://www.bsigroup.com"><strong>BS 7608:2014+A1:2015. Guide to fatigue design and assessment of steel products</strong></a> <span class="meta">Standard</span>
         <span class="what">The UK weld class S-N curves.</span></li>
-      <li><a href="https://doi.org/10.1007/978-3-319-23757-2"><strong>Hobbacher, A. F. (2016). Recommendations for fatigue design of welded joints and components, 2nd edition. IIW / Springer</strong></a> <span class="meta">Book</span>
+      <li id="ref-iiw16"><a href="https://doi.org/10.1007/978-3-319-23757-2"><strong>Hobbacher, A. F. (2016). Recommendations for fatigue design of welded joints and components, 2nd edition. IIW / Springer</strong></a> <span class="meta">Book</span>
         <span class="what">The IIW FAT classes for welded details.</span></li>
-      <li><a href="https://www.astm.org"><strong>ASTM E1049-85 (2017). Standard practices for cycle counting in fatigue analysis</strong></a> <span class="meta">Standard</span>
+      <li id="ref-astme1049"><a href="https://www.astm.org"><strong>ASTM E1049-85 (2017). Standard practices for cycle counting in fatigue analysis</strong></a> <span class="meta">Standard</span>
         <span class="what">The definition of rainflow counting.</span></li>
-      <li><strong>Miner, M. A. (1945). Cumulative damage in fatigue. Journal of Applied Mechanics 12, A159-A164</strong> <span class="meta">Paper</span>
+      <li id="ref-miner45"><strong>Miner, M. A. (1945). Cumulative damage in fatigue. Journal of Applied Mechanics 12, A159-A164</strong> <span class="meta">Paper</span>
         <span class="what">Linear damage summation: where Miner&#x27;s rule comes from.</span></li>
-      <li><strong>Wirsching, P. H. and Light, M. C. (1980). Fatigue under wide band random stresses. Journal of the Structural Division, ASCE 106(7), 1593-1607</strong> <span class="meta">Paper</span>
+      <li id="ref-wirsching80"><strong>Wirsching, P. H. and Light, M. C. (1980). Fatigue under wide band random stresses. Journal of the Structural Division, ASCE 106(7), 1593-1607</strong> <span class="meta">Paper</span>
         <span class="what">Correcting narrowband fatigue damage for real, wide-band stress spectra.</span></li>
-      <li><strong>Dirlik, T. (1985). Application of computers in fatigue analysis. PhD thesis, University of Warwick</strong> <span class="meta">Thesis</span>
+      <li id="ref-dirlik85"><strong>Dirlik, T. (1985). Application of computers in fatigue analysis. PhD thesis, University of Warwick</strong> <span class="meta">Thesis</span>
         <span class="what">The most widely used method for fatigue damage straight from a stress PSD.</span></li>
-      <li><a href="https://doi.org/10.1016/j.ijfatigue.2004.10.007"><strong>Benasciutti, D. and Tovo, R. (2005). Spectral methods for lifetime prediction under wide-band stationary random processes. International Journal of Fatigue 27(8), 867-877</strong></a> <span class="meta">Paper</span>
+      <li id="ref-benasciutti05"><a href="https://doi.org/10.1016/j.ijfatigue.2004.10.007"><strong>Benasciutti, D. and Tovo, R. (2005). Spectral methods for lifetime prediction under wide-band stationary random processes. International Journal of Fatigue 27(8), 867-877</strong></a> <span class="meta">Paper</span>
         <span class="what">A more recent and often more accurate spectral fatigue method.</span></li>
-      <li><a href="https://doi.org/10.1016/0142-1123(92)90088-T"><strong>Zhao, W. and Baker, M. J. (1992). On the probability density function of rainflow stress range for stationary Gaussian processes. International Journal of Fatigue 14(2), 121-135</strong></a> <span class="meta">Paper</span>
+      <li id="ref-zhao92"><a href="https://doi.org/10.1016/0142-1123(92)90088-T"><strong>Zhao, W. and Baker, M. J. (1992). On the probability density function of rainflow stress range for stationary Gaussian processes. International Journal of Fatigue 14(2), 121-135</strong></a> <span class="meta">Paper</span>
         <span class="what">Another spectral method for rainflow range distribution.</span></li>
-      <li><a href="https://doi.org/10.1016/j.ymssp.2023.110149"><strong>Zorman, A., Slavič, J. and Boltežar, M. (2023). Vibration fatigue by spectral methods: a review with open-source support. Mechanical Systems and Signal Processing 190, 110149</strong></a> <span class="meta">Paper</span>
+      <li id="ref-zorman23"><a href="https://doi.org/10.1016/j.ymssp.2023.110149"><strong>Zorman, A., Slavič, J. and Boltežar, M. (2023). Vibration fatigue by spectral methods: a review with open-source support. Mechanical Systems and Signal Processing 190, 110149</strong></a> <span class="meta">Paper</span>
         <span class="what">The best single overview of spectral fatigue methods, with an open-source implementation (FLife).</span></li>
-      <li><strong>Steinberg, D. S. (2000). Vibration analysis for electronic equipment, 3rd edition. Wiley</strong> <span class="meta">Book</span>
+      <li id="ref-steinberg"><strong>Steinberg, D. S. (2000). Vibration analysis for electronic equipment, 3rd edition. Wiley</strong> <span class="meta">Book</span>
         <span class="what">The practical three-band (1σ, 2σ, 3σ) fatigue method and plenty of random vibration rules of thumb.</span></li>
     </ul>
     </section>
@@ -217,11 +229,11 @@
     <h2>Open-source software &amp; free libraries</h2>
 
     <ul class="ref-list">
-      <li><a href="https://ross.readthedocs.io"><strong>ROSS: Rotordynamic Open Source Software (Python). Timbo, R. et al. (2020), Journal of Open Source Software 5(48), 2120</strong></a> <span class="meta">Software</span>
+      <li id="ref-ross"><a href="https://ross.readthedocs.io"><strong>ROSS: Rotordynamic Open Source Software (Python). Timbo, R. et al. (2020), Journal of Open Source Software 5(48), 2120</strong></a> <span class="meta">Software</span>
         <span class="what">A well-documented rotordynamics library. Excellent for checking your own rotor models.</span></li>
-      <li><a href="https://github.com/ladisk/FLife"><strong>FLife: vibration fatigue library (Python), University of Ljubljana</strong></a> <span class="meta">Software</span>
+      <li id="ref-flife"><a href="https://github.com/ladisk/FLife"><strong>FLife: vibration fatigue library (Python), University of Ljubljana</strong></a> <span class="meta">Software</span>
         <span class="what">Reference implementations of the spectral fatigue methods above.</span></li>
-      <li><a href="https://www.vibrationdata.com"><strong>Tom Irvine: Vibrationdata</strong></a> <span class="meta">Tutorials &amp; software</span>
+      <li id="ref-irvine"><a href="https://www.vibrationdata.com"><strong>Tom Irvine: Vibrationdata</strong></a> <span class="meta">Tutorials &amp; software</span>
         <span class="what">Decades of free tutorials, papers and programs on shock, random vibration, SRS, PSD and fatigue. The inspiration for the tools on this site.</span></li>
     </ul>
     </section>

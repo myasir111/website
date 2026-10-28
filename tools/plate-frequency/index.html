@@ -69,6 +69,17 @@
     <p>Practical fixes for a resonant panel: stiffen it (moves the frequency up), brace it to a nearby structure, or add damping. Thicker plate helps less than you'd think: bending stiffness grows with h³, but mass grows with h too, so frequency only rises in proportion to thickness. Doubling the plate doubles the frequency and doubles the weight. Stiffeners usually win.</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Kirchhoff thin-plate theory, all four edges simply supported: exact Navier solution fmn = (π/2)[(m/a)² + (n/b)²]·√(D/μ).</li><li>Flexural rigidity D = Eh³/12(1 − ν²); μ = ρh + added mass per unit area (smeared uniformly).</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>Thin plates only (side length more than about 20 × thickness). Stiffeners, in-plane loads and fluid loading are not included.</li><li>Clamped edges raise the fundamental (by about 1.8× for a square plate); Leissa tabulates every edge condition.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> 1000 × 800 × 6 mm steel gives 36.89, 80.08 and 104.4 Hz for the first three modes, matching Python.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-leissa69">Leissa, A. W. (1969). Vibration of plates. NASA SP-160</a> <span class="meta">Free report</span> <a class="ext" href="https://ntrs.nasa.gov/citations/19700009156" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-blevins">Blevins, R. D. (1979, reprinted 2001). Formulas for natural frequency and mode shape. Krieger</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-soedel04">Soedel, W. (2004). Vibrations of shells and plates, 3rd edition. Marcel Dekker</a> <span class="meta">Book</span></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

@@ -81,6 +81,17 @@
     <p>For resonance avoidance, many design practices aim to keep natural frequencies clear of forcing frequencies by a margin, commonly around ±20% (for example in API 618 for pulsation-related piping mechanical response). Check the margin required by the standard you work to.</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Linear single degree of freedom system with viscous damping, steady-state harmonic response.</li><li>fn = (1/2π)√(k/m) or (1/2π)√(g/δst); DAF = 1/√((1−r²)² + (2ζr)²); transmissibility T = √(1 + (2ζr)²)·DAF.</li><li>Q = 1/2ζ. The ±20% band is the common separation margin used in machinery and piping design practice.</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>One mode only: real structures have several, and the nearest one dominates.</li><li>Static deflection method assumes the spring is linear and the deflection is due to self-weight alone.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> k = 500 N/mm, m = 50 kg gives fn = 15.92 Hz; at 24.75 Hz with ζ = 0.05, T = 0.709, matching Python.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-rao">Rao, S. S. Mechanical vibrations. Pearson</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-denhartog">Den Hartog, J. P. Mechanical vibrations. Dover</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-api618">API Standard 618, 5th edition. Reciprocating compressors for petroleum, chemical and gas industry services</a> <span class="meta">Standard</span> <a class="ext" href="https://www.api.org" aria-label="Open source">↗</a></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

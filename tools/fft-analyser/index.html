@@ -97,6 +97,17 @@
     <p>Related: the <a href="../fft-setup/">FFT setup planner</a> works out sample rate, lines and acquisition time before you measure, and the explainer <a href="../../explainers/fft-intuition/">What an FFT actually sees</a> covers leakage and resolution interactively.</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Welch&#x27;s method: the record is split into blocks with 50% overlap, each block is mean-removed, windowed and transformed with a radix-2 FFT, and the power spectra are averaged (RMS averaging).</li><li>Windows: Hann; five-term flat top (MATLAB flattopwin coefficients); rectangular.</li><li>Amplitude correction by the window&#x27;s coherent gain (Σw), single-sided spectrum, so a sine on a bin reads its true peak. RMS = peak/√2 per line.</li><li>Peak frequencies refined by parabolic interpolation on log magnitude between neighbouring bins.</li><li>Overall RMS, peak and crest factor are computed from the time signal itself. With a time column, the sample rate is 1/median(Δt).</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>Amplitude scaling is correct for discrete tones. For broadband (random) signals use a PSD with energy (ENBW) correction instead.</li><li>Hann can under-read a tone between bins by up to about 15% (scalloping loss); flat top is within about 0.1%.</li><li>No anti-alias filtering: the data must already be sampled correctly.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> A test file with 3.0 and 1.0 peak sines at 100 and 250 Hz (5 kHz sampling) reads 2.121 and 0.7073 RMS with flat top, and overall RMS 2.236 (exact: 2.236).</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-welch67">Welch, P. D. (1967). The use of fast Fourier transform for the estimation of power spectra: a method based on time averaging over short, modified periodograms. IEEE Transactions on Audio and Electroacoustics 15(2), 70-73</a> <span class="meta">Paper</span> <a class="ext" href="https://doi.org/10.1109/TAU.1967.1161901" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-harris78">Harris, F. J. (1978). On the use of windows for harmonic analysis with the discrete Fourier transform. Proceedings of the IEEE 66(1), 51-83</a> <span class="meta">Paper</span> <a class="ext" href="https://doi.org/10.1109/PROC.1978.10837" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-gade87">Gade, S. and Herlufsen, H. (1987). Use of weighting functions in DFT/FFT analysis, parts I and II. Brüel &amp; Kjær Technical Review 3 and 4</a> <span class="meta">Technical review</span> <a class="ext" href="https://www.bksv.com" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-matlabflattop">MathWorks. flattopwin: flat top weighted window (documentation)</a> <span class="meta">Software docs</span> <a class="ext" href="https://www.mathworks.com/help/signal/ref/flattopwin.html" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-randall11">Randall, R. B. (2011). Vibration-based condition monitoring: industrial, aerospace and automotive applications. Wiley</a> <span class="meta">Book</span></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

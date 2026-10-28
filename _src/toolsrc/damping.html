@@ -1,0 +1,35 @@
+title: Damping Converter
+desc: Convert between damping ratio, quality factor Q, loss factor, logarithmic decrement and half-power bandwidth.
+---
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Signal analysis</p>
+    <h1>Damping converter</h1>
+    <p class="lede">Damping comes in five different dialects depending on whether you measured it from a bump test, a ring-down or a frequency response. Enter any one and get the rest.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>I know the…</span>
+        <select id="kind">
+          <option value="z">Damping ratio ζ</option>
+          <option value="pct">Damping ratio in % of critical</option>
+          <option value="Q">Quality factor Q (amplification)</option>
+          <option value="eta">Loss factor η</option>
+          <option value="delta">Logarithmic decrement δ</option>
+          <option value="bw">Half-power bandwidth in Hz (needs fn)</option>
+        </select>
+      </label>
+      <label class="field"><span>Value</span><input id="val" type="number" value="0.03" step="any" min="0"></label>
+      <label class="field"><span>Natural frequency f<sub>n</sub> (Hz, for bandwidth)</span><input id="fn" type="number" value="50" step="any" min="0"></label>
+    </div>
+    <div class="panel">
+      <table class="results"><tbody id="out"></tbody></table>
+      <p class="note" style="margin-top:12px">Ring-down tip: if the amplitude drops from A<sub>0</sub> to A<sub>n</sub> over n cycles, δ = ln(A<sub>0</sub>/A<sub>n</sub>) / n.</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The relationships</h2>
+    <p class="formula">Q = 1 / 2ζ &nbsp;&nbsp; η = 2ζ (at resonance) &nbsp;&nbsp; δ = 2πζ / √(1 − ζ²)<br>Δf<sub>−3dB</sub> = 2ζ·f<sub>n</sub> = f<sub>n</sub> / Q</p>
+    <p>The half-power (−3 dB) bandwidth method is what you'd use on a measured frequency response or impact test. The log decrement is for a free-decay (ring-down) time signal. Q tells you how much a resonance amplifies a force at its natural frequency. All of these assume light, viscous damping, which is a good model for most steel structures and piping.</p>
+  </div>

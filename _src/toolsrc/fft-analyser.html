@@ -1,0 +1,71 @@
+title: FFT Spectrum Analyser
+desc: Free browser FFT analyser for vibration data: load a CSV time signal, choose window, block size and averaging, and get the amplitude spectrum, peaks and overall RMS. Data never leaves your computer.
+---
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Signal analysis</p>
+    <h1>FFT spectrum analyser</h1>
+    <p class="lede">Drop in a time signal from your data logger and get a properly windowed, averaged spectrum. Everything runs in your browser; your data is never uploaded.</p>
+  </section>
+
+  <div class="panel" style="margin-top:32px">
+    <div class="sim-head">
+      <div class="seg" role="group" aria-label="Data source">
+        <button id="src-demo" class="on">Demo signal</button>
+        <button id="src-file">Load CSV / TXT</button>
+      </div>
+      <span class="note" id="info"></span>
+    </div>
+    <input type="file" id="file" accept=".csv,.txt,.dat,.tsv" hidden>
+    <div id="colpick" class="row2" style="margin-top:14px" hidden>
+      <label class="field"><span>Signal column</span><select id="col"></select></label>
+      <label class="field"><span>Time column</span><select id="tcol"></select></label>
+    </div>
+
+    <div class="controls" style="margin-top:6px">
+      <label class="field"><span>Sample rate (Hz)</span><input id="fs" type="number" value="2560" step="any" min="1"></label>
+      <label class="field"><span>Block size (samples)</span>
+        <select id="nb"><option>1024</option><option>2048</option><option selected>4096</option><option>8192</option><option>16384</option><option>32768</option><option>65536</option></select>
+      </label>
+      <label class="field"><span>Window</span>
+        <select id="win"><option value="hann" selected>Hann</option><option value="flattop">Flat top</option><option value="rect">Rectangular</option></select>
+      </label>
+      <label class="field"><span>Amplitude</span>
+        <select id="amp"><option value="pk">Peak</option><option value="rms" selected>RMS</option></select>
+      </label>
+      <label class="field"><span>Units label</span><input id="unit" type="text" value="mm/s"></label>
+      <label class="field"><span>Max frequency to show (Hz)</span><input id="fmax" type="number" value="500" step="any" min="1"></label>
+      <label class="field check"><input type="checkbox" id="logy"> <span>Log amplitude axis</span></label>
+    </div>
+
+    <div class="sim-label">Time waveform</div>
+    <canvas id="tw" style="height:170px"></canvas>
+    <div class="sim-label" style="display:flex;justify-content:space-between"><span>Spectrum</span><span id="cursor" style="text-transform:none;letter-spacing:0"></span></div>
+    <canvas id="sp" style="height:280px;cursor:crosshair"></canvas>
+  </div>
+
+  <div class="tool" style="margin-top:20px">
+    <div class="panel">
+      <table class="results"><tbody id="stats"></tbody></table>
+      <button class="btn-small" id="export" style="margin-top:14px">Download spectrum as CSV</button>
+    </div>
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>#</th><th>Frequency (Hz)</th><th>CPM</th><th>Amplitude</th><th>× 1st peak</th></tr></thead>
+        <tbody id="peaks"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>How to use it</h2>
+    <ul>
+      <li><strong>File format:</strong> plain text or CSV, one sample per row. Columns can be separated by commas, semicolons, tabs or spaces, and header lines are skipped automatically. If one column is time in seconds, select it as the time column and the sample rate is worked out for you.</li>
+      <li><strong>Block size</strong> sets the resolution: Δf = sample rate ÷ block size. A longer record allows more averages, which smooths out random noise.</li>
+      <li><strong>Averaging:</strong> blocks overlap by 50% and are RMS-averaged (power averaging), which is how most data collectors do it.</li>
+      <li><strong>Window:</strong> Hann for general use; flat top when you need accurate amplitudes of discrete peaks; rectangular only for transients that fit inside the block.</li>
+    </ul>
+    <h2>What's under the hood</h2>
+    <p class="formula">X<sub>k</sub> = Σ x<sub>n</sub>·w<sub>n</sub>·e<sup>−2πikn/N</sup> &nbsp;&nbsp; A<sub>k</sub> = 2|X<sub>k</sub>| / Σw<sub>n</sub> &nbsp;&nbsp; (peak, amplitude-corrected)</p>
+    <p>The amplitude is corrected for the window's coherent gain, so a sine that lands exactly on a bin reads its true amplitude. Between bins, Hann can under-read by up to about 15%, flat top by under 0.1%. That's why flat top is the choice for amplitude accuracy. The overall RMS is calculated from the time signal itself (mean removed), so you can compare it with your instrument's overall reading.</p>
+    <p>Related: the <a href="../fft-setup/">FFT setup planner</a> works out sample rate, lines and acquisition time before you measure, and the explainer <a href="../../explainers/fft-intuition/">What an FFT actually sees</a> covers leakage and resolution interactively.</p>
+  </div>

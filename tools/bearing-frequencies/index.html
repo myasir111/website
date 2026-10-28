@@ -72,6 +72,17 @@
     </ul>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Kinematic defect frequencies for a rolling element bearing with a stationary outer race and rotating inner race.</li><li>FTF = (fr/2)(1 − (d/D)cosθ); BPFO = n·FTF; BPFI = (n·fr/2)(1 + (d/D)cosθ); BSF = (D/2d)·fr·(1 − ((d/D)cosθ)²).</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>Assumes pure rolling with no slip. Measured peaks typically sit 1–2% away from the calculated values.</li><li>For a rotating outer race, swap the roles of the inner and outer race frequencies.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> 6205 geometry (n = 9, d = 7.94 mm, D = 39.04 mm) at 25 Hz gives BPFO 89.62 Hz, BPFI 135.4 Hz, BSF 58.92 Hz and FTF 9.958 Hz, matching Python.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-randall11">Randall, R. B. (2011). Vibration-based condition monitoring: industrial, aerospace and automotive applications. Wiley</a> <span class="meta">Book</span></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

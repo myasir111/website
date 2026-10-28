@@ -71,6 +71,17 @@
     <p class="note">This is a screening check. Lock-in depends on mass ratio, damping and the actual geometry, and thermowells have their own dedicated method (ASME PTC 19.3 TW). Use those for design.</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Strouhal relation fs = St·V/D for cross-flow (lift) shedding; in-line (drag) shedding at 2·fs.</li><li>Reynolds number Re = ρVD/μ to check the flow regime for the chosen St; reduced velocity Vr = V/(fn·D).</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>St ≈ 0.2 holds for circular cylinders over the subcritical range; it changes near the drag crisis (Re around 2×10⁵ and above).</li><li>Lock-in depends on mass ratio and damping (Scruton number), which are not included. Thermowells must be assessed to ASME PTC 19.3 TW.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> 5 m/s past a 25 mm cylinder in water gives fs = 40 Hz and Re = 1.25×10⁵, matching Python.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-blevinsfiv">Blevins, R. D. Flow-induced vibration, 2nd edition. Krieger</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-ptc193">ASME PTC 19.3 TW-2016. Thermowells</a> <span class="meta">Standard</span> <a class="ext" href="https://www.asme.org" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-ei08">Energy Institute (2008). Guidelines for the avoidance of vibration induced fatigue failure in process pipework, 2nd edition</a> <span class="meta">Guideline</span> <a class="ext" href="https://www.energyinst.org/technical/publications/topics/asset-integrity/guidelines-for-the-avoidance-of-vibration-induced-fatigue-failure-in-process-pipework" aria-label="Open source">↗</a></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

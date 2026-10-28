@@ -64,6 +64,17 @@
     <p class="note">Assumes a single dominant mode and a flat input PSD around f<sub>n</sub>. If the PSD slopes steeply near the resonance, or several modes contribute, integrate the full response PSD instead.</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Miles&#x27; equation: Grms = √((π/2)·fn·Q·PSD(fn)), the RMS response of a single resonator to white-noise base acceleration.</li><li>Relative displacement z ≈ Grms·g/(2πfn)²; 3σ values = 3 × RMS for a Gaussian response.</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>Single dominant mode; input PSD roughly flat across the resonance bandwidth.</li><li>For sloping or multi-mode inputs, integrate the full response PSD instead.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> fn = 100 Hz, Q = 10, 0.04 g²/Hz gives 7.93 Grms, matching Python.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-miles54">Miles, J. W. (1954). On structural fatigue under random loading. Journal of the Aeronautical Sciences 21(11), 753-762</a> <span class="meta">Paper</span> <a class="ext" href="https://doi.org/10.2514/8.3199" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-steinberg">Steinberg, D. S. (2000). Vibration analysis for electronic equipment, 3rd edition. Wiley</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-irvine">Tom Irvine: Vibrationdata</a> <span class="meta">Tutorials &amp; software</span> <a class="ext" href="https://www.vibrationdata.com" aria-label="Open source">↗</a></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

@@ -83,6 +83,17 @@
     <p>Real pipe supports are neither perfectly pinned nor perfectly fixed, so the true first mode usually sits between the pinned–pinned and fixed–fixed results. That band is a useful sanity check against FEA or a field measurement. Heavy valves or flanges in the span, bends, and support flexibility all pull the frequency down; for those, use FEA.</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Euler–Bernoulli beam theory: fi = ((λiL)²/2πL²)·√(EI/m).</li><li>λL from each support condition&#x27;s characteristic equation, solved by root-finding to 6 significant figures (π·n; cosh·cos = ±1; tan = tanh).</li><li>Mass per metre = pipe steel + contents + user-entered extra (insulation, cladding); contents add mass but no stiffness.</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>No shear deformation or rotary inertia: accurate for slender spans (L/D above about 10). Short, stubby spans read high.</li><li>Ideal supports. Real supports are flexible, so measured frequencies usually sit below the fixed–fixed value; Wachel et al. give field correction factors.</li><li>No internal pressure, axial load, bends or concentrated masses (valves, flanges).</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> 6&quot; Sch 40, water-filled, 3 m pinned–pinned gives 39.01 Hz (hand calculation: 39.01 Hz). Every mode shape was checked numerically against its boundary conditions.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-blevins">Blevins, R. D. (1979, reprinted 2001). Formulas for natural frequency and mode shape. Krieger</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-rao">Rao, S. S. Mechanical vibrations. Pearson</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-wachel90">Wachel, J. C., Morton, S. J. and Atkins, K. E. (1990). Piping vibration analysis. Proceedings of the 19th Turbomachinery Symposium, Texas A&amp;M University, 119-134</a> <span class="meta">Paper</span> <a class="ext" href="https://oaktrust.library.tamu.edu" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-b3610">ASME B36.10M. Welded and seamless wrought steel pipe</a> <span class="meta">Code</span> <a class="ext" href="https://www.asme.org" aria-label="Open source">↗</a></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

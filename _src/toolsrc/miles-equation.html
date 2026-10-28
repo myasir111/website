@@ -1,0 +1,38 @@
+title: Miles' Equation
+desc: RMS acceleration response of a single degree of freedom system to flat random base excitation using Miles' equation, with 3-sigma peak and RMS displacement.
+---
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Random vibration</p>
+    <h1>Miles' equation</h1>
+    <p class="lede">A quick estimate of how hard a component responds to broadband random vibration, as long as the input spectrum is roughly flat around its natural frequency.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Natural frequency, f<sub>n</sub> (Hz)</span><input id="fn" type="number" value="100" step="any" min="0"></label>
+      <label class="field"><span>Quality factor, Q</span><input id="Q" type="number" value="10" step="any" min="0"></label>
+      <label class="field"><span>Input acceleration PSD at f<sub>n</sub> (g²/Hz)</span><input id="psd" type="number" value="0.04" step="any" min="0"></label>
+      <p class="note">Q = 1/(2ζ). Q = 10 (ζ = 5%) is a common default when damping is unknown.</p>
+    </div>
+
+    <div class="panel">
+      <div class="row2" style="margin-bottom:10px">
+        <div><div class="note">RMS acceleration response</div><div class="big" id="o-g">—<small>G rms</small></div></div>
+        <div><div class="note">3σ peak</div><div class="big" id="o-3s">—<small>G</small></div></div>
+      </div>
+      <table class="results">
+        <tbody>
+          <tr><td>Damping ratio ζ</td><td class="num" id="o-z"></td></tr>
+          <tr><td>RMS relative displacement</td><td class="num" id="o-d"></td></tr>
+          <tr><td>3σ relative displacement</td><td class="num" id="o-d3"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">G<sub>rms</sub> = √( (π/2) · f<sub>n</sub> · Q · PSD(f<sub>n</sub>) )<br>z<sub>rms</sub> ≈ G<sub>rms</sub> · g / (2πf<sub>n</sub>)²</p>
+    <p>The (π/2)·f<sub>n</sub>/Q term is the effective noise bandwidth of the resonance, so the formula is just "input density × bandwidth × amplification²". Peaks in a Gaussian random response are commonly taken at 3σ (3 × RMS), which covers 99.7% of the time.</p>
+    <p class="note">Assumes a single dominant mode and a flat input PSD around f<sub>n</sub>. If the PSD slopes steeply near the resonance, or several modes contribute, integrate the full response PSD instead.</p>
+  </div>

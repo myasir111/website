@@ -89,6 +89,17 @@
     <p class="note">Conventions: velocity is usually reported as RMS (ISO) or peak (often in the US), displacement as peak-to-peak, and acceleration as peak or RMS. Always check which one your instrument shows. 1 g = 9.80665 m/s².</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Single-frequency harmonic relations: velocity = acceleration / 2πf, displacement = velocity / 2πf.</li><li>Detector conversions for a pure sine: peak = √2 × RMS, peak-to-peak = 2 × peak.</li><li>Standard gravity 1 g = 9.80665 m/s²; 1 in = 25.4 mm; 1 mil = 0.0254 mm.</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>Valid only for a single sinusoid. Broadband overall values cannot be converted between units this way.</li><li>Peak here means the true peak of the sine, not a &#x27;peak&#x27; detector on a broadband signal.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> 10 mm/s RMS at 50 Hz gives 3.142 m/s² RMS and 90.03 µm peak-to-peak, matching an independent Python calculation.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-rao">Rao, S. S. Mechanical vibrations. Pearson</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-randall11">Randall, R. B. (2011). Vibration-based condition monitoring: industrial, aerospace and automotive applications. Wiley</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-iso20816_3">ISO 20816-3:2022. Mechanical vibration: measurement and evaluation of machine vibration. Part 3: industrial machinery</a> <span class="meta">Standard</span> <a class="ext" href="https://www.iso.org" aria-label="Open source">↗</a></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

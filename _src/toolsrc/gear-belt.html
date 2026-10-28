@@ -1,0 +1,49 @@
+title: Gear Mesh & Belt Frequencies
+desc: Gear mesh frequency, output speed, hunting tooth and assembly phase frequencies for a gear pair, plus belt pass frequency for belt drives.
+---
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Diagnostics</p>
+    <h1>Gear mesh &amp; belt frequencies</h1>
+    <p class="lede">The frequencies to mark on a gearbox or belt-drive spectrum before you start looking for faults.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <h3 style="font-size:15px;margin:0 0 10px">Gear pair</h3>
+      <div class="row2">
+        <label class="field"><span>Input speed</span><input id="rpm" type="number" value="1480" step="any" min="0"></label>
+        <label class="field"><span>Units</span><select id="u"><option value="rpm">RPM</option><option value="hz">Hz</option></select></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Input (driver) teeth</span><input id="z1" type="number" value="20" step="1" min="1"></label>
+        <label class="field"><span>Output (driven) teeth</span><input id="z2" type="number" value="47" step="1" min="1"></label>
+      </div>
+      <h3 style="font-size:15px;margin:18px 0 10px">Belt drive</h3>
+      <div class="row2">
+        <label class="field"><span>Driver pulley pitch diameter (mm)</span><input id="d1" type="number" value="200" step="any" min="0"></label>
+        <label class="field"><span>Driven pulley pitch diameter (mm)</span><input id="d2" type="number" value="400" step="any" min="0"></label>
+      </div>
+      <label class="field"><span>Belt length (mm)</span><input id="bl" type="number" value="2500" step="any" min="0"></label>
+      <p class="note">Belt drive uses the same input speed as the driver pulley.</p>
+    </div>
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>Gear pair</th><th>Hz</th><th>CPM</th></tr></thead>
+        <tbody id="gear"></tbody>
+      </table>
+      <table class="results" style="margin-top:20px">
+        <thead><tr><th>Belt drive</th><th>Hz</th><th>CPM</th></tr></thead>
+        <tbody id="belt"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">GMF = Z<sub>1</sub> · f<sub>1</sub> = Z<sub>2</sub> · f<sub>2</sub> &nbsp;&nbsp; f<sub>2</sub> = f<sub>1</sub> · Z<sub>1</sub>/Z<sub>2</sub><br>N<sub>a</sub> = gcd(Z<sub>1</sub>, Z<sub>2</sub>) &nbsp;&nbsp; f<sub>HT</sub> = GMF · N<sub>a</sub> / (Z<sub>1</sub>·Z<sub>2</sub>)<br>f<sub>belt</sub> = π · D<sub>1</sub> · f<sub>1</sub> / L</p>
+    <ul>
+      <li><strong>Gear mesh (GMF)</strong> and its harmonics are always present. Watch their amplitude trend, and sidebands at the shaft speeds of each gear: sidebands at f<sub>1</sub> point to the input gear, at f<sub>2</sub> to the output gear.</li>
+      <li><strong>Hunting tooth frequency</strong> is how often the same pair of teeth meet again. A damaged tooth on each gear shows up as a low-frequency beat at f<sub>HT</sub>. Tooth counts with a common factor (N<sub>a</sub> &gt; 1) make it repeat more often.</li>
+      <li><strong>Belt frequency</strong> is usually below running speed. A worn or damaged belt shows peaks at 1×, 2× and 3× belt frequency, often with 2× dominant.</li>
+    </ul>
+  </div>

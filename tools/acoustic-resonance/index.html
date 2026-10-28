@@ -84,6 +84,17 @@
     <p class="note">Screening estimate only. Branch-to-main diameter ratio, the neighbouring branches and the system's acoustic response all change the onset. Source for the Strouhal band: experimental study of flow-excited acoustic resonance in ducts with closed side branches, <a href="https://eng-web77-v02.ocio.monash.edu/intranet/proceedings/fiv2008/html/pdf/291.pdf">FIV 2008 conference proceedings, paper 291</a>.</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Speed of sound c = √(γ·Z·Ru·T/Mw), the ideal-gas expression with a compressibility correction.</li><li>Plane-wave acoustic modes: closed–open (quarter-wave) fn = (2n − 1)c/4L; closed–closed and open–open fn = n·c/2L.</li><li>Excitation band for a closed side branch: shedding fs = St·V/d with St from 0.27 to 0.55 (experimental range from the FIV 2008 study).</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>The γ·Z form is an approximation; for dense gases near critical conditions use the real-gas isentropic exponent from a property package.</li><li>Plane waves only: valid below the first cross-mode, about 1.84c/(πD).</li><li>End correction at the branch mouth (about 0.4d) is not added automatically.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> γ = 1.3, Z = 0.9, Mw = 19 at 40 °C gives c = 400.4 m/s; a 1.2 m dead leg gives 83.42 Hz, and 50 mm branch gives an excitation band of 7.58–15.45 m/s, all matching Python.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-fiv08branch">Flow-excited acoustic resonance in ducts with closed side branches. Proceedings of the 9th International Conference on Flow-Induced Vibration (FIV 2008), paper 291</a> <span class="meta">Paper</span> <a class="ext" href="https://eng-web77-v02.ocio.monash.edu/intranet/proceedings/fiv2008/html/pdf/291.pdf" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-blevins">Blevins, R. D. (1979, reprinted 2001). Formulas for natural frequency and mode shape. Krieger</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-api618">API Standard 618, 5th edition. Reciprocating compressors for petroleum, chemical and gas industry services</a> <span class="meta">Standard</span> <a class="ext" href="https://www.api.org" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-ei08">Energy Institute (2008). Guidelines for the avoidance of vibration induced fatigue failure in process pipework, 2nd edition</a> <span class="meta">Guideline</span> <a class="ext" href="https://www.energyinst.org/technical/publications/topics/asset-integrity/guidelines-for-the-avoidance-of-vibration-induced-fatigue-failure-in-process-pipework" aria-label="Open source">↗</a></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

@@ -71,6 +71,17 @@
     <p>Resolution is set purely by how long you record. To separate two close peaks you need the bin spacing, widened by the window's effective noise bandwidth, to be several times smaller than their difference. A common rule of thumb is a gap of at least 4 bins with a Hann window. Zoom FFT or a lower F<sub>max</sub> with more lines both achieve this.</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Δf = Fmax / lines; block time T = lines / Fmax; sample rate fs = 2.56·Fmax; block size N = 2.56·lines.</li><li>Total time = T·(1 + (navg − 1)(1 − overlap)).</li><li>Effective bandwidth = ENBW × Δf, with ENBW 1.5 (Hann), 3.77 (flat top) and 1.0 (rectangular) bins.</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>The 4-bin separation rule is a practical rule of thumb for Hann, not a hard limit.</li><li>Analysers with non-2.56 sampling ratios or zoom FFT behave differently.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> 1000 Hz Fmax, 800 lines, 4 averages at 50% overlap gives Δf = 1.25 Hz and 2.0 s total, checked by hand.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-harris78">Harris, F. J. (1978). On the use of windows for harmonic analysis with the discrete Fourier transform. Proceedings of the IEEE 66(1), 51-83</a> <span class="meta">Paper</span> <a class="ext" href="https://doi.org/10.1109/PROC.1978.10837" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-gade87">Gade, S. and Herlufsen, H. (1987). Use of weighting functions in DFT/FFT analysis, parts I and II. Brüel &amp; Kjær Technical Review 3 and 4</a> <span class="meta">Technical review</span> <a class="ext" href="https://www.bksv.com" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-randall11">Randall, R. B. (2011). Vibration-based condition monitoring: industrial, aerospace and automotive applications. Wiley</a> <span class="meta">Book</span></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

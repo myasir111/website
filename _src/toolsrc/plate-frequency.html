@@ -1,0 +1,43 @@
+title: Plate Natural Frequency
+desc: Natural frequencies and mode shapes of a simply supported rectangular plate, useful for duct walls, panels and enclosure plates.
+---
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Structural dynamics</p>
+    <h1>Plate natural frequency</h1>
+    <p class="lede">First modes of a flat rectangular panel: duct walls, enclosure panels, tank shell sections, deck plates. Useful when a "drumming" panel lines up with a running speed or blade pass.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <div class="row2">
+        <label class="field"><span>Length a (mm)</span><input id="a" type="number" value="1000" step="any" min="0"></label>
+        <label class="field"><span>Width b (mm)</span><input id="b" type="number" value="800" step="any" min="0"></label>
+      </div>
+      <label class="field"><span>Thickness h (mm)</span><input id="h" type="number" value="6" step="any" min="0"></label>
+      <div class="row2">
+        <label class="field"><span>Young's modulus (GPa)</span><input id="E" type="number" value="200" step="any" min="0"></label>
+        <label class="field"><span>Poisson's ratio</span><input id="nu" type="number" value="0.3" step="0.01" min="0" max="0.49"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Density (kg/m³)</span><input id="rho" type="number" value="7850" step="any" min="0"></label>
+        <label class="field"><span>Added mass (kg/m²)</span><input id="ma" type="number" value="0" step="any" min="0"></label>
+      </div>
+      <label class="field"><span>Excitation frequency to check (Hz, optional)</span><input id="fx" type="number" value="49.5" step="any"></label>
+      <p class="note">Edges simply supported on all four sides. Fully clamped edges raise the fundamental by roughly 1.8× for a square plate.</p>
+    </div>
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>Mode (m, n)</th><th>Hz</th><th>CPM</th><th>vs excitation</th></tr></thead>
+        <tbody id="out"></tbody>
+      </table>
+      <div class="sim-label" style="margin-top:16px">Mode shape · click a row</div>
+      <canvas id="shape" style="height:200px"></canvas>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formula</h2>
+    <p class="formula">f<sub>mn</sub> = (π/2) · [ (m/a)² + (n/b)² ] · √( D / (ρh + m<sub>a</sub>) )<br>D = E·h³ / (12(1 − ν²))</p>
+    <p>m and n count the half-waves along each side. This is the exact Kirchhoff thin-plate solution for simply supported edges. Real duct and enclosure panels sit somewhere between simply supported and clamped, so treat this as the lower end of the range. Stiffeners, internal pressure and flow all shift the answer; for a fix, an FEA model tuned to a bump test is the reliable route.</p>
+    <p>Practical fixes for a resonant panel: stiffen it (moves the frequency up), brace it to a nearby structure, or add damping. Thicker plate helps less than you'd think: bending stiffness grows with h³, but mass grows with h too, so frequency only rises in proportion to thickness. Doubling the plate doubles the frequency and doubles the weight. Stiffeners usually win.</p>
+  </div>

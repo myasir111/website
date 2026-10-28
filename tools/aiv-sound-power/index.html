@@ -67,6 +67,17 @@
     <p class="note">What this does not do: the likelihood-of-failure assessment. That also depends on the downstream pipe diameter and wall thickness, the distance to the nearest branch or discontinuity, branch connection types and sound attenuation along the line, all defined in the Energy Institute guidelines. Use this to see quickly whether a source is quiet or loud, and the full method for the assessment.</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Carucci–Mueller correlation: PWL = 10·log10[W²·(ΔP/P1)^3.6·(T/Mw)^1.2] + 126.1 + K (W in kg/s, T in K).</li><li>K = +6 dB for sonic (choked) flow; choking when P1/P2 ≥ ((γ + 1)/2)^(γ/(γ − 1)).</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>Sound power at the source only. The likelihood-of-failure assessment (pipe D/t, distance to discontinuities, branch type, attenuation) follows the Energy Institute guidelines.</li><li>Eisinger (1997) gives a D/t-based design limit for comparison.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> 20 kg/s from 50 to 10 bar a at 40 °C, Mw 19 (choked) gives 169.2 dB, matching Python.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-carucci82">Carucci, V. A. and Mueller, R. T. (1982). Acoustically induced piping vibration in high capacity pressure reducing systems. ASME paper 82-WA/PVP-8</a> <span class="meta">Paper</span></li><li><a href="../../resources.html#ref-ei08">Energy Institute (2008). Guidelines for the avoidance of vibration induced fatigue failure in process pipework, 2nd edition</a> <span class="meta">Guideline</span> <a class="ext" href="https://www.energyinst.org/technical/publications/topics/asset-integrity/guidelines-for-the-avoidance-of-vibration-induced-fatigue-failure-in-process-pipework" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-eisinger97">Eisinger, F. L. (1997). Designing piping systems against acoustically induced structural fatigue. Journal of Pressure Vessel Technology 119(3), 379-383</a> <span class="meta">Paper</span> <a class="ext" href="https://doi.org/10.1115/1.2842319" aria-label="Open source">↗</a></li><li><a href="../../resources.html#ref-gpn20">Gas Processing &amp; LNG (2020). Calculate likelihood of piping failure from high-frequency acoustic vibration</a> <span class="meta">Article</span> <a class="ext" href="https://gasprocessingnews.com/articles/2020/06/calculate-likelihood-of-piping-failure-from-high-frequency-acoustic-vibration/" aria-label="Open source">↗</a></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

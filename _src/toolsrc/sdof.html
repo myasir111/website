@@ -1,0 +1,55 @@
+title: SDOF Natural Frequency & Transmissibility
+desc: Single degree of freedom calculator: natural frequency from stiffness and mass, dynamic amplification and transmissibility at a forcing frequency, with a live plot.
+---
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Structural dynamics</p>
+    <h1>SDOF natural frequency &amp; transmissibility</h1>
+    <p class="lede">The mass-on-a-spring model behind most resonance checks. Find the natural frequency, then see how hard a forcing frequency drives it.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Define the system by</span>
+        <select id="mode"><option value="km">Stiffness &amp; mass</option><option value="fn">Natural frequency</option><option value="defl">Static deflection</option></select>
+      </label>
+      <div id="g-km">
+        <label class="field"><span>Stiffness, k (N/mm)</span><input id="k" type="number" value="500" step="any" min="0"></label>
+        <label class="field"><span>Mass, m (kg)</span><input id="m" type="number" value="50" step="any" min="0"></label>
+      </div>
+      <div id="g-fn" hidden>
+        <label class="field"><span>Natural frequency, f<sub>n</sub> (Hz)</span><input id="fn" type="number" value="15" step="any" min="0"></label>
+      </div>
+      <div id="g-defl" hidden>
+        <label class="field"><span>Static deflection under self-weight (mm)</span><input id="dst" type="number" value="1" step="any" min="0"></label>
+      </div>
+      <label class="field"><span>Damping ratio, ζ</span><input id="z" type="number" value="0.05" step="0.005" min="0.001" max="1"></label>
+      <label class="field"><span>Forcing frequency (Hz)</span><input id="ff" type="number" value="24.75" step="any" min="0"></label>
+      <p class="note">Typical damping: welded steel structures and piping 0.01–0.05; bolted structures 0.03–0.07.</p>
+    </div>
+
+    <div class="panel">
+      <div class="row2" style="margin-bottom:10px">
+        <div><div class="note">Natural frequency</div><div class="big" id="o-fn">—<small>Hz</small></div></div>
+        <div><div class="note">Frequency ratio r = f / f<sub>n</sub></div><div class="big" id="o-r">—</div></div>
+      </div>
+      <table class="results">
+        <tbody>
+          <tr><td>Natural frequency</td><td class="num" id="o-fncpm"></td></tr>
+          <tr><td>Quality factor Q = 1/2ζ (peak amplification)</td><td class="num" id="o-q"></td></tr>
+          <tr><td>Dynamic amplification (force → displacement)</td><td class="num" id="o-daf"></td></tr>
+          <tr><td>Transmissibility (base → mass, or force → support)</td><td class="num" id="o-t"></td></tr>
+          <tr><td>Separation from f<sub>n</sub></td><td class="num" id="o-sep"></td></tr>
+        </tbody>
+      </table>
+      <div id="o-msg"></div>
+      <canvas id="plot" style="margin-top:16px"></canvas>
+      <p class="note" style="margin:6px 0 0">Transmissibility vs frequency ratio (log scale). The dot is your operating point.</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">f<sub>n</sub> = (1/2π)·√(k/m) = (1/2π)·√(g/δ<sub>st</sub>)<br>DAF = 1 / √((1−r²)² + (2ζr)²)<br>T &nbsp;&nbsp;= √(1 + (2ζr)²) / √((1−r²)² + (2ζr)²)</p>
+    <p>Below resonance (r &lt; 1) the response follows the force. Near r = 1 it's amplified by roughly Q. Above √2·f<sub>n</sub> the transmissibility drops below 1, which is the principle behind vibration isolation.</p>
+    <p>For resonance avoidance, many design practices aim to keep natural frequencies clear of forcing frequencies by a margin, commonly around ±20% (for example in API 618 for pulsation-related piping mechanical response). Check the margin required by the standard you work to.</p>
+  </div>

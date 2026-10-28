@@ -1,0 +1,46 @@
+title: Bearing Defect Frequencies
+desc: Calculate rolling element bearing defect frequencies BPFO, BPFI, BSF and FTF from geometry and shaft speed.
+---
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Diagnostics</p>
+    <h1>Bearing defect frequencies</h1>
+    <p class="lede">Where to look in the spectrum for outer race, inner race, rolling element and cage defects on a rolling element bearing.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <div class="row2">
+        <label class="field"><span>Shaft speed</span><input id="rpm" type="number" value="1490" step="any" min="0"></label>
+        <label class="field"><span>Units</span><select id="sunit"><option value="rpm">RPM</option><option value="hz">Hz</option></select></label>
+      </div>
+      <label class="field"><span>Number of rolling elements, n</span><input id="n" type="number" value="9" step="1" min="1"></label>
+      <label class="field"><span>Rolling element diameter, d (mm)</span><input id="d" type="number" value="7.94" step="any" min="0"></label>
+      <label class="field"><span>Pitch diameter, D (mm)</span><input id="D" type="number" value="39.04" step="any" min="0"></label>
+      <label class="field"><span>Contact angle, θ (degrees)</span><input id="th" type="number" value="0" step="any" min="0" max="89"></label>
+      <p class="note">Defaults are approximate figures for a 6205 deep-groove ball bearing. Get exact geometry from the manufacturer.</p>
+    </div>
+
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>Frequency</th><th>Hz</th><th>CPM</th><th>Orders (×)</th></tr></thead>
+        <tbody id="out"></tbody>
+      </table>
+      <h3 style="margin:22px 0 8px;font-size:15px">Harmonics (Hz)</h3>
+      <table class="results">
+        <thead><tr><th></th><th>1×</th><th>2×</th><th>3×</th><th>4×</th></tr></thead>
+        <tbody id="harm"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">FTF  = (f<sub>r</sub>/2) · (1 − (d/D)cosθ)<br>BPFO = (n·f<sub>r</sub>/2) · (1 − (d/D)cosθ)<br>BPFI = (n·f<sub>r</sub>/2) · (1 + (d/D)cosθ)<br>BSF  = (D/2d) · f<sub>r</sub> · (1 − ((d/D)cosθ)²)</p>
+    <p>These assume pure rolling with no slip. In practice the measured peaks usually sit slightly off the calculated values (a percent or two), so look for a peak <em>near</em> the line with its harmonics and sidebands rather than an exact match.</p>
+    <ul>
+      <li><strong>BPFO</strong> (outer race): usually a clean series of harmonics, since a stationary outer-race defect is always in the load zone.</li>
+      <li><strong>BPFI</strong> (inner race): the defect rotates in and out of the load zone, so expect sidebands at 1× shaft speed.</li>
+      <li><strong>BSF</strong> (rolling element): often appears at 2×BSF, because a ball defect hits both races each spin, with sidebands at FTF.</li>
+      <li><strong>FTF</strong> (cage): sub-synchronous, usually around 0.4× shaft speed. Rarely a peak on its own; shows up as sideband spacing.</li>
+    </ul>
+  </div>

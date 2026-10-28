@@ -1,0 +1,57 @@
+title: Pipe Span Natural Frequency
+desc: Natural frequencies and mode shapes of a pipe or beam span (Euler-Bernoulli) for common support conditions, including contents and insulation mass.
+---
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Structural dynamics</p>
+    <h1>Pipe span natural frequency</h1>
+    <p class="lede">First four bending modes of a straight pipe span between supports, the quick check behind span-length decisions in piping vibration work.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Support condition</span>
+        <select id="bc">
+          <option value="pp">Pinned – pinned (simply supported)</option>
+          <option value="ff">Fixed – fixed</option>
+          <option value="fp">Fixed – pinned</option>
+          <option value="cf">Fixed – free (cantilever)</option>
+          <option value="free">Free – free</option>
+        </select>
+      </label>
+      <label class="field"><span>Span length, L (m)</span><input id="L" type="number" value="3" step="any" min="0"></label>
+      <div class="row2">
+        <label class="field"><span>Outside diameter (mm)</span><input id="od" type="number" value="168.3" step="any" min="0"></label>
+        <label class="field"><span>Wall thickness (mm)</span><input id="wt" type="number" value="7.11" step="any" min="0"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Young's modulus (GPa)</span><input id="E" type="number" value="200" step="any" min="0"></label>
+        <label class="field"><span>Pipe density (kg/m³)</span><input id="rho" type="number" value="7850" step="any" min="0"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Contents density (kg/m³)</span><input id="rhof" type="number" value="1000" step="any" min="0"></label>
+        <label class="field"><span>Insulation / extra (kg/m)</span><input id="mx" type="number" value="0" step="any" min="0"></label>
+      </div>
+      <p class="note">Defaults: 6" Sch 40 carbon steel, water-filled. For gas service set contents density to the gas density (or 0).</p>
+    </div>
+
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>Mode</th><th>λL</th><th>Frequency (Hz)</th><th>CPM</th></tr></thead>
+        <tbody id="out"></tbody>
+      </table>
+      <p class="note" style="margin-top:10px" id="props"></p>
+      <div class="sim-head" style="margin-top:16px">
+        <div class="seg" id="modes" role="group" aria-label="Mode to animate">
+          <button data-m="0" class="on">Mode 1</button><button data-m="1">Mode 2</button><button data-m="2">Mode 3</button><button data-m="3">Mode 4</button>
+        </div>
+      </div>
+      <canvas id="shape" style="height:170px;margin-top:10px"></canvas>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">f<sub>i</sub> = ((λ<sub>i</sub>L)² / 2πL²) · √(EI / m)<br>I = π(D<sub>o</sub>⁴ − D<sub>i</sub>⁴)/64 &nbsp;&nbsp; m = pipe + contents + insulation mass per metre</p>
+    <p>λL comes from each support condition's frequency equation: <code>nπ</code> for pinned–pinned, <code>cosh·cos = 1</code> for fixed–fixed and free–free, <code>cosh·cos = −1</code> for a cantilever, <code>tan = tanh</code> for fixed–pinned.</p>
+    <p>Real pipe supports are neither perfectly pinned nor perfectly fixed, so the true first mode usually sits between the pinned–pinned and fixed–fixed results. That band is a useful sanity check against FEA or a field measurement. Heavy valves or flanges in the span, bends, and support flexibility all pull the frequency down; for those, use FEA.</p>
+  </div>

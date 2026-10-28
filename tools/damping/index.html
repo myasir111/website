@@ -61,6 +61,17 @@
     <p>The half-power (−3 dB) bandwidth method is what you'd use on a measured frequency response or impact test. The log decrement is for a free-decay (ring-down) time signal. Q tells you how much a resonance amplifies a force at its natural frequency. All of these assume light, viscous damping, which is a good model for most steel structures and piping.</p>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Linear viscous damping relations: Q = 1/2ζ; η = 2ζ (equivalent at resonance); δ = 2πζ/√(1 − ζ²) (exact for viscous damping).</li><li>Half-power (−3 dB) bandwidth Δf = 2ζ·fn; cycles to decay to 10% = ln(10)/δ.</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>The half-power method is accurate for light damping (ζ below about 0.1) and well-separated modes.</li><li>Structural (hysteretic) damping is only equivalent to viscous damping at resonance.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> ζ = 0.03 gives Q = 16.67, δ = 0.1886 and 3 Hz bandwidth at 50 Hz, checked by hand.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-rao">Rao, S. S. Mechanical vibrations. Pearson</a> <span class="meta">Book</span></li><li><a href="../../resources.html#ref-denhartog">Den Hartog, J. P. Mechanical vibrations. Dover</a> <span class="meta">Book</span></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">

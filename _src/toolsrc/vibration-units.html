@@ -1,0 +1,63 @@
+title: Vibration Unit Converter
+desc: Convert vibration amplitude between acceleration, velocity and displacement at a given frequency, in peak, RMS or peak-to-peak, metric and imperial.
+---
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Measurement</p>
+    <h1>Vibration unit converter</h1>
+    <p class="lede">Enter one amplitude and a frequency. Get every other unit, for a single-frequency (sinusoidal) vibration.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Amplitude</span><input id="val" type="number" value="10" step="any"></label>
+      <div class="row2">
+        <label class="field"><span>Unit</span>
+          <select id="unit">
+            <optgroup label="Acceleration">
+              <option value="g">g</option>
+              <option value="ms2">m/s²</option>
+              <option value="ins2">in/s²</option>
+            </optgroup>
+            <optgroup label="Velocity">
+              <option value="mms" selected>mm/s</option>
+              <option value="ins">in/s</option>
+            </optgroup>
+            <optgroup label="Displacement">
+              <option value="um">µm</option>
+              <option value="mm">mm</option>
+              <option value="mil">mil</option>
+            </optgroup>
+          </select>
+        </label>
+        <label class="field"><span>Measured as</span>
+          <select id="det">
+            <option value="rms" selected>RMS</option>
+            <option value="pk">Peak</option>
+            <option value="pp">Peak-to-peak</option>
+          </select>
+        </label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Frequency</span><input id="f" type="number" value="50" step="any" min="0"></label>
+        <label class="field"><span>Units</span>
+          <select id="funit"><option value="hz">Hz</option><option value="cpm">CPM / RPM</option></select>
+        </label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>Quantity</th><th>Peak</th><th>RMS</th><th>Peak-to-peak</th></tr></thead>
+        <tbody id="out"></tbody>
+      </table>
+      <p class="note" style="margin-top:14px">Valid for a single-frequency sine (peak = √2 × RMS). A broadband overall value can't be converted between units this way, because each frequency in it scales differently.</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p>For a sinusoid at angular frequency ω = 2πf, each integration divides by ω:</p>
+    <p class="formula">v = a / (2πf) &nbsp;&nbsp;&nbsp; d = v / (2πf) = a / (2πf)²<br>peak = √2 × RMS &nbsp;&nbsp;&nbsp; peak-to-peak = 2 × peak</p>
+    <p>That's why the same machine looks very different in different units. Acceleration emphasises high frequencies (bearings, gears), displacement emphasises low ones (unbalance on slow machines), and velocity sits in between. That's why velocity is the usual unit for overall severity on most industrial machines.</p>
+    <p class="note">Conventions: velocity is usually reported as RMS (ISO) or peak (often in the US), displacement as peak-to-peak, and acceleration as peak or RMS. Always check which one your instrument shows. 1 g = 9.80665 m/s².</p>
+  </div>

@@ -75,6 +75,17 @@
     </ul>
   </div>
 
+  <section class="method" id="method">
+    <h2>Method &amp; sources</h2>
+    <div class="method-grid">
+      <div><h3>What it calculates</h3><ul><li>Gear mesh frequency GMF = Z1·f1; output speed f2 = f1·Z1/Z2.</li><li>Assembly phase factor Na = gcd(Z1, Z2); hunting tooth frequency fHT = GMF·Na / (Z1·Z2); assembly phase frequency = GMF / Na.</li><li>Belt frequency = π·D1·f1 / L (pitch diameter and pitch length); driven speed = f1·D1/D2.</li></ul></div>
+      <div><h3>Assumptions &amp; limits</h3><ul><li>Belt slip (typically 1–2%) is ignored.</li><li>Planetary gearboxes need their own carrier and planet relationships.</li></ul></div>
+    </div>
+    <p class="verified"><b>Verified:</b> 20/47 teeth at 1480 RPM gives GMF 493.3 Hz, output 10.50 Hz and hunting tooth 0.5248 Hz, matching Python.</p>
+    <h3>Sources</h3>
+    <ol class="src-list"><li><a href="../../resources.html#ref-randall11">Randall, R. B. (2011). Vibration-based condition monitoring: industrial, aerospace and automotive applications. Wiley</a> <span class="meta">Book</span></li></ol>
+    <p class="note"><a href="../../resources.html">All 64 references on the Resources page →</a></p>
+  </section>
 </main>
 
 <footer class="site-footer">
