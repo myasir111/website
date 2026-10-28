@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Damping Converter · Nodal</title>
+  <meta name="description" content="Convert between damping ratio, quality factor Q, loss factor, logarithmic decrement and half-power bandwidth.">
+  <meta property="og:title" content="Damping Converter · Nodal">
+  <meta property="og:description" content="Convert between damping ratio, quality factor Q, loss factor, logarithmic decrement and half-power bandwidth.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Signal analysis</p>
+    <h1>Damping converter</h1>
+    <p class="lede">Damping comes in five different dialects depending on whether you measured it from a bump test, a ring-down or a frequency response. Enter any one and get the rest.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>I know the…</span>
+        <select id="kind">
+          <option value="z">Damping ratio ζ</option>
+          <option value="pct">Damping ratio in % of critical</option>
+          <option value="Q">Quality factor Q (amplification)</option>
+          <option value="eta">Loss factor η</option>
+          <option value="delta">Logarithmic decrement δ</option>
+          <option value="bw">Half-power bandwidth in Hz (needs fn)</option>
+        </select>
+      </label>
+      <label class="field"><span>Value</span><input id="val" type="number" value="0.03" step="any" min="0"></label>
+      <label class="field"><span>Natural frequency f<sub>n</sub> (Hz, for bandwidth)</span><input id="fn" type="number" value="50" step="any" min="0"></label>
+    </div>
+    <div class="panel">
+      <table class="results"><tbody id="out"></tbody></table>
+      <p class="note" style="margin-top:12px">Ring-down tip: if the amplitude drops from A<sub>0</sub> to A<sub>n</sub> over n cycles, δ = ln(A<sub>0</sub>/A<sub>n</sub>) / n.</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The relationships</h2>
+    <p class="formula">Q = 1 / 2ζ &nbsp;&nbsp; η = 2ζ (at resonance) &nbsp;&nbsp; δ = 2πζ / √(1 − ζ²)<br>Δf<sub>−3dB</sub> = 2ζ·f<sub>n</sub> = f<sub>n</sub> / Q</p>
+    <p>The half-power (−3 dB) bandwidth method is what you'd use on a measured frequency response or impact test. The log decrement is for a free-decay (ring-down) time signal. Q tells you how much a resonance amplifies a force at its natural frequency. All of these assume light, viscous damping, which is a good model for most steel structures and piping.</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  function calc() {
+    const v = T.num('val'), fn = T.num('fn');
+    const k = T.$('kind').value;
+    const z = k === 'z' ? v : k === 'pct' ? v / 100 : k === 'Q' ? 1 / (2 * v) : k === 'eta' ? v / 2
+      : k === 'delta' ? v / Math.sqrt(4 * Math.PI ** 2 + v * v) : v / (2 * fn);
+    const rows = [
+      ['Damping ratio ζ', T.fmt(z)],
+      ['% of critical', T.fmt(z * 100) + ' %'],
+      ['Quality factor Q', T.fmt(1 / (2 * z))],
+      ['Loss factor η', T.fmt(2 * z)],
+      ['Logarithmic decrement δ', z < 1 ? T.fmt(2 * Math.PI * z / Math.sqrt(1 - z * z)) : '— (overdamped)'],
+      ['Half-power bandwidth at f<sub>n</sub>', `${T.fmt(2 * z * fn)} Hz`],
+      ['Cycles to decay to 10%', z < 1 ? T.fmt(Math.log(10) / (2 * Math.PI * z / Math.sqrt(1 - z * z)), 3) : '—'],
+    ];
+    T.$('out').innerHTML = rows.map(([a, b]) => `<tr><td>${a}</td><td class="num">${b}</td></tr>`).join('');
+  }
+  T.live(calc);
+})();
+</script>
+</body>
+</html>

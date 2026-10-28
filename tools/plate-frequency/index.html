@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plate Natural Frequency · Nodal</title>
+  <meta name="description" content="Natural frequencies and mode shapes of a simply supported rectangular plate, useful for duct walls, panels and enclosure plates.">
+  <meta property="og:title" content="Plate Natural Frequency · Nodal">
+  <meta property="og:description" content="Natural frequencies and mode shapes of a simply supported rectangular plate, useful for duct walls, panels and enclosure plates.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Structural dynamics</p>
+    <h1>Plate natural frequency</h1>
+    <p class="lede">First modes of a flat rectangular panel: duct walls, enclosure panels, tank shell sections, deck plates. Useful when a "drumming" panel lines up with a running speed or blade pass.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <div class="row2">
+        <label class="field"><span>Length a (mm)</span><input id="a" type="number" value="1000" step="any" min="0"></label>
+        <label class="field"><span>Width b (mm)</span><input id="b" type="number" value="800" step="any" min="0"></label>
+      </div>
+      <label class="field"><span>Thickness h (mm)</span><input id="h" type="number" value="6" step="any" min="0"></label>
+      <div class="row2">
+        <label class="field"><span>Young's modulus (GPa)</span><input id="E" type="number" value="200" step="any" min="0"></label>
+        <label class="field"><span>Poisson's ratio</span><input id="nu" type="number" value="0.3" step="0.01" min="0" max="0.49"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Density (kg/m³)</span><input id="rho" type="number" value="7850" step="any" min="0"></label>
+        <label class="field"><span>Added mass (kg/m²)</span><input id="ma" type="number" value="0" step="any" min="0"></label>
+      </div>
+      <label class="field"><span>Excitation frequency to check (Hz, optional)</span><input id="fx" type="number" value="49.5" step="any"></label>
+      <p class="note">Edges simply supported on all four sides. Fully clamped edges raise the fundamental by roughly 1.8× for a square plate.</p>
+    </div>
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>Mode (m, n)</th><th>Hz</th><th>CPM</th><th>vs excitation</th></tr></thead>
+        <tbody id="out"></tbody>
+      </table>
+      <div class="sim-label" style="margin-top:16px">Mode shape · click a row</div>
+      <canvas id="shape" style="height:200px"></canvas>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formula</h2>
+    <p class="formula">f<sub>mn</sub> = (π/2) · [ (m/a)² + (n/b)² ] · √( D / (ρh + m<sub>a</sub>) )<br>D = E·h³ / (12(1 − ν²))</p>
+    <p>m and n count the half-waves along each side. This is the exact Kirchhoff thin-plate solution for simply supported edges. Real duct and enclosure panels sit somewhere between simply supported and clamped, so treat this as the lower end of the range. Stiffeners, internal pressure and flow all shift the answer; for a fix, an FEA model tuned to a bump test is the reliable route.</p>
+    <p>Practical fixes for a resonant panel: stiffen it (moves the frequency up), brace it to a nearby structure, or add damping. Thicker plate helps less than you'd think: bending stiffness grows with h³, but mass grows with h too, so frequency only rises in proportion to thickness. Doubling the plate doubles the frequency and doubles the weight. Stiffeners usually win.</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  let modes = [], sel = 0;
+  function calc() {
+    const a = T.num('a') / 1000, b = T.num('b') / 1000, h = T.num('h') / 1000;
+    const E = T.num('E') * 1e9, nu = T.num('nu'), rho = T.num('rho'), ma = T.num('ma'), fx = T.num('fx');
+    const D = E * h ** 3 / (12 * (1 - nu * nu)), mu = rho * h + ma;
+    modes = [];
+    for (let m = 1; m <= 6; m++) for (let n = 1; n <= 6; n++)
+      modes.push({ m, n, f: Math.PI / 2 * ((m / a) ** 2 + (n / b) ** 2) * Math.sqrt(D / mu) });
+    modes.sort((x, y) => x.f - y.f); modes = modes.slice(0, 8);
+    if (sel >= modes.length) sel = 0;
+    T.$('out').innerHTML = modes.map((md, i) => {
+      const sep = isFinite(fx) && fx > 0 ? (fx - md.f) / md.f * 100 : NaN;
+      const flag = Math.abs(sep) < 20 ? ` style="color:var(--accent-2)"` : '';
+      return `<tr data-i="${i}" style="cursor:pointer${i === sel ? ';background:var(--bg)' : ''}"><td>(${md.m}, ${md.n})</td><td class="num">${T.fmt(md.f)}</td><td class="num">${T.fmt(md.f * 60)}</td><td class="num"${flag}>${isFinite(sep) ? (sep >= 0 ? '+' : '') + T.fmt(sep, 3) + ' %' : '—'}</td></tr>`;
+    }).join('');
+    draw();
+  }
+  function draw() {
+    const md = modes[sel]; if (!md) return;
+    const { ctx, w, h } = T.canvas(T.$('shape'));
+    const a = T.num('a'), b = T.num('b');
+    const sc = Math.min((w - 20) / a, (h - 20) / b), pw = a * sc, ph = b * sc, x0 = (w - pw) / 2, y0 = (h - ph) / 2;
+    const acc = T.css('--accent'), acc2 = T.css('--accent-2');
+    const N = 60;
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      const v = Math.sin(md.m * Math.PI * (i + 0.5) / N) * Math.sin(md.n * Math.PI * (j + 0.5) / N);
+      ctx.globalAlpha = Math.abs(v) * 0.9;
+      ctx.fillStyle = v >= 0 ? acc : acc2;
+      ctx.fillRect(x0 + i * pw / N, y0 + j * ph / N, pw / N + 0.6, ph / N + 0.6);
+    }
+    ctx.globalAlpha = 1; ctx.strokeStyle = T.css('--muted'); ctx.lineWidth = 1; ctx.strokeRect(x0, y0, pw, ph);
+    // nodal lines
+    ctx.setLineDash([4, 3]);
+    for (let k = 1; k < md.m; k++) { const x = x0 + k * pw / md.m; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y0 + ph); ctx.stroke(); }
+    for (let k = 1; k < md.n; k++) { const y = y0 + k * ph / md.n; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + pw, y); ctx.stroke(); }
+    ctx.setLineDash([]);
+  }
+  T.$('out').addEventListener('click', (e) => { const r = e.target.closest('tr'); if (!r) return; sel = +r.dataset.i; calc(); });
+  T.live(calc);
+})();
+</script>
+</body>
+</html>

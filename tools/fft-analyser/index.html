@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FFT Spectrum Analyser · Nodal</title>
+  <meta name="description" content="Free browser FFT analyser for vibration data: load a CSV time signal, choose window, block size and averaging, and get the amplitude spectrum, peaks and overall RMS. Data never leaves your computer.">
+  <meta property="og:title" content="FFT Spectrum Analyser · Nodal">
+  <meta property="og:description" content="Free browser FFT analyser for vibration data: load a CSV time signal, choose window, block size and averaging, and get the amplitude spectrum, peaks and overall RMS. Data never leaves your computer.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Signal analysis</p>
+    <h1>FFT spectrum analyser</h1>
+    <p class="lede">Drop in a time signal from your data logger and get a properly windowed, averaged spectrum. Everything runs in your browser; your data is never uploaded.</p>
+  </section>
+
+  <div class="panel" style="margin-top:32px">
+    <div class="sim-head">
+      <div class="seg" role="group" aria-label="Data source">
+        <button id="src-demo" class="on">Demo signal</button>
+        <button id="src-file">Load CSV / TXT</button>
+      </div>
+      <span class="note" id="info"></span>
+    </div>
+    <input type="file" id="file" accept=".csv,.txt,.dat,.tsv" hidden>
+    <div id="colpick" class="row2" style="margin-top:14px" hidden>
+      <label class="field"><span>Signal column</span><select id="col"></select></label>
+      <label class="field"><span>Time column</span><select id="tcol"></select></label>
+    </div>
+
+    <div class="controls" style="margin-top:6px">
+      <label class="field"><span>Sample rate (Hz)</span><input id="fs" type="number" value="2560" step="any" min="1"></label>
+      <label class="field"><span>Block size (samples)</span>
+        <select id="nb"><option>1024</option><option>2048</option><option selected>4096</option><option>8192</option><option>16384</option><option>32768</option><option>65536</option></select>
+      </label>
+      <label class="field"><span>Window</span>
+        <select id="win"><option value="hann" selected>Hann</option><option value="flattop">Flat top</option><option value="rect">Rectangular</option></select>
+      </label>
+      <label class="field"><span>Amplitude</span>
+        <select id="amp"><option value="pk">Peak</option><option value="rms" selected>RMS</option></select>
+      </label>
+      <label class="field"><span>Units label</span><input id="unit" type="text" value="mm/s"></label>
+      <label class="field"><span>Max frequency to show (Hz)</span><input id="fmax" type="number" value="500" step="any" min="1"></label>
+      <label class="field check"><input type="checkbox" id="logy"> <span>Log amplitude axis</span></label>
+    </div>
+
+    <div class="sim-label">Time waveform</div>
+    <canvas id="tw" style="height:170px"></canvas>
+    <div class="sim-label" style="display:flex;justify-content:space-between"><span>Spectrum</span><span id="cursor" style="text-transform:none;letter-spacing:0"></span></div>
+    <canvas id="sp" style="height:280px;cursor:crosshair"></canvas>
+  </div>
+
+  <div class="tool" style="margin-top:20px">
+    <div class="panel">
+      <table class="results"><tbody id="stats"></tbody></table>
+      <button class="btn-small" id="export" style="margin-top:14px">Download spectrum as CSV</button>
+    </div>
+    <div class="panel">
+      <table class="results">
+        <thead><tr><th>#</th><th>Frequency (Hz)</th><th>CPM</th><th>Amplitude</th><th>× 1st peak</th></tr></thead>
+        <tbody id="peaks"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>How to use it</h2>
+    <ul>
+      <li><strong>File format:</strong> plain text or CSV, one sample per row. Columns can be separated by commas, semicolons, tabs or spaces, and header lines are skipped automatically. If one column is time in seconds, select it as the time column and the sample rate is worked out for you.</li>
+      <li><strong>Block size</strong> sets the resolution: Δf = sample rate ÷ block size. A longer record allows more averages, which smooths out random noise.</li>
+      <li><strong>Averaging:</strong> blocks overlap by 50% and are RMS-averaged (power averaging), which is how most data collectors do it.</li>
+      <li><strong>Window:</strong> Hann for general use; flat top when you need accurate amplitudes of discrete peaks; rectangular only for transients that fit inside the block.</li>
+    </ul>
+    <h2>What's under the hood</h2>
+    <p class="formula">X<sub>k</sub> = Σ x<sub>n</sub>·w<sub>n</sub>·e<sup>−2πikn/N</sup> &nbsp;&nbsp; A<sub>k</sub> = 2|X<sub>k</sub>| / Σw<sub>n</sub> &nbsp;&nbsp; (peak, amplitude-corrected)</p>
+    <p>The amplitude is corrected for the window's coherent gain, so a sine that lands exactly on a bin reads its true amplitude. Between bins, Hann can under-read by up to about 15%, flat top by under 0.1%. That's why flat top is the choice for amplitude accuracy. The overall RMS is calculated from the time signal itself (mean removed), so you can compare it with your instrument's overall reading.</p>
+    <p>Related: the <a href="../fft-setup/">FFT setup planner</a> works out sample rate, lines and acquisition time before you measure, and the explainer <a href="../../explainers/fft-intuition/">What an FFT actually sees</a> covers leakage and resolution interactively.</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  let cols = null;       // parsed numeric columns from a file
+  let sig = null;        // current signal (Float64Array)
+  let spec = null;       // { f: [], a: [] }
+  let src = 'demo';
+
+  // ---- demo: 1X at 24.75 Hz with harmonics, a bearing-like tone with sidebands, and noise ----
+  function demo() {
+    const fs = 2560, N = 32768, x = new Float64Array(N);
+    let s = 7;
+    const rnd = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+    for (let i = 0; i < N; i++) {
+      const t = i / fs, f1 = 24.75;
+      const am = 1 + 0.4 * Math.cos(2 * Math.PI * f1 * t);
+      x[i] = 2.0 * Math.sin(2 * Math.PI * f1 * t) + 0.9 * Math.sin(2 * Math.PI * 2 * f1 * t + 0.5) + 0.35 * Math.sin(2 * Math.PI * 3 * f1 * t + 1.1)
+           + 0.25 * am * Math.sin(2 * Math.PI * 133.9 * t)
+           + 0.4 * Math.sqrt(-2 * Math.log(Math.max(rnd(), 1e-12))) * Math.cos(2 * Math.PI * rnd());
+    }
+    T.$('fs').value = fs;
+    return x;
+  }
+
+  // ---- parsing ----
+  function parse(text) {
+    const rows = [];
+    for (const line of text.split(/\r?\n/)) {
+      const parts = line.trim().split(/[,;\t ]+/).filter(Boolean);
+      if (!parts.length) continue;
+      const nums = parts.map(Number);
+      if (nums.every((v) => isFinite(v))) rows.push(nums);
+    }
+    if (!rows.length) throw new Error('No numeric rows found.');
+    const nc = Math.min(...rows.slice(0, 50).map((r) => r.length));
+    return Array.from({ length: nc }, (_, c) => Float64Array.from(rows, (r) => r[c]));
+  }
+
+  function fromFile() {
+    const c = +T.$('col').value, tc = T.$('tcol').value;
+    if (tc !== 'none') {
+      const t = cols[+tc], dts = [];
+      for (let i = 1; i < Math.min(t.length, 2000); i++) dts.push(t[i] - t[i - 1]);
+      dts.sort((a, b) => a - b);
+      const dt = dts[Math.floor(dts.length / 2)];
+      if (dt > 0) T.$('fs').value = +(1 / dt).toPrecision(8);
+    }
+    return cols[c];
+  }
+
+  // ---- FFT ----
+  function fft(re, im) {
+    const n = re.length;
+    for (let i = 1, j = 0; i < n; i++) {
+      let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit;
+      if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; }
+    }
+    for (let len = 2; len <= n; len <<= 1) {
+      const ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+      for (let i = 0; i < n; i += len) {
+        let cr = 1, ci = 0;
+        for (let k = 0; k < len / 2; k++) {
+          const a = i + k, b = a + len / 2;
+          const tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr;
+          re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
+          const t = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = t;
+        }
+      }
+    }
+  }
+  function windowFn(type, N) {
+    const w = new Float64Array(N);
+    for (let i = 0; i < N; i++) {
+      const p = 2 * Math.PI * i / (N - 1);
+      w[i] = type === 'hann' ? 0.5 - 0.5 * Math.cos(p)
+        : type === 'flattop' ? 0.21557895 - 0.41663158 * Math.cos(p) + 0.277263158 * Math.cos(2 * p) - 0.083578947 * Math.cos(3 * p) + 0.006947368 * Math.cos(4 * p)
+        : 1;
+    }
+    return w;
+  }
+
+  function analyse() {
+    sig = src === 'demo' ? (sig && sig.demo ? sig : Object.assign(demo(), { demo: true })) : fromFile();
+    const fs = T.num('fs');
+    let N = +T.$('nb').value;
+    while (N > sig.length && N > 256) N >>= 1;
+    const w = windowFn(T.$('win').value, N), cg = w.reduce((a, b) => a + b, 0);
+    let mean = 0; for (const v of sig) mean += v; mean /= sig.length;
+    const hop = N / 2, nAvg = Math.max(1, Math.floor((sig.length - N) / hop) + 1);
+    const pow = new Float64Array(N / 2 + 1);
+    for (let b = 0; b < nAvg; b++) {
+      const re = new Float64Array(N), im = new Float64Array(N);
+      for (let i = 0; i < N; i++) re[i] = (sig[b * hop + i] - mean) * w[i];
+      fft(re, im);
+      for (let k = 0; k <= N / 2; k++) pow[k] += (re[k] * re[k] + im[k] * im[k]);
+    }
+    const scale = T.$('amp').value === 'rms' ? Math.SQRT1_2 : 1;
+    const a = Array.from(pow, (p, k) => (k === 0 || k === N / 2 ? 1 : 2) * Math.sqrt(p / nAvg) / cg * scale);
+    a[0] = 0;
+    spec = { f: a.map((_, k) => k * fs / N), a, N, nAvg, df: fs / N };
+    let rms = 0; for (const v of sig) rms += (v - mean) ** 2; rms = Math.sqrt(rms / sig.length);
+    let pk = 0; for (const v of sig) pk = Math.max(pk, Math.abs(v - mean));
+    const u = T.$('unit').value;
+    T.$('info').textContent = `${sig.length.toLocaleString()} samples · ${(sig.length / fs).toFixed(2)} s`;
+    T.$('stats').innerHTML = [
+      ['Overall RMS (time signal)', `${T.fmt(rms)} ${u}`],
+      ['Peak (time signal)', `${T.fmt(pk)} ${u}`],
+      ['Crest factor', T.fmt(pk / rms, 3)],
+      ['Resolution Δf', `${T.fmt(spec.df)} Hz`],
+      ['Block size / averages', `${N} / ${nAvg}`],
+      ['Nyquist frequency', `${T.fmt(fs / 2)} Hz`],
+    ].map(([k, v]) => `<tr><td>${k}</td><td class="num">${v}</td></tr>`).join('');
+    peaks();
+    draw();
+  }
+
+  function peaks() {
+    const { f, a } = spec, fmax = T.num('fmax'), out = [];
+    for (let k = 2; k < a.length - 2 && f[k] <= fmax; k++) {
+      if (a[k] > a[k - 1] && a[k] >= a[k + 1] && a[k] > a[k - 2] && a[k] >= a[k + 2]) {
+        // parabolic interpolation on log amplitude for the peak frequency
+        const l = Math.log(a[k - 1] + 1e-30), c = Math.log(a[k] + 1e-30), r = Math.log(a[k + 1] + 1e-30);
+        const d = 0.5 * (l - r) / (l - 2 * c + r || 1e-12);
+        out.push({ f: f[k] + d * spec.df, a: a[k] });
+      }
+    }
+    out.sort((x, y) => y.a - x.a);
+    const top = out.slice(0, 8), f0 = top.length ? top[0].f : 1, u = T.$('unit').value;
+    T.$('peaks').innerHTML = top.map((p, i) =>
+      `<tr><td>${i + 1}</td><td class="num">${T.fmt(p.f)}</td><td class="num">${T.fmt(p.f * 60)}</td><td class="num">${T.fmt(p.a)} ${u}</td><td class="num">${T.fmt(p.f / f0, 3)}</td></tr>`).join('');
+  }
+
+  function draw(hoverX) {
+    const pad = { l: 52, r: 10, t: 8, b: 22 };
+    const fs = T.num('fs');
+    // time waveform (decimated min/max per pixel)
+    {
+      const { ctx, w, h } = T.canvas(T.$('tw'));
+      const n = sig.length, px = w - pad.l - pad.r;
+      let mx = 0; for (const v of sig) mx = Math.max(mx, Math.abs(v));
+      ctx.strokeStyle = T.css('--line'); ctx.beginPath(); ctx.moveTo(pad.l, h / 2 - 4); ctx.lineTo(w - pad.r, h / 2 - 4); ctx.stroke();
+      ctx.strokeStyle = T.css('--accent'); ctx.lineWidth = 1; ctx.beginPath();
+      for (let p = 0; p < px; p++) {
+        const i0 = Math.floor(p / px * n), i1 = Math.max(i0 + 1, Math.floor((p + 1) / px * n));
+        let lo = Infinity, hi = -Infinity;
+        for (let i = i0; i < i1; i++) { lo = Math.min(lo, sig[i]); hi = Math.max(hi, sig[i]); }
+        const Y = (v) => (h - pad.b) / 2 - v / mx * ((h - pad.b) / 2 - 4) + 4 - 4;
+        ctx.moveTo(pad.l + p, Y(hi)); ctx.lineTo(pad.l + p, Y(lo) + 0.5);
+      }
+      ctx.stroke();
+      ctx.fillStyle = T.css('--muted'); ctx.font = '11px ' + T.css('--mono'); ctx.textAlign = 'right';
+      ctx.fillText(`${(n / fs).toFixed(2)} s`, w - pad.r, h - 4);
+      ctx.textAlign = 'left'; ctx.fillText('0', pad.l, h - 4);
+    }
+    // spectrum
+    const { ctx, w, h } = T.canvas(T.$('sp'));
+    const fmax = Math.min(T.num('fmax'), fs / 2), logy = T.$('logy').checked;
+    const kMax = Math.min(spec.a.length - 1, Math.ceil(fmax / spec.df));
+    let amax = 0; for (let k = 1; k <= kMax; k++) amax = Math.max(amax, spec.a[k]);
+    const lo = logy ? amax * 1e-4 : 0;
+    const X = (f) => pad.l + f / fmax * (w - pad.l - pad.r);
+    const Y = (a) => logy
+      ? h - pad.b - (Math.log10(Math.max(a, lo)) - Math.log10(lo)) / (Math.log10(amax * 1.2) - Math.log10(lo)) * (h - pad.t - pad.b)
+      : h - pad.b - a / (amax * 1.1) * (h - pad.t - pad.b);
+    ctx.font = '11px ' + T.css('--mono'); ctx.fillStyle = T.css('--muted'); ctx.strokeStyle = T.css('--line'); ctx.lineWidth = 1;
+    const step = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000, 10000].find((s) => fmax / s <= 10) || 20000;
+    ctx.textAlign = 'center';
+    for (let f = 0; f <= fmax + 1e-9; f += step) {
+      ctx.beginPath(); ctx.moveTo(X(f), pad.t); ctx.lineTo(X(f), h - pad.b); ctx.stroke();
+      ctx.fillText(f, X(f), h - 6);
+    }
+    ctx.textAlign = 'right';
+    const ticks = logy ? [0, 1, 2, 3, 4].map((e) => amax * 1.2 / 10 ** e) : [0, 0.25, 0.5, 0.75, 1].map((q) => q * amax * 1.1);
+    ticks.forEach((v) => { if (v >= lo) ctx.fillText(T.fmt(v, 2), pad.l - 6, Y(v) + 4); });
+    ctx.strokeStyle = T.css('--accent-2'); ctx.lineWidth = 1.4; ctx.beginPath();
+    for (let k = 0; k <= kMax; k++) { const x = X(spec.f[k]), y = Y(spec.a[k]); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke();
+    if (hoverX != null && hoverX >= pad.l && hoverX <= w - pad.r) {
+      const f = (hoverX - pad.l) / (w - pad.l - pad.r) * fmax, k = Math.round(f / spec.df);
+      ctx.strokeStyle = T.css('--muted'); ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(spec.f[k]), pad.t); ctx.lineTo(X(spec.f[k]), h - pad.b); ctx.stroke(); ctx.setLineDash([]);
+      T.$('cursor').textContent = `${T.fmt(spec.f[k])} Hz · ${T.fmt(spec.f[k] * 60)} CPM · ${T.fmt(spec.a[k])} ${T.$('unit').value}`;
+    }
+  }
+
+  // ---- events ----
+  function setSrc(s) {
+    src = s;
+    T.$('src-demo').classList.toggle('on', s === 'demo');
+    T.$('src-file').classList.toggle('on', s === 'file');
+    T.$('colpick').hidden = s !== 'file';
+  }
+  T.$('src-demo').addEventListener('click', () => { setSrc('demo'); sig = null; analyse(); });
+  T.$('src-file').addEventListener('click', () => T.$('file').click());
+  T.$('file').addEventListener('change', async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      cols = parse(await f.text());
+      const opts = cols.map((_, i) => `<option value="${i}">Column ${i + 1}</option>`).join('');
+      T.$('col').innerHTML = opts; T.$('col').value = String(cols.length > 1 ? 1 : 0);
+      T.$('tcol').innerHTML = '<option value="none">None (enter sample rate)</option>' + opts;
+      T.$('tcol').value = cols.length > 1 ? '0' : 'none';
+      setSrc('file'); analyse();
+      T.$('info').textContent = f.name + ' · ' + T.$('info').textContent;
+    } catch (err) { T.$('info').textContent = 'Could not read file: ' + err.message; }
+    e.target.value = '';
+  });
+  ['fs', 'nb', 'win', 'amp', 'col', 'tcol'].forEach((id) => T.$(id).addEventListener('input', analyse));
+  ['fmax', 'logy', 'unit'].forEach((id) => T.$(id).addEventListener('input', () => { peaks(); draw(); }));
+  T.$('sp').addEventListener('mousemove', (e) => draw(e.offsetX));
+  T.$('sp').addEventListener('mouseleave', () => { T.$('cursor').textContent = ''; draw(); });
+  window.addEventListener('resize', () => draw());
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => draw());
+  T.$('export').addEventListener('click', () => {
+    const rows = ['frequency_hz,amplitude_' + T.$('amp').value].concat(spec.f.map((f, k) => `${f},${spec.a[k]}`));
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv' }));
+    a.download = 'spectrum.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  analyse();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acoustic Resonance & Dead Legs · Nodal</title>
+  <meta name="description" content="Speed of sound in a gas, acoustic natural frequencies of pipes and closed side branches (dead legs), and the flow velocity range that can excite them by vortex shedding.">
+  <meta property="og:title" content="Acoustic Resonance & Dead Legs · Nodal">
+  <meta property="og:description" content="Speed of sound in a gas, acoustic natural frequencies of pipes and closed side branches (dead legs), and the flow velocity range that can excite them by vortex shedding.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Piping &amp; flow</p>
+    <h1>Acoustic resonance &amp; dead legs</h1>
+    <p class="lede">A closed side branch (dead leg, relief valve stub, PSV inlet) is a quarter-wave resonator. Flow across its mouth sheds vortices, and at the wrong velocity they lock onto the acoustic mode and pump up large pulsations.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Speed of sound from</span>
+        <select id="cm"><option value="gas" selected>Gas properties</option><option value="direct">Enter directly</option></select>
+      </label>
+      <div id="g-gas">
+        <div class="row2">
+          <label class="field"><span>Ratio of specific heats γ</span><input id="gam" type="number" value="1.3" step="0.01" min="1"></label>
+          <label class="field"><span>Molecular weight (kg/kmol)</span><input id="mw" type="number" value="19" step="any" min="1"></label>
+        </div>
+        <div class="row2">
+          <label class="field"><span>Temperature (°C)</span><input id="tc" type="number" value="40" step="any"></label>
+          <label class="field"><span>Compressibility Z</span><input id="z" type="number" value="0.9" step="0.01" min="0.1"></label>
+        </div>
+      </div>
+      <div id="g-direct" hidden>
+        <label class="field"><span>Speed of sound c (m/s)</span><input id="c" type="number" value="420" step="any" min="1"></label>
+      </div>
+      <label class="field"><span>Branch / pipe length L (m)</span><input id="L" type="number" value="1.2" step="any" min="0"></label>
+      <label class="field"><span>End conditions</span>
+        <select id="bc"><option value="co" selected>Closed – open (dead leg off a main line)</option><option value="cc">Closed – closed</option><option value="oo">Open – open</option></select>
+      </label>
+      <div class="row2">
+        <label class="field"><span>Branch internal diameter d (mm)</span><input id="d" type="number" value="50" step="any" min="0"></label>
+        <label class="field"><span>Main line flow velocity (m/s)</span><input id="V" type="number" value="15" step="any" min="0"></label>
+      </div>
+      <p class="note">Gas defaults are roughly a light natural gas. For a dead leg, L is measured from the main pipe wall to the closed end; adding an end correction of about 0.4·d gives a slightly better estimate.</p>
+    </div>
+    <div class="panel">
+      <div class="row2" style="margin-bottom:10px">
+        <div><div class="note">Speed of sound</div><div class="big" id="o-c">—<small>m/s</small></div></div>
+        <div><div class="note">First acoustic mode</div><div class="big" id="o-f1">—<small>Hz</small></div></div>
+      </div>
+      <table class="results">
+        <thead><tr><th>Mode</th><th>Hz</th><th>Wavelength (m)</th></tr></thead>
+        <tbody id="out"></tbody>
+      </table>
+      <table class="results" style="margin-top:16px"><tbody id="vx"></tbody></table>
+      <div id="o-msg"></div>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The formulas</h2>
+    <p class="formula">c = √( γ · Z · R<sub>u</sub> · T / M<sub>w</sub> ) &nbsp;&nbsp; (R<sub>u</sub> = 8314.46 J/kmol·K)<br>closed–open: f<sub>n</sub> = (2n − 1) · c / 4L &nbsp;&nbsp; closed–closed or open–open: f<sub>n</sub> = n · c / 2L<br>shedding at the branch mouth: f<sub>s</sub> = St · V / d</p>
+    <p>Lab studies on closed side branches show the acoustic modes being excited over a Strouhal range of roughly <strong>0.27 to 0.55</strong> (based on branch diameter and main-pipe velocity). The calculator turns that band into a range of main-line velocities that can excite the first mode, so you can see whether normal operation, turndown or start-up passes through it.</p>
+    <p>Typical fixes: shorten the branch to push its frequency above the excitation, round or chamfer the branch entrance, or relocate it away from flow disturbances. Pulsation from this mechanism is a classic cause of PSV chatter and small-bore connection fatigue.</p>
+    <p class="note">Screening estimate only. Branch-to-main diameter ratio, the neighbouring branches and the system's acoustic response all change the onset. Source for the Strouhal band: experimental study of flow-excited acoustic resonance in ducts with closed side branches, <a href="https://eng-web77-v02.ocio.monash.edu/intranet/proceedings/fiv2008/html/pdf/291.pdf">FIV 2008 conference proceedings, paper 291</a>.</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  const Ru = 8314.46, ST_LO = 0.27, ST_HI = 0.55;
+  function calc() {
+    const gas = T.$('cm').value === 'gas';
+    T.$('g-gas').hidden = !gas; T.$('g-direct').hidden = gas;
+    const c = gas ? Math.sqrt(T.num('gam') * T.num('z') * Ru * (T.num('tc') + 273.15) / T.num('mw')) : T.num('c');
+    const L = T.num('L'), bc = T.$('bc').value;
+    const f = [1, 2, 3, 4].map((n) => (bc === 'co' ? (2 * n - 1) * c / (4 * L) : n * c / (2 * L)));
+    T.$('o-c').innerHTML = `${T.fmt(c)}<small>m/s</small>`;
+    T.$('o-f1').innerHTML = `${T.fmt(f[0])}<small>Hz</small>`;
+    T.$('out').innerHTML = f.map((v, i) => `<tr><td>${i + 1}</td><td class="num">${T.fmt(v)}</td><td class="num">${T.fmt(c / v)}</td></tr>`).join('');
+    const d = T.num('d') / 1000, V = T.num('V');
+    const fs = (St) => St * V / d;
+    const vLo = f[0] * d / ST_HI, vHi = f[0] * d / ST_LO; // velocity band that excites mode 1
+    T.$('vx').innerHTML = [
+      ['Shedding frequency at branch mouth (St 0.27–0.55)', `${T.fmt(fs(ST_LO))} – ${T.fmt(fs(ST_HI))} Hz`],
+      ['Main-line velocity that can excite mode 1', `${T.fmt(vLo)} – ${T.fmt(vHi)} m/s`],
+      ['Branch length / diameter', T.fmt(L / d, 3)],
+    ].map(([k, v]) => `<tr><td>${k}</td><td class="num">${v}</td></tr>`).join('');
+    T.$('o-msg').innerHTML = bc !== 'co' ? '' : (V >= vLo && V <= vHi)
+      ? `<div class="warn">The main-line velocity sits inside the band that can excite the first acoustic mode of this dead leg. Check for pulsation, or detune the branch.</div>`
+      : V > vHi
+        ? `<div class="ok">The flow is above the first-mode excitation band (${T.fmt(vLo)}–${T.fmt(vHi)} m/s). Check the band isn't crossed at start-up or turndown, and check higher modes.</div>`
+        : `<div class="ok">The flow is below the first-mode excitation band. Check higher flow cases.</div>`;
+  }
+  T.live(calc);
+})();
+</script>
+</body>
+</html>

@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vibration Calculators · Nodal</title>
-  <meta name="description" content="Free browser-based vibration calculators: unit conversion, SDOF response, pipe span natural frequency, bearing defect frequencies, vortex shedding and Miles' equation.">
+  <meta name="description" content="Free browser-based vibration calculators: FFT analyser, unit conversion, damping, bearing and gear frequencies, SDOF, pipe span and plate natural frequencies, vortex shedding, dead-leg acoustic resonance, AIV sound power and Miles' equation.">
   <meta property="og:title" content="Vibration Calculators · Nodal">
-  <meta property="og:description" content="Free browser-based vibration calculators: unit conversion, SDOF response, pipe span natural frequency, bearing defect frequencies, vortex shedding and Miles' equation.">
+  <meta property="og:description" content="Free browser-based vibration calculators: FFT analyser, unit conversion, damping, bearing and gear frequencies, SDOF, pipe span and plate natural frequencies, vortex shedding, dead-leg acoustic resonance, AIV sound power and Miles' equation.">
   <meta property="og:image" content="https://nodallab.dev/assets/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -32,21 +32,47 @@
   <section class="hero" style="padding-bottom:0">
     <p class="eyebrow">Tools</p>
     <h1>Vibration calculators</h1>
-    <p class="lede">Quick engineering calculators that run in your browser. No install, no sign-up, nothing sent anywhere. Each one shows the formula it uses so you can check it.</p>
+    <p class="lede">Engineering calculators that run in your browser. No install, no sign-up, and nothing you type or load is sent anywhere. Each one shows the formula it uses so you can check it.</p>
   </section>
 
   <div class="tool-group">
-    <h2>Measurement &amp; signal</h2>
+    <h2>Signal analysis</h2>
     <div class="cards">
+      <a class="card" href="fft-analyser/">
+        <span class="tag">New · Analyser</span>
+        <h3>FFT spectrum analyser</h3>
+        <p>Load a CSV time signal and get a windowed, averaged spectrum with peak list, overall RMS and CSV export.</p>
+      </a>
+      <a class="card" href="fft-setup/">
+        <span class="tag">New · Planning</span>
+        <h3>FFT setup planner</h3>
+        <p>F<sub>max</sub>, lines and averages to sample rate, resolution and acquisition time, with a separation check.</p>
+      </a>
       <a class="card" href="vibration-units/">
         <span class="tag">Conversion</span>
         <h3>Vibration unit converter</h3>
         <p>Acceleration, velocity and displacement at any frequency, in peak, RMS or peak-to-peak.</p>
       </a>
+      <a class="card" href="damping/">
+        <span class="tag">New · Conversion</span>
+        <h3>Damping converter</h3>
+        <p>Damping ratio, Q, loss factor, log decrement and half-power bandwidth: enter one, get the rest.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tool-group">
+    <h2>Machinery diagnostics</h2>
+    <div class="cards">
       <a class="card" href="bearing-frequencies/">
-        <span class="tag">Diagnostics</span>
+        <span class="tag">Bearings</span>
         <h3>Bearing defect frequencies</h3>
         <p>BPFO, BPFI, BSF and FTF from bearing geometry and shaft speed, with harmonics.</p>
+      </a>
+      <a class="card" href="gear-belt/">
+        <span class="tag">New · Gears &amp; belts</span>
+        <h3>Gear mesh &amp; belt frequencies</h3>
+        <p>GMF, shaft speeds, hunting tooth and assembly phase frequencies, and belt frequency.</p>
       </a>
     </div>
   </div>
@@ -64,21 +90,36 @@
         <h3>Pipe span natural frequency</h3>
         <p>First four bending modes of a pipe or beam span, with contents and insulation, plus animated mode shapes.</p>
       </a>
-    </div>
-  </div>
-
-  <div class="tool-group">
-    <h2>Flow &amp; random vibration</h2>
-    <div class="cards">
-      <a class="card" href="vortex-shedding/">
-        <span class="tag">FIV</span>
-        <h3>Vortex shedding frequency</h3>
-        <p>Strouhal shedding frequency for a cylinder in flow, compared against a structure's natural frequency.</p>
+      <a class="card" href="plate-frequency/">
+        <span class="tag">New · Panels</span>
+        <h3>Plate natural frequency</h3>
+        <p>Modes of a rectangular panel (duct walls, enclosures) with mode-shape maps and an excitation check.</p>
       </a>
       <a class="card" href="miles-equation/">
         <span class="tag">Random</span>
         <h3>Miles' equation</h3>
         <p>RMS response of an SDOF system to flat random base excitation.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tool-group">
+    <h2>Piping &amp; flow</h2>
+    <div class="cards">
+      <a class="card" href="aiv-sound-power/">
+        <span class="tag">New · AIV</span>
+        <h3>AIV sound power level</h3>
+        <p>Carucci–Mueller sound power from a valve, PSV or orifice, with choked-flow check and sensitivity.</p>
+      </a>
+      <a class="card" href="acoustic-resonance/">
+        <span class="tag">New · Pulsation</span>
+        <h3>Acoustic resonance &amp; dead legs</h3>
+        <p>Speed of sound, pipe and side-branch acoustic modes, and the flow velocities that can excite them.</p>
+      </a>
+      <a class="card" href="vortex-shedding/">
+        <span class="tag">FIV</span>
+        <h3>Vortex shedding frequency</h3>
+        <p>Strouhal shedding frequency for a cylinder in flow, compared against a structure's natural frequency.</p>
       </a>
     </div>
   </div>

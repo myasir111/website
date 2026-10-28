@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FFT Setup Planner · Nodal</title>
+  <meta name="description" content="Plan a vibration measurement: from Fmax, lines and averages to sample rate, resolution, block time and total acquisition time, and check whether two frequencies can be separated.">
+  <meta property="og:title" content="FFT Setup Planner · Nodal">
+  <meta property="og:description" content="Plan a vibration measurement: from Fmax, lines and averages to sample rate, resolution, block time and total acquisition time, and check whether two frequencies can be separated.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../tools/" class="active">Tools</a>
+      <a href="../../projects.html">Projects</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Tools</a> · Signal analysis</p>
+    <h1>FFT setup planner</h1>
+    <p class="lede">Before you hit record: what resolution you'll get, how long each average takes, and whether you'll be able to separate the frequencies you care about.</p>
+  </section>
+
+  <div class="tool" style="margin-top:32px">
+    <div class="panel">
+      <label class="field"><span>Maximum frequency, F<sub>max</sub> (Hz)</span><input id="fmax" type="number" value="1000" step="any" min="1"></label>
+      <label class="field"><span>Lines of resolution</span>
+        <select id="lines"><option>100</option><option>200</option><option>400</option><option selected>800</option><option>1600</option><option>3200</option><option>6400</option><option>12800</option><option>25600</option></select>
+      </label>
+      <div class="row2">
+        <label class="field"><span>Averages</span><input id="navg" type="number" value="4" step="1" min="1"></label>
+        <label class="field"><span>Overlap (%)</span><select id="ov"><option value="0">0</option><option value="50" selected>50</option><option value="67">67</option><option value="75">75</option></select></label>
+      </div>
+      <label class="field"><span>Window</span>
+        <select id="win"><option value="1.5" selected>Hann</option><option value="3.77">Flat top</option><option value="1">Rectangular</option></select>
+      </label>
+      <h3 style="font-size:15px;margin:18px 0 8px">Separation check (optional)</h3>
+      <div class="row2">
+        <label class="field"><span>Frequency A (Hz)</span><input id="fa" type="number" value="49.5" step="any"></label>
+        <label class="field"><span>Frequency B (Hz)</span><input id="fb" type="number" value="50" step="any"></label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="row2" style="margin-bottom:10px">
+        <div><div class="note">Resolution Δf</div><div class="big" id="o-df">—<small>Hz</small></div></div>
+        <div><div class="note">Total acquisition time</div><div class="big" id="o-tt">—<small>s</small></div></div>
+      </div>
+      <table class="results"><tbody id="out"></tbody></table>
+      <div id="o-msg"></div>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>The relationships</h2>
+    <p class="formula">Δf = F<sub>max</sub> / lines &nbsp;&nbsp; T<sub>block</sub> = 1 / Δf = lines / F<sub>max</sub><br>f<sub>s</sub> = 2.56 · F<sub>max</sub> &nbsp;&nbsp; N = 2.56 · lines<br>T<sub>total</sub> = T<sub>block</sub> · (1 + (n<sub>avg</sub> − 1)(1 − overlap))</p>
+    <p>The 2.56 factor gives the anti-aliasing filter room to roll off above F<sub>max</sub>, and it's why analysers sample at 2.56× rather than the Nyquist minimum of 2×.</p>
+    <p>Resolution is set purely by how long you record. To separate two close peaks you need the bin spacing, widened by the window's effective noise bandwidth, to be several times smaller than their difference. A common rule of thumb is a gap of at least 4 bins with a Hann window. Zoom FFT or a lower F<sub>max</sub> with more lines both achieve this.</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script src="../tools.js"></script>
+<script>
+(function () {
+  function calc() {
+    const fmax = T.num('fmax'), L = +T.$('lines').value, n = Math.max(1, Math.round(T.num('navg'))), ov = +T.$('ov').value / 100, enbw = +T.$('win').value;
+    const df = fmax / L, tb = 1 / df, fs = 2.56 * fmax, N = 2.56 * L;
+    const tt = tb * (1 + (n - 1) * (1 - ov));
+    T.$('o-df').innerHTML = `${T.fmt(df)}<small>Hz</small>`;
+    T.$('o-tt').innerHTML = `${T.fmt(tt, 3)}<small>s</small>`;
+    T.$('out').innerHTML = [
+      ['Sample rate', `${T.fmt(fs)} Hz`],
+      ['Block size', `${T.fmt(N)} samples`],
+      ['Time per block', `${T.fmt(tb, 3)} s`],
+      ['Resolution in CPM', `${T.fmt(df * 60)} CPM`],
+      ['Effective bandwidth (window ENBW × Δf)', `${T.fmt(enbw * df)} Hz`],
+    ].map(([k, v]) => `<tr><td>${k}</td><td class="num">${v}</td></tr>`).join('');
+    const fa = T.num('fa'), fb = T.num('fb');
+    if (isFinite(fa) && isFinite(fb) && fa !== fb) {
+      const bins = Math.abs(fa - fb) / df;
+      const need = Math.abs(fa - fb) / 4;
+      T.$('o-msg').innerHTML = bins >= 4
+        ? `<div class="ok">${T.fmt(fa)} Hz and ${T.fmt(fb)} Hz are ${T.fmt(bins, 3)} bins apart: separable.</div>`
+        : `<div class="warn">Only ${T.fmt(bins, 3)} bins apart: likely to merge into one peak. Aim for Δf ≤ ${T.fmt(need)} Hz, e.g. ${Math.ceil(fmax / need)}+ lines at this F<sub>max</sub>, which takes ${T.fmt(4 / Math.abs(fa - fb), 3)} s per block.</div>`;
+    } else T.$('o-msg').innerHTML = '';
+  }
+  T.live(calc);
+})();
+</script>
+</body>
+</html>
