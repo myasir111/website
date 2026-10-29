@@ -48,7 +48,9 @@
     [
       [r`b_n=\frac{2}{T}\int_0^{T} f(t)\sin(n\omega_0 t)\,dt`, '← how much nX is in f'],
       [r`=\frac{2}{T}\Big[\int_0^{T/2}\!\sin(n\omega_0 t)\,dt-\int_{T/2}^{T}\!\sin(n\omega_0 t)\,dt\Big]`, '← square: +1 then −1'],
-      [r`=\frac{2}{T}\cdot\frac{1}{n\omega_0}\Big[(1-\cos n\pi)-(\cos n\pi-1)\Big]`, '← ∫ sin = −cos / (nω₀)'],
+      [r`\int\sin(n\omega_0 t)\,dt=-\frac{\cos(n\omega_0 t)}{n\omega_0}`, '← antiderivative'],
+      [r`\int_0^{T/2}\!\sin=\frac{1-\cos(n\omega_0\tfrac{T}{2})}{n\omega_0}=\frac{1-\cos n\pi}{n\omega_0},\qquad \int_{T/2}^{T}\!\sin=\frac{\cos n\pi-\cos 2n\pi}{n\omega_0}=\frac{\cos n\pi-1}{n\omega_0}`, '← limits; ω₀T = 2π'],
+      [r`=\frac{2}{T}\cdot\frac{1}{n\omega_0}\Big[(1-\cos n\pi)-(\cos n\pi-1)\Big]=\frac{4\,(1-\cos n\pi)}{n\,\omega_0 T}`, '← collect'],
       [r`=\frac{2}{\pi n}\big(1-(-1)^n\big)`, '← ω₀T = 2π, cos nπ = (−1)ⁿ'],
       [r`b_n=\frac{4}{\pi n}\ \ (n\ \text{odd}),\qquad b_n=0\ \ (n\ \text{even})`, '← falls like 1/n'],
     ],
@@ -70,17 +72,30 @@
   const F = (x, d = 3) => (+x.toFixed(d)).toString();
   WORK.push((s) => {
     if (!s.showSol) return [];
-    const { A, R, p } = s.ex, n = firstOdd(p);
+    const { A, R, p } = s.ex, n = firstOdd(p), pi = 3.1416;
     return [
-      [r`b_n=\frac{4A}{\pi n}\ (n\ \text{odd}),\qquad b_n=0\ (n\ \text{even})`, '← step 5, scaled by A'],
-      [r`b_1=\frac{4\times ${A}}{\pi}=${F(4 * A / Math.PI)}\ \text{mm/s}`, '← 1X'],
-      [r`b_2=\frac{2}{T}\Big[\int_0^{T/2}\!A\sin(2\omega_0 t)\,dt-\int_{T/2}^{T}\!A\sin(2\omega_0 t)\,dt\Big]`, '← why is 2X zero? work it out'],
-      [r`\int_0^{T/2}\!\sin(2\omega_0 t)\,dt=\frac{1-\cos(2\omega_0\cdot\tfrac{T}{2})}{2\omega_0}=\frac{1-\cos 2\pi}{2\omega_0}=0`, '← a whole 2X cycle fits in each half'],
-      [r`\int_{T/2}^{T}\!\sin(2\omega_0 t)\,dt=\frac{\cos 2\pi-\cos 4\pi}{2\omega_0}=0`, '← its up and down areas cancel'],
-      [r`b_2=\frac{2A}{T}\,(0-0)=0`, '← zero, exactly: see the sketch'],
-      [r`b_3=\frac{4\times ${A}}{3\pi}=${F(4 * A / (3 * Math.PI))}\ \text{mm/s}`, '← a third of 1X'],
-      [r`f_3=3\times\frac{${R}}{60}=${F(R / 20, 2)}\ \text{Hz}`, '← where 3X sits'],
-      [r`\frac{b_n}{b_1}=\frac{1}{n}<${p / 100}\ \Rightarrow\ n>${F(100 / p, 2)}\ \Rightarrow\ n=${n}`, '← first odd n that fits'],
+      [r`f(t)=a_0+\sum_{n=1}^{\infty}\big[a_n\cos(n\omega_0 t)+b_n\sin(n\omega_0 t)\big]`, '← start: any repeating signal (step 6)'],
+      [r`a_0=\frac{1}{T}\!\int_0^T\! f\,dt`, '← how to get each coefficient'],
+      [r`a_n=\frac{2}{T}\!\int_0^T\! f\cos(n\omega_0 t)\,dt,\qquad b_n=\frac{2}{T}\!\int_0^T\! f\sin(n\omega_0 t)\,dt`, ''],
+      [r`f(t)=\begin{cases}+A=+${A}, & 0<t<\tfrac{T}{2}\\ -A=-${A}, & \tfrac{T}{2}<t<T\end{cases}`, '← our signal, written out'],
+      [r`a_0=\frac{1}{T}\Big[A\cdot\tfrac{T}{2}+(-A)\cdot\tfrac{T}{2}\Big]=0`, '← as long up as down: no DC'],
+      [r`a_n=\frac{2A}{T}\Big[\int_0^{T/2}\!\cos(n\omega_0 t)\,dt-\int_{T/2}^{T}\!\cos(n\omega_0 t)\,dt\Big]`, '← cosine parts'],
+      [r`=\frac{2A}{T}\cdot\frac{\sin n\pi-(\sin 2n\pi-\sin n\pi)}{n\omega_0}=0`, '← ∫cos = sin/(nω₀); sin of a multiple of π is 0'],
+      [r`b_n=\frac{2}{T}\Big[\int_0^{T/2}\!A\sin(n\omega_0 t)\,dt+\int_{T/2}^{T}\!(-A)\sin(n\omega_0 t)\,dt\Big]`, '← only sines left: split where f flips'],
+      [r`\int\sin(n\omega_0 t)\,dt=-\frac{\cos(n\omega_0 t)}{n\omega_0}`, '← antiderivative'],
+      [r`\int_0^{T/2}\!\sin(n\omega_0 t)\,dt=\frac{-\cos(n\omega_0\tfrac{T}{2})+\cos 0}{n\omega_0}=\frac{1-\cos n\pi}{n\omega_0}`, '← put in the limits; ω₀T/2 = π'],
+      [r`\int_{T/2}^{T}\!\sin(n\omega_0 t)\,dt=\frac{-\cos(n\omega_0 T)+\cos(n\omega_0\tfrac{T}{2})}{n\omega_0}=\frac{\cos n\pi-1}{n\omega_0}`, '← ω₀T = 2π, cos 2nπ = 1'],
+      [r`b_n=\frac{2A}{T}\cdot\frac{(1-\cos n\pi)-(\cos n\pi-1)}{n\omega_0}=\frac{2A}{n\,\omega_0 T}\cdot 2\,(1-\cos n\pi)`, '← collect the brackets'],
+      [r`n\,\omega_0 T=2\pi n\ \Rightarrow\ b_n=\frac{4A}{2\pi n}\,(1-\cos n\pi)=\frac{2A}{\pi n}\,(1-\cos n\pi)`, ''],
+      [r`\cos n\pi=(-1)^n:\qquad n\ \text{odd}\Rightarrow 1-\cos n\pi=1-(-1)=2`, '← the key step'],
+      [r`\phantom{\cos n\pi=(-1)^n:}\qquad n\ \text{even}\Rightarrow 1-\cos n\pi=1-1=0`, '← this is why the evens vanish'],
+      [r`\boxed{\,b_n=\frac{4A}{\pi n}\ (n\ \text{odd}),\qquad b_n=0\ (n\ \text{even})\,}`, '← the formula, now earned'],
+      [r`b_1=\frac{4\times ${A}}{\pi\times 1}=\frac{${F(4 * A, 2)}}{${pi}}=${F(4 * A / Math.PI)}\ \text{mm/s}`, '← n = 1'],
+      [r`b_2=\frac{2\times ${A}}{2\pi}\,(1-\cos 2\pi)=\frac{${A}}{\pi}\,(1-1)=0`, '← n = 2: the bracket is zero'],
+      [r`b_3=\frac{4\times ${A}}{\pi\times 3}=\frac{${F(4 * A, 2)}}{${F(3 * Math.PI, 3)}}=${F(4 * A / (3 * Math.PI))}\ \text{mm/s}`, '← n = 3'],
+      [r`f_3=3\times\frac{${R}\ \text{rev/min}}{60\ \text{s/min}}=\frac{${3 * R}}{60}=${F(R / 20, 2)}\ \text{Hz}`, '← 3X in hertz'],
+      [r`\frac{b_n}{b_1}=\frac{4A/(\pi n)}{4A/\pi}=\frac{1}{n}`, '← A and π cancel'],
+      [r`\frac{1}{n}<${p / 100}\ \Rightarrow\ n>\frac{1}{${p / 100}}=${F(100 / p, 2)}\ \Rightarrow\ \text{first odd } n=${n}`, '← n must be odd: evens are zero'],
     ];
   });
 
@@ -199,7 +214,7 @@
           if (!s.ex) newEx2(s);
           const { A, R, p } = s.ex;
           return `<div class="problem"><p>A vibrating screen is driven so its velocity is close to a <b>square wave</b> of amplitude \\(A=${A}\\) mm/s, at <b>${R} rpm</b>.</p>
-                  <p>Use \\(b_n=4A/(\\pi n)\\) for odd \\(n\\). Work these out, type them in and press Check. The last one asks: which is the first harmonic whose peak is below <b>${p}%</b> of 1X?</p></div>`;
+                  <p>Start from the Fourier coefficients (step 6) and work out each peak, type it in and press Check. Show working derives everything from scratch. The last one asks: which is the first harmonic whose peak is below <b>${p}%</b> of 1X?</p></div>`;
         },
         controls: [
           { type: 'answer', label: '1X amplitude \\(b_1\\)', unit: 'mm/s', value: (s) => 4 * s.ex.A / Math.PI, rel: 0.02 },

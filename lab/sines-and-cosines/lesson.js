@@ -75,11 +75,17 @@
     if (!s.showSol) return [];
     const { R, a, b } = s.ex, f1 = R / 60, c = Math.hypot(a, b), ph = Math.atan2(a, b) * 180 / Math.PI;
     return [
-      [r`f_1=\frac{\text{rpm}}{60}=\frac{${R}}{60}=${F(f1)}\ \text{Hz}`, '← 1X'],
-      [r`f_2=2f_1=2\times ${F(f1)}=${F(2 * f1)}\ \text{Hz}`, '← 2X'],
-      [r`T=\frac{1}{f_1}=\frac{1}{${F(f1)}}=${F(1 / f1, 5)}\ \text{s}=${F(1000 / f1)}\ \text{ms}`, '← one turn'],
-      [r`c=\sqrt{a^2+b^2}=\sqrt{${a}^2+${b}^2}=\sqrt{${F(a * a + b * b)}}=${F(c)}\ \text{mm/s}`, '← step 4'],
-      [r`\tan\varphi=\frac{a}{b}=\frac{${a}}{${b}}=${F(a / b, 3)}\ \Rightarrow\ \varphi=${F(ph, 1)}^\circ`, '← calculator in degrees: tan⁻¹'],
+      [r`f_1=\frac{\text{rpm}}{60}`, '← rev per minute → rev per second'],
+      [r`f_1=\frac{${R}\ \text{rev/min}}{60\ \text{s/min}}=${F(f1)}\ \text{rev/s}=${F(f1)}\ \text{Hz}`, '← 1X'],
+      [r`f_2=2\times f_1=2\times ${F(f1)}=${F(2 * f1)}\ \text{Hz}`, '← 2X: twice per turn'],
+      [r`T=\frac{1}{f_1}=\frac{1}{${F(f1)}}=${F(1 / f1, 5)}\ \text{s}`, '← time for one turn'],
+      [r`T=${F(1 / f1, 5)}\times 1000=${F(1000 / f1)}\ \text{ms}`, '← seconds → milliseconds'],
+      [r`a\cos\omega t+b\sin\omega t=c\,\sin(\omega t+\varphi),\quad c=\sqrt{a^2+b^2},\ \tan\varphi=\tfrac{a}{b}`, '← from step 4'],
+      [r`a^2=${a}^2=${F(a * a)},\qquad b^2=${b}^2=${F(b * b)}`, '← square each part'],
+      [r`a^2+b^2=${F(a * a)}+${F(b * b)}=${F(a * a + b * b)}`, '← add'],
+      [r`c=\sqrt{${F(a * a + b * b)}}=${F(c)}\ \text{mm/s}`, '← square root'],
+      [r`\tan\varphi=\frac{a}{b}=\frac{${a}}{${b}}=${F(a / b, 4)}`, '← divide'],
+      [r`\varphi=\tan^{-1}(${F(a / b, 4)})=${F(ph, 1)}^\circ`, '← calculator in degrees mode'],
     ];
   });
 

@@ -67,21 +67,37 @@
   WORK.push((s) => {
     if (!s.ex) newEx3(s);
     const { A } = s.ex, P = Math.PI;
-    const given = [r`A\max(\sin\omega_0 t,0)=\frac{A}{\pi}+\frac{A}{2}\sin\omega_0 t-\frac{2A}{\pi}\!\sum_{n\ \text{even}}\!\frac{\cos(n\omega_0 t)}{n^2-1}`, '← given: the cut sine, scaled by A'];
+    const given = [r`f(t)=\begin{cases}A\sin(\omega_0 t), & 0<t<\tfrac{T}{2}\\ 0, & \tfrac{T}{2}<t<T\end{cases}\qquad A=${A}\ \text{mm/s}`, '← our signal: the bottom half cut off'];
     if (!s.showSol) return [given];
     return [
       given,
-      [r`\text{DC}=\frac{A}{\pi}=\frac{${A}}{\pi}=${F(A / P)}`, '← the offset'],
-      [r`1\text{X}=\frac{A}{2}=${F(A / 2)}`, ''],
-      [r`2\text{X}=\frac{2A}{\pi(2^2-1)}=\frac{2\times ${A}}{3\pi}=${F(2 * A / (3 * P))}`, '← even: allowed now'],
-      [r`b_3=\frac{2}{T}\int_0^{T/2}\!A\sin(\omega_0 t)\sin(3\omega_0 t)\,dt`, '← why is 3X zero? f = 0 on the 2nd half'],
-      [r`\sin\alpha\sin\beta=\tfrac12\big[\cos(\alpha-\beta)-\cos(\alpha+\beta)\big]`, '← product-to-sum rule'],
-      [r`b_3=\frac{A}{T}\int_0^{T/2}\!\big[\cos(2\omega_0 t)-\cos(4\omega_0 t)\big]dt=\frac{A}{T}\Big[\frac{\sin 2\omega_0 t}{2\omega_0}-\frac{\sin 4\omega_0 t}{4\omega_0}\Big]_0^{T/2}`, ''],
-      [r`=\frac{A}{T}\Big[\frac{\sin 2\pi}{2\omega_0}-\frac{\sin 4\pi}{4\omega_0}\Big]=0`, '← sin 2π = sin 4π = 0'],
-      [r`a_3=\frac{A}{T}\int_0^{T/2}\!\big[\sin(4\omega_0 t)-\sin(2\omega_0 t)\big]dt=\frac{A}{T}\Big[\frac{1-\cos4\pi}{4\omega_0}-\frac{1-\cos 2\pi}{2\omega_0}\Big]=0`, '← cosine part: zero too'],
-      [r`3\text{X}=\sqrt{a_3^2+b_3^2}=0`, '← green and red cancel: see the sketch'],
-      [r`4\text{X}=\frac{2A}{\pi(4^2-1)}=\frac{2\times ${A}}{15\pi}=${F(2 * A / (15 * P))}`, '← falls like 1/n²'],
-      [r`\frac{2\text{X}}{1\text{X}}=\frac{2A/3\pi}{A/2}=\frac{4}{3\pi}\approx 0.424`, '← same for any A'],
+      [r`a_0=\frac{1}{T}\!\int_0^T\! f\,dt`, '← the recipe (lesson 2, step 6)'],
+      [r`a_n=\frac{2}{T}\!\int_0^T\! f\cos(n\omega_0 t)\,dt,\qquad b_n=\frac{2}{T}\!\int_0^T\! f\sin(n\omega_0 t)\,dt`, '← f = 0 on the 2nd half: only 0 → T/2 counts'],
+      [r`a_0=\frac{A}{T}\int_0^{T/2}\!\sin(\omega_0 t)\,dt=\frac{A}{T}\cdot\frac{1-\cos\pi}{\omega_0}=\frac{A}{T}\cdot\frac{2}{\omega_0}=\frac{2A}{\omega_0 T}=\frac{A}{\pi}`, '← DC; ω₀T = 2π'],
+      [r`b_1=\frac{2A}{T}\int_0^{T/2}\!\sin^2(\omega_0 t)\,dt`, '← 1X, sine part'],
+      [r`=\frac{2A}{T}\int_0^{T/2}\!\frac{1-\cos 2\omega_0 t}{2}\,dt`, '← sin²x = (1 − cos 2x)/2'],
+      [r`=\frac{A}{T}\Big[t-\frac{\sin 2\omega_0 t}{2\omega_0}\Big]_0^{T/2}`, '← integrate'],
+      [r`=\frac{A}{T}\Big[\frac{T}{2}-\frac{\sin 2\pi}{2\omega_0}\Big]=\frac{A}{T}\cdot\frac{T}{2}=\frac{A}{2}`, '← sin 2π = 0'],
+      [r`a_1=\frac{2A}{T}\int_0^{T/2}\!\sin\omega_0 t\,\cos\omega_0 t\,dt=\frac{A}{T}\int_0^{T/2}\!\sin 2\omega_0 t\,dt`, '← 1X, cosine part; sin x cos x = ½ sin 2x'],
+      [r`=\frac{A}{T}\cdot\frac{1-\cos 2\pi}{2\omega_0}=0\qquad\Rightarrow\ 1\text{X}=\frac{A}{2}`, '← cos 2π = 1'],
+      [r`a_n=\frac{2A}{T}\int_0^{T/2}\!\sin(\omega_0 t)\cos(n\omega_0 t)\,dt`, '← now n ≥ 2, cosine part'],
+      [r`=\frac{A}{T}\int_0^{T/2}\!\big[\sin((n{+}1)\omega_0 t)-\sin((n{-}1)\omega_0 t)\big]dt`, '← sin x cos y = ½[sin(x+y) + sin(x−y)]'],
+      [r`=\frac{A}{T}\Big[\frac{1-\cos((n{+}1)\pi)}{(n{+}1)\,\omega_0}-\frac{1-\cos((n{-}1)\pi)}{(n{-}1)\,\omega_0}\Big]`, '← integrate, limits 0 and T/2'],
+      [r`n\ \text{odd}:\ n\pm1\ \text{even}\Rightarrow\cos=+1\Rightarrow 1-1=0\ \Rightarrow\ a_n=0`, '← why 3X, 5X… are zero'],
+      [r`n\ \text{even}:\ n\pm1\ \text{odd}\Rightarrow\cos=-1\Rightarrow 1-(-1)=2`, '← why 2X, 4X… survive'],
+      [r`a_n=\frac{A}{T}\Big[\frac{2}{(n{+}1)\,\omega_0}-\frac{2}{(n{-}1)\,\omega_0}\Big]=\frac{2A}{\omega_0 T}\Big[\frac{1}{n{+}1}-\frac{1}{n{-}1}\Big]`, ''],
+      [r`\frac{1}{n{+}1}-\frac{1}{n{-}1}=\frac{(n{-}1)-(n{+}1)}{n^2-1}=\frac{-2}{n^2-1}`, '← common denominator'],
+      [r`a_n=\frac{2A}{2\pi}\cdot\frac{-2}{n^2-1}=-\frac{2A}{\pi\,(n^2-1)}`, '← ω₀T = 2π'],
+      [r`b_n=\frac{2A}{T}\int_0^{T/2}\!\sin(\omega_0 t)\sin(n\omega_0 t)\,dt`, '← n ≥ 2, sine part'],
+      [r`=\frac{A}{T}\int_0^{T/2}\!\big[\cos((n{-}1)\omega_0 t)-\cos((n{+}1)\omega_0 t)\big]dt`, '← sin x sin y = ½[cos(x−y) − cos(x+y)]'],
+      [r`=\frac{A}{T}\Big[\frac{\sin((n{-}1)\pi)}{(n{-}1)\,\omega_0}-\frac{\sin((n{+}1)\pi)}{(n{+}1)\,\omega_0}\Big]=0`, '← sin of a multiple of π is 0'],
+      [r`\boxed{\,f(t)=\frac{A}{\pi}+\frac{A}{2}\sin\omega_0 t-\frac{2A}{\pi}\sum_{n\ \text{even}}\frac{\cos(n\omega_0 t)}{n^2-1}\,}`, '← the series, now earned'],
+      [r`\text{DC}=\frac{A}{\pi}=\frac{${A}}{${P.toFixed(4)}}=${F(A / P)}\ \text{mm/s}`, '← plug in A'],
+      [r`1\text{X}=\frac{A}{2}=\frac{${A}}{2}=${F(A / 2)}\ \text{mm/s}`, ''],
+      [r`2\text{X}=\frac{2A}{\pi(2^2-1)}=\frac{2\times ${A}}{3\pi}=\frac{${F(2 * A, 2)}}{${F(3 * P, 3)}}=${F(2 * A / (3 * P))}\ \text{mm/s}`, '← n = 2'],
+      [r`3\text{X}=0`, '← n = 3 is odd: zero (line above)'],
+      [r`4\text{X}=\frac{2A}{\pi(4^2-1)}=\frac{2\times ${A}}{15\pi}=\frac{${F(2 * A, 2)}}{${F(15 * P, 3)}}=${F(2 * A / (15 * P))}\ \text{mm/s}`, '← n = 4'],
+      [r`\frac{2\text{X}}{1\text{X}}=\frac{2A/(3\pi)}{A/2}=\frac{4}{3\pi}=${F(4 / (3 * P), 3)}`, '← A cancels: same for any A'],
     ];
   });
 
@@ -252,7 +268,7 @@
         text: (s) => {
           if (!s.ex) newEx3(s);
           return `<div class="problem"><p>A part can move freely one way but is stopped hard the other way, so its velocity is a sine of peak \\(A=${s.ex.A}\\) mm/s with one half cut flat at zero. (A simple model of motion limited on one side.)</p>
-                  <p>The cut sine's series is on the page below. Work out each peak, type it in and press Check.</p></div>`;
+                  <p>The signal is written out on the page below. Work out each peak from the Fourier coefficients, type it in and press Check. Show working derives every coefficient from scratch.</p></div>`;
         },
         controls: [
           { type: 'answer', label: 'DC offset', unit: 'mm/s', value: (s) => s.ex.A / Math.PI, rel: 0.02 },
