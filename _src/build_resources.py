@@ -39,6 +39,7 @@ page = f'''<!doctype html>
     <a class="brand" href="./">nodal<span>.</span></a>
     <nav class="nav">
       <a href="explainers/">Explainers</a>
+      <a href="lab/">Lab</a>
       <a href="tools/">Tools</a>
       <a href="resources.html" class="active">Resources</a>
       <a href="about.html">About</a>

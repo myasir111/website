@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sines and cosines · Nodal</title>
+  <meta name="description" content="A point going round a shaft, traced over time: amplitude, frequency, phase, and why a sine plus a cosine is one shifted sine.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Sines and cosines">
+  <meta property="og:description" content="A point going round a shaft, traced over time: amplitude, frequency, phase, and why a sine plus a cosine is one shifted sine.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&family=Caveat:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../lab/lab.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../lab/" class="active">Lab</a>
+      <a href="../../tools/">Tools</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="lab-wrap">
+  <section class="lab-head">
+    <p class="eyebrow"><a href="../">Lab</a> · Lesson 1</p>
+    <h1>Sines and cosines</h1>
+    <p class="lede">A point going round a shaft, traced over time: amplitude, frequency, phase, and why a sine plus a cosine is one shifted sine.</p>
+  </section>
+
+  <div class="lesson">
+    <div class="sketch">
+      <canvas id="board" aria-label="Sketch for this step"></canvas>
+      <div class="board-foot"><div class="legend" id="legend"></div><div class="verdict" id="verdict" aria-live="polite"></div></div>
+    </div>
+    <section class="panel" id="panel" aria-live="polite"></section>
+    <div class="working" id="working" aria-label="Working, line by line"></div>
+  </div>
+  <div class="lesson-nav"><a href="../">← All lessons</a><a href="../build-a-signal/">Lesson 2: Build a signal from harmonics →</a></div>
+  <noscript><p>This lesson needs JavaScript to draw the board.</p></noscript>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script defer src="../lab.js"></script>
+<script defer src="lesson.js"></script>
+</body>
+</html>

@@ -27,6 +27,7 @@ def page(title, desc, body, root, scripts=""):
     <a class="brand" href="{root}">nodal<span>.</span></a>
     <nav class="nav">
       <a href="{root}explainers/">Explainers</a>
+      <a href="{root}lab/">Lab</a>
       <a href="{root}tools/" class="active">Tools</a>
       <a href="{root}resources.html">Resources</a>
       <a href="{root}about.html">About</a>

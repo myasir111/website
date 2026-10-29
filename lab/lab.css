@@ -1,0 +1,98 @@
+/* Lab: step-by-step interactive lessons. Builds on ../css/style.css tokens. */
+:root {
+  --good: #1f9d55;
+  --bad: #d6452f;
+  --blue: #2f7fd8;
+  --paper: #fffdf6;
+  --rule: #ece6d4;
+  --margin: #e7b9a6;
+  --hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --good: #3cc46f; --bad: #f0644d; --blue: #5aa2f0; --paper: #14181d; --rule: #222932; --margin: #5a3a32; }
+}
+
+.lab-wrap { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+.lab-head { padding: 40px 0 18px; }
+.lab-head .eyebrow a { color: inherit; }
+.lab-head h1 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 8px; }
+.lab-head .lede { font-size: 17px; }
+
+/* layout: the sheet of paper (sketch + working) on the left, the guide on the right.
+   On phones: sketch, then the guide, then the working. */
+.lesson { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 0 24px;
+  grid-template-areas: "sketch panel" "work panel"; align-items: start; }
+.sketch { grid-area: sketch; }
+.panel { grid-area: panel; position: sticky; top: 16px; }
+.working { grid-area: work; }
+@media (max-width: 900px) {
+  .lesson { grid-template-columns: minmax(0, 1fr); grid-template-areas: "sketch" "panel" "work"; gap: 0; }
+  .panel { position: static; margin: 16px 0; }
+}
+
+/* the sheet: graph paper behind the sketch, ruled paper behind the working */
+.sketch, .working { background-color: var(--paper); border: 1px solid var(--line); }
+.sketch { border-radius: 14px 14px 0 0; border-bottom: 0; padding: 14px 14px 8px;
+  background-image: linear-gradient(var(--rule) 1px, transparent 1px), linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 22px 22px; background-position: -1px -1px; }
+.sketch canvas { width: 100%; height: 380px; display: block; touch-action: pan-y; }
+@media (max-width: 560px) { .sketch canvas { height: 270px; } }
+@media (max-width: 900px) { .sketch { border-radius: 14px; border-bottom: 1px solid var(--line); } .working { border-radius: 14px; } }
+.board-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; font: 12px var(--mono); color: var(--muted); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; }
+.legend span::before { content: ""; display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; background: var(--sw, var(--ink)); }
+.verdict { font: 600 13px var(--mono); }
+.verdict.good { color: var(--good); }
+.verdict.bad { color: var(--bad); }
+
+.working { border-radius: 0 0 14px 14px; padding: 18px 18px 26px 0; min-height: 120px;
+  background-image: linear-gradient(90deg, transparent 47px, var(--margin) 47px, var(--margin) 48px, transparent 48px),
+                    repeating-linear-gradient(transparent 0 43px, var(--rule) 43px 44px);
+  background-position: 0 0, 0 12px; }
+.working:empty::before { content: "Working appears here, line by line."; display: block; padding-left: 60px; font: 20px var(--hand); color: var(--muted); }
+.wline { display: grid; grid-template-columns: 48px minmax(0, auto) minmax(0, 1fr); align-items: center; gap: 0 14px; min-height: 44px; }
+.wnum { font: 600 13px var(--mono); color: var(--muted); text-align: center; align-self: start; padding-top: 12px; }
+.wmath { padding-left: 12px; overflow-x: auto; overflow-y: hidden; font-size: 17px; color: var(--ink); opacity: 0.55; transition: opacity .3s; }
+.wmath .katex { white-space: nowrap; }
+.wnote { font: 21px/1.1 var(--hand); color: var(--accent-2); opacity: 0.55; transition: opacity .3s; }
+.wline.now .wmath, .wline.now .wnote { opacity: 1; }
+.wline.now .wnum { color: var(--accent); }
+@media (max-width: 700px) {
+  .wline { grid-template-columns: 34px minmax(0, 1fr); min-height: 0; padding: 6px 0; }
+  .wmath { font-size: 15px; padding: 2px 0 2px 12px; }
+  .wnote { grid-column: 2; padding-left: 12px; font-size: 19px; }
+  .working { background-image: linear-gradient(90deg, transparent 33px, var(--margin) 33px, var(--margin) 34px, transparent 34px); }
+}
+/* writing in: each new line is revealed left to right, then its margin note */
+.wline.writing .wmath { animation: write 0.85s ease-out both; animation-delay: var(--d); }
+.wline.writing .wnote { animation: fadein 0.5s ease-out both; animation-delay: calc(var(--d) + 0.7s); }
+@keyframes write { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes fadein { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .wline.writing .wmath, .wline.writing .wnote { animation: none; } }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.progress { display: flex; gap: 6px; flex-wrap: wrap; }
+.progress button { width: 26px; height: 6px; border-radius: 3px; border: 0; padding: 0; background: var(--line); cursor: pointer; }
+.progress button.done { background: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.progress button.on { background: var(--accent); }
+.step-count { font: 12px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 0; }
+.panel h2 { margin: 0; font-size: 24px; }
+.panel .text p { margin: 0 0 10px; }
+.panel .text p:last-child { margin-bottom: 0; }
+.panel .tex { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+.panel .tex .katex-display { margin: 0.4em 0; }
+.try { border-top: 1px dashed var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 12px; }
+.try-label { font: 12px var(--mono); color: var(--accent-2); text-transform: uppercase; letter-spacing: 0.1em; margin: 0; }
+.ctl { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.ctl .row { display: flex; justify-content: space-between; gap: 10px; }
+.ctl .val { font-family: var(--mono); color: var(--accent); }
+.ctl input[type=range] { width: 100%; accent-color: var(--accent); }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.nav-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 4px; }
+.nav-row .btn { cursor: pointer; font: inherit; font-size: 15px; }
+.nav-row .btn[disabled] { opacity: 0.4; cursor: default; }
+.kbd-hint { font: 12px var(--mono); color: var(--muted); margin: 0; }
+
+.lesson-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 40px 0 0; font-size: 15px; }
+.lab-cards .card .num { font: 600 13px var(--mono); color: var(--accent); }
+.lab-cards .card .steps { font: 12px var(--mono); color: var(--muted); margin-top: auto; padding-top: 10px; }
