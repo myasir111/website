@@ -59,6 +59,27 @@
     ],
   ];
 
+
+  // ---- calculator exercise: random but realistic numbers
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const newEx3 = (s) => { s.ex = { A: pick([2, 2.5, 3, 4, 5, 6, 8, 10, 12]) }; s.showSol = false; };
+  const F = (x, d = 3) => (+x.toFixed(d)).toString();
+  WORK.push((s) => {
+    if (!s.ex) newEx3(s);
+    const { A } = s.ex, P = Math.PI;
+    const given = [r`A\max(\sin\omega_0 t,0)=\frac{A}{\pi}+\frac{A}{2}\sin\omega_0 t-\frac{2A}{\pi}\!\sum_{n\ \text{even}}\!\frac{\cos(n\omega_0 t)}{n^2-1}`, '← given: the cut sine, scaled by A'];
+    if (!s.showSol) return [given];
+    return [
+      given,
+      [r`\text{DC}=\frac{A}{\pi}=\frac{${A}}{\pi}=${F(A / P)}`, '← the offset'],
+      [r`1\text{X}=\frac{A}{2}=${F(A / 2)}`, ''],
+      [r`2\text{X}=\frac{2A}{\pi(2^2-1)}=\frac{2\times ${A}}{3\pi}=${F(2 * A / (3 * P))}`, '← even: allowed now'],
+      [r`3\text{X}=0`, '← no odd terms beyond 1X'],
+      [r`4\text{X}=\frac{2A}{\pi(4^2-1)}=\frac{2\times ${A}}{15\pi}=${F(2 * A / (15 * P))}`, '← falls like 1/n²'],
+      [r`\frac{2\text{X}}{1\text{X}}=\frac{2A/3\pi}{A/2}=\frac{4}{3\pi}\approx 0.424`, '← same for any A'],
+    ];
+  });
+
   Lab.lesson({
     work: WORK,
     next: '../',
@@ -218,6 +239,39 @@
             B.bars([Math.abs(F.dc), ...Array.from(F.amp).slice(1)], { ghost: true });
           });
           api.legend([]);
+        },
+      },
+      {
+        title: 'Try it with a calculator',
+        tryLabel: 'Your answers',
+        text: (s) => {
+          if (!s.ex) newEx3(s);
+          return `<div class="problem"><p>A part can move freely one way but is stopped hard the other way, so its velocity is a sine of peak \\(A=${s.ex.A}\\) mm/s with one half cut flat at zero. (A simple model of motion limited on one side.)</p>
+                  <p>The cut sine's series is on the page below. Work out each peak, type it in and press Check.</p></div>`;
+        },
+        controls: [
+          { type: 'answer', label: 'DC offset', unit: 'mm/s', value: (s) => s.ex.A / Math.PI, rel: 0.02 },
+          { type: 'answer', label: '1X', unit: 'mm/s', value: (s) => s.ex.A / 2, rel: 0.02 },
+          { type: 'answer', label: '2X', unit: 'mm/s', value: (s) => 2 * s.ex.A / (3 * Math.PI), rel: 0.02 },
+          { type: 'answer', label: '3X', unit: 'mm/s', value: () => 0, abs: 0.005 },
+          { type: 'answer', label: '4X', unit: 'mm/s', value: (s) => 2 * s.ex.A / (15 * Math.PI), rel: 0.03 },
+          { type: 'answer', label: 'Ratio 2X / 1X', unit: '', value: () => 4 / (3 * Math.PI), rel: 0.02 },
+          { type: 'check' },
+          { type: 'button', label: 'Show working', action: (s, api) => { s.showSol = true; api.rewrite(); } },
+          { type: 'button', label: 'New numbers', action: (s, api) => { newEx3(s); api.refresh(); api.rewrite(); } },
+        ],
+        draw(g, s, t, api) {
+          if (!s.ex) newEx3(s);
+          const c = g.col, A = s.ex.A;
+          const f = (x) => A * Math.max(Math.sin(TAU * x), 0);
+          const P = g.plot({ ...WAVE, y: [-1.5 * A, 1.5 * A] });
+          P.axes({ grid: [0.5, 1, 1.5], ticks: TICKS });
+          P.curve((x) => A * Math.sin(TAU * x), { color: c.muted, width: 1.4, dash: [5, 5] });
+          P.curve(f, { color: c.ink, width: 2.8, glow: true });
+          const B = g.plot({ ...SPEC, y: [0, 0.75 * A] });
+          const vals = [A / Math.PI, A / 2, ...Array.from({ length: 8 }, (_, i) => ((i + 2) % 2 ? 0 : 2 * A / (Math.PI * ((i + 2) ** 2 - 1))))];
+          B.bars(s.showSol ? vals : vals.map(() => 0), { ghost: true });
+          api.legend([[`peak A = ${A} mm/s, cut at zero`, c.ink], ['the full sine', c.muted]]);
         },
       },
     ],

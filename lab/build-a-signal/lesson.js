@@ -59,6 +59,28 @@
     ],
   ];
 
+
+  // ---- calculator exercise: random but realistic numbers
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const newEx2 = (s) => {
+    s.ex = { A: pick([1.2, 1.5, 2, 2.4, 3, 3.6, 4.5, 6]), R: pick([960, 1475, 1490, 2960, 3580]), p: pick([10, 15, 20, 25]) };
+    s.showSol = false;
+  };
+  const firstOdd = (p) => { let n = 1; while (!(1 / n < p / 100)) n += 2; return n; };
+  const F = (x, d = 3) => (+x.toFixed(d)).toString();
+  WORK.push((s) => {
+    if (!s.showSol) return [];
+    const { A, R, p } = s.ex, n = firstOdd(p);
+    return [
+      [r`b_n=\frac{4A}{\pi n}\ (n\ \text{odd}),\qquad b_n=0\ (n\ \text{even})`, '← step 5, scaled by A'],
+      [r`b_1=\frac{4\times ${A}}{\pi}=${F(4 * A / Math.PI)}\ \text{mm/s}`, '← 1X'],
+      [r`b_2=0`, '← even: forced to zero'],
+      [r`b_3=\frac{4\times ${A}}{3\pi}=${F(4 * A / (3 * Math.PI))}\ \text{mm/s}`, '← a third of 1X'],
+      [r`f_3=3\times\frac{${R}}{60}=${F(R / 20, 2)}\ \text{Hz}`, '← where 3X sits'],
+      [r`\frac{b_n}{b_1}=\frac{1}{n}<${p / 100}\ \Rightarrow\ n>${F(100 / p, 2)}\ \Rightarrow\ n=${n}`, '← first odd n that fits'],
+    ];
+  });
+
   Lab.lesson({
     work: WORK,
     next: '../why-evens-vanish/',
@@ -165,6 +187,41 @@
           const amps = [0]; for (let k = 1; k <= 12; k++) amps.push(k <= s.Nm ? C.amp[k] : 0);
           g.plot({ ...SPEC, y: [0, 0.75] }).bars(amps, { ghost: true, noDC: true });
           api.legend([['machine signal', c.muted], [`sum up to ${s.Nm}X`, c.ink]]);
+        },
+      },
+      {
+        title: 'Try it with a calculator',
+        tryLabel: 'Your answers',
+        text: (s) => {
+          if (!s.ex) newEx2(s);
+          const { A, R, p } = s.ex;
+          return `<div class="problem"><p>A vibrating screen is driven so its velocity is close to a <b>square wave</b> of amplitude \\(A=${A}\\) mm/s, at <b>${R} rpm</b>.</p>
+                  <p>Use \\(b_n=4A/(\\pi n)\\) for odd \\(n\\). Work these out, type them in and press Check. The last one asks: which is the first harmonic whose peak is below <b>${p}%</b> of 1X?</p></div>`;
+        },
+        controls: [
+          { type: 'answer', label: '1X amplitude \\(b_1\\)', unit: 'mm/s', value: (s) => 4 * s.ex.A / Math.PI, rel: 0.02 },
+          { type: 'answer', label: '2X amplitude \\(b_2\\)', unit: 'mm/s', value: () => 0, abs: 0.005 },
+          { type: 'answer', label: '3X amplitude \\(b_3\\)', unit: 'mm/s', value: (s) => 4 * s.ex.A / (3 * Math.PI), rel: 0.02 },
+          { type: 'answer', label: 'Frequency of 3X', unit: 'Hz', value: (s) => s.ex.R / 20, rel: 0.01 },
+          { type: 'answer', label: 'First harmonic below that % of 1X', unit: 'n', value: (s) => firstOdd(s.ex.p), abs: 0 },
+          { type: 'check' },
+          { type: 'button', label: 'Show working', action: (s, api) => { s.showSol = true; api.rewrite(); } },
+          { type: 'button', label: 'New numbers', action: (s, api) => { newEx2(s); api.refresh(); api.rewrite(); } },
+        ],
+        draw(g, s, t, api) {
+          if (!s.ex) newEx2(s);
+          const c = g.col, { A, p } = s.ex, C = coeffs('square', SHAPES.square.f);
+          const P = g.plot({ ...WAVE, y: [-1.7 * A, 1.7 * A] });
+          P.axes({ grid: [1, 2], ticks: TICKS });
+          P.curve((x) => A * Math.sign(Math.sin(TAU * x)), { color: c.ink, width: 2.6, glow: true });
+          const B = g.plot({ ...SPEC, y: [0, 1.35 * 4 * A / Math.PI] });
+          const amps = [0]; for (let k = 1; k <= 12; k++) amps.push(A * C.amp[k]);
+          B.bars(amps.map((v, k) => (k <= 1 ? v : 0)), { ghost: true, noDC: true });
+          const y = B.Y(4 * A / Math.PI * p / 100);
+          g.ctx.setLineDash([5, 4]); g.ctx.strokeStyle = c.bad; g.ctx.lineWidth = 1.2;
+          g.ctx.beginPath(); g.ctx.moveTo(B.X(0.5), y); g.ctx.lineTo(B.X(12.5), y); g.ctx.stroke(); g.ctx.setLineDash([]);
+          g.text(`${p}% of 1X`, B.X(12.4), y - 8, { size: 11, color: c.bad, align: 'right' });
+          api.legend([[`square wave, A = ${A} mm/s`, c.ink], ['1X shown; the rest is yours', c.blue]]);
         },
       },
     ],

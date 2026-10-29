@@ -176,6 +176,11 @@ const Lab = (() => {
         legendEl.innerHTML = items.map(([label, color]) => `<span style="--sw:${color}">${label}</span>`).join('');
       },
       verdict(text, cls) { if (verdictEl) { verdictEl.textContent = text || ''; verdictEl.className = 'verdict ' + (cls || ''); } },
+      refresh() { show(cur, false, false); },
+      rewrite() {
+        workEl.querySelectorAll(`.wline[data-step="${cur}"]`).forEach((r) => r.remove());
+        written = cur - 1; renderWork(true);
+      },
       set(key, v) { s[key] = v; const el = panel.querySelector(`[data-key="${key}"]`); if (el && el.type === 'range') { el.value = v; el.dispatchEvent(new Event('input')); } },
     };
 
@@ -189,15 +194,16 @@ const Lab = (() => {
       if (!animate || cur < written) { workEl.innerHTML = ''; written = -1; }
       workEl.querySelectorAll('.writing').forEach((r) => r.classList.remove('writing'));
       for (let i = written + 1; i <= cur; i++) {
-        const lines = W[i] || [];
+        const lines = (typeof W[i] === 'function' ? W[i](s) : W[i]) || [];
         lines.forEach(([src, note], j) => {
           const row = document.createElement('div');
           row.className = 'wline' + (i === cur ? ' now' : '');
           row.dataset.step = i;
           const num = document.createElement('span'); num.className = 'wnum'; num.textContent = j === 0 ? String(i + 1) : '';
           const m = document.createElement('span'); m.className = 'wmath'; tex(src, m, false);
-          row.append(num, m);
-          if (note) { const n = document.createElement('span'); n.className = 'wnote'; n.textContent = note; row.appendChild(n); }
+          const body = document.createElement('span'); body.className = 'wbody'; body.appendChild(m);
+          if (note) { const n = document.createElement('span'); n.className = 'wnote'; n.textContent = note; body.appendChild(n); }
+          row.append(num, body);
           if (animate && i === cur) row.style.setProperty('--d', (0.25 + 0.75 * j) + 's'), row.classList.add('writing');
           workEl.appendChild(row);
         });
@@ -239,6 +245,35 @@ const Lab = (() => {
             seg.appendChild(b);
           });
           box.appendChild(seg);
+        } else if (c.type === 'answer') {
+          const wrap = document.createElement('label'); wrap.className = 'ans';
+          wrap.innerHTML = `<span class="ans-q">${c.label}</span><span class="ans-in"><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><span class="unit">${c.unit || ''}</span><span class="mark" aria-live="polite"></span></span>`;
+          autoMath(wrap.querySelector('.ans-q'));
+          const inp = wrap.querySelector('input'), mark = wrap.querySelector('.mark');
+          inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') box.querySelector('[data-check]')?.click(); });
+          box._answers = box._answers || [];
+          box._answers.push({ c, inp, mark });
+          box.appendChild(wrap);
+        } else if (c.type === 'check') {
+          let row = box.querySelector('.btns');
+          if (!row) { row = document.createElement('div'); row.className = 'btns'; box.appendChild(row); }
+          const b = document.createElement('button'); b.type = 'button'; b.className = 'btn-small check'; b.textContent = c.label || 'Check';
+          b.dataset.check = '1';
+          b.addEventListener('click', () => {
+            let right = 0, tried = 0;
+            (box._answers || []).forEach(({ c: q, inp, mark }) => {
+              const v = parseFloat(inp.value.replace(',', '.').replace(/[^0-9eE+\-.]/g, ''));
+              if (Number.isNaN(v)) { mark.textContent = ''; mark.className = 'mark'; return; }
+              tried++;
+              const want = q.value(s), tol = Math.max(q.abs ?? 0, Math.abs(want) * (q.rel ?? 0.02));
+              const ok = Math.abs(v - want) <= tol;
+              if (ok) right++;
+              mark.textContent = ok ? '✓' : '✗'; mark.className = 'mark ' + (ok ? 'good' : 'bad');
+            });
+            const n = (box._answers || []).length;
+            api.verdict(tried === 0 ? 'Type an answer first' : right === n ? 'All correct ✓' : `${right} of ${n} correct — try again, or show the working`, right === n ? 'good' : (tried ? 'bad' : ''));
+          });
+          row.appendChild(b);
         } else if (c.type === 'button') {
           let row = box.querySelector('.btns');
           if (!row) { row = document.createElement('div'); row.className = 'btns'; box.appendChild(row); }
@@ -263,7 +298,7 @@ const Lab = (() => {
       panel.appendChild(prog);
       panel.insertAdjacentHTML('beforeend', `<p class="step-count">Step ${cur + 1} of ${steps.length}</p><h2></h2><div class="text"></div>`);
       panel.querySelector('h2').textContent = st.title;
-      const text = panel.querySelector('.text'); text.innerHTML = st.text || ''; autoMath(text);
+      const text = panel.querySelector('.text'); text.innerHTML = (typeof st.text === 'function' ? st.text(s) : st.text) || ''; autoMath(text);
       if (st.tex && !cfg.work) { const d = document.createElement('div'); d.className = 'tex'; panel.appendChild(d); tex(st.tex, d); }
       if (st.controls && st.controls.length) {
         const box = document.createElement('div'); box.className = 'try';

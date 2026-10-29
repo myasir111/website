@@ -62,6 +62,27 @@
     ],
   ];
 
+
+  // ---- calculator exercise: random but realistic numbers
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const r1 = (x) => Math.round(x * 10) / 10;
+  const newEx1 = (s) => {
+    s.ex = { R: pick([740, 985, 1480, 1490, 2950, 2975, 3560]), a: r1(0.5 + Math.random() * 4), b: r1(0.5 + Math.random() * 4) };
+    s.showSol = false;
+  };
+  const F = (x, d = 2) => (+x.toFixed(d)).toString();
+  WORK.push((s) => {
+    if (!s.showSol) return [];
+    const { R, a, b } = s.ex, f1 = R / 60, c = Math.hypot(a, b), ph = Math.atan2(a, b) * 180 / Math.PI;
+    return [
+      [r`f_1=\frac{\text{rpm}}{60}=\frac{${R}}{60}=${F(f1)}\ \text{Hz}`, '← 1X'],
+      [r`f_2=2f_1=2\times ${F(f1)}=${F(2 * f1)}\ \text{Hz}`, '← 2X'],
+      [r`T=\frac{1}{f_1}=\frac{1}{${F(f1)}}=${F(1 / f1, 5)}\ \text{s}=${F(1000 / f1)}\ \text{ms}`, '← one turn'],
+      [r`c=\sqrt{a^2+b^2}=\sqrt{${a}^2+${b}^2}=\sqrt{${F(a * a + b * b)}}=${F(c)}\ \text{mm/s}`, '← step 4'],
+      [r`\tan\varphi=\frac{a}{b}=\frac{${a}}{${b}}=${F(a / b, 3)}\ \Rightarrow\ \varphi=${F(ph, 1)}^\circ`, '← calculator in degrees: tan⁻¹'],
+    ];
+  });
+
   Lab.lesson({
     work: WORK,
     next: '../build-a-signal/',
@@ -145,6 +166,46 @@
           [0, 100, 200, 300, 400].forEach((hz) => g.text(hz + ' Hz', B.X(hz), B.Y(0) + 12, { size: 10 }));
           api.legend([['1X', c.muted], [`${s.order}X`, c.blue]]);
           api.verdict(`1X = ${f1.toFixed(1)} Hz · ${s.order}X = ${(f1 * s.order).toFixed(1)} Hz`, '');
+        },
+      },
+      {
+        title: 'Try it with a calculator',
+        tryLabel: 'Your answers',
+        text: (s) => {
+          if (!s.ex) newEx1(s);
+          const { R, a, b } = s.ex;
+          return `<div class="problem"><p>A fan runs at <b>${R} rpm</b>. At 1X its vibration has a cosine part \\(a=${a}\\) mm/s and a sine part \\(b=${b}\\) mm/s.</p>
+                  <p>Work these out with a calculator, type them in and press Check. Stuck? Show the working: it's written onto the page, line by line.</p></div>`;
+        },
+        controls: [
+          { type: 'answer', label: '1X frequency', unit: 'Hz', value: (s) => s.ex.R / 60, rel: 0.01 },
+          { type: 'answer', label: '2X frequency', unit: 'Hz', value: (s) => s.ex.R / 30, rel: 0.01 },
+          { type: 'answer', label: 'Time for one turn, T', unit: 'ms', value: (s) => 60000 / s.ex.R, rel: 0.01 },
+          { type: 'answer', label: 'Amplitude \\(c\\) at 1X', unit: 'mm/s', value: (s) => Math.hypot(s.ex.a, s.ex.b), rel: 0.02 },
+          { type: 'answer', label: 'Phase \\(\\varphi\\)', unit: 'degrees', value: (s) => Math.atan2(s.ex.a, s.ex.b) * 180 / Math.PI, abs: 1 },
+          { type: 'check' },
+          { type: 'button', label: 'Show working', action: (s, api) => { s.showSol = true; api.rewrite(); } },
+          { type: 'button', label: 'New numbers', action: (s, api) => { newEx1(s); api.refresh(); api.rewrite(); } },
+        ],
+        draw(g, s, t, api) {
+          if (!s.ex) newEx1(s);
+          const c = g.col, { R, a, b } = s.ex, Tms = 60000 / R;
+          const amp = Math.hypot(a, b), top = Math.ceil(amp + 0.5);
+          const P = g.plot({ box: [0.07, 0.08, 0.62, 0.78], x: [0, 2 * Tms], y: [-top, top] });
+          P.axes({ grid: [Tms], ticks: [[Tms, 'T = ?'], [2 * Tms, '2T']] });
+          const w = 2 * Math.PI / Tms;
+          P.curve((x) => a * Math.cos(w * x), { color: c.blue, width: 1.5, alpha: 0.8 });
+          P.curve((x) => b * Math.sin(w * x), { color: c.good, width: 1.5, alpha: 0.8 });
+          P.curve((x) => a * Math.cos(w * x) + b * Math.sin(w * x), { color: c.orange, width: 3, glow: true });
+          const ctx = g.ctx, S = Math.min(g.w * 0.24, g.h * 0.6) / Math.max(a, b, 1), ox = g.w * 0.74, oy = g.h * 0.8;
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = c.good; ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + b * S, oy); ctx.stroke();
+          ctx.strokeStyle = c.blue; ctx.beginPath(); ctx.moveTo(ox + b * S, oy); ctx.lineTo(ox + b * S, oy - a * S); ctx.stroke();
+          ctx.strokeStyle = c.orange; ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + b * S, oy - a * S); ctx.stroke();
+          g.text(`b = ${b}`, ox + b * S / 2, oy + 14, { size: 12, color: c.good });
+          g.text(`a = ${a}`, ox + b * S + 8, oy - a * S / 2, { size: 12, color: c.blue, align: 'left' });
+          g.text('c = ?', ox + b * S / 2 - 14, oy - a * S / 2 - 10, { size: 12, color: c.orange, align: 'right' });
+          api.legend([['a cos', c.blue], ['b sin', c.good], ['the vibration at 1X', c.orange]]);
         },
       },
     ],

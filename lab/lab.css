@@ -50,7 +50,11 @@
                     repeating-linear-gradient(transparent 0 43px, var(--rule) 43px 44px);
   background-position: 0 0, 0 12px; }
 .working:empty::before { content: "Working appears here, line by line."; display: block; padding-left: 60px; font: 20px var(--hand); color: var(--muted); }
-.wline { display: grid; grid-template-columns: 48px minmax(0, auto) minmax(0, 1fr); align-items: center; gap: 0 14px; min-height: 44px; }
+.wline { display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: center; min-height: 44px; }
+/* maths and its margin note share a row; a long equation pushes the note underneath */
+.wbody { display: flex; flex-wrap: wrap; align-items: center; gap: 0 14px; min-width: 0; padding: 4px 0; }
+.wbody .wmath { flex: 0 1 auto; max-width: 100%; }
+.wbody .wnote { flex: 1 0 190px; padding-left: 12px; }
 .wnum { font: 600 13px var(--mono); color: var(--muted); text-align: center; align-self: start; padding-top: 12px; }
 .wmath { padding-left: 12px; overflow-x: auto; overflow-y: hidden; font-size: 17px; color: var(--ink); opacity: 0.55; transition: opacity .3s; }
 .wmath .katex { white-space: nowrap; }
@@ -58,9 +62,9 @@
 .wline.now .wmath, .wline.now .wnote { opacity: 1; }
 .wline.now .wnum { color: var(--accent); }
 @media (max-width: 700px) {
-  .wline { grid-template-columns: 34px minmax(0, 1fr); min-height: 0; padding: 6px 0; }
+  .wline { grid-template-columns: 34px minmax(0, 1fr); min-height: 0; padding: 2px 0; }
   .wmath { font-size: 15px; padding: 2px 0 2px 12px; }
-  .wnote { grid-column: 2; padding-left: 12px; font-size: 19px; }
+  .wbody .wnote { flex-basis: 100%; font-size: 19px; }
   .working { background-image: linear-gradient(90deg, transparent 33px, var(--margin) 33px, var(--margin) 34px, transparent 34px); }
 }
 /* writing in: each new line is revealed left to right, then its margin note */
@@ -96,3 +100,17 @@
 .lesson-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 40px 0 0; font-size: 15px; }
 .lab-cards .card .num { font: 600 13px var(--mono); color: var(--accent); }
 .lab-cards .card .steps { font: 12px var(--mono); color: var(--muted); margin-top: auto; padding-top: 10px; }
+
+/* calculator exercises */
+.problem { background: color-mix(in srgb, var(--accent) 7%, transparent); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 8px 8px 0; }
+.problem p { margin: 0 0 6px; }
+.problem p:last-child { margin: 0; }
+.ans { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.ans-in { display: flex; align-items: center; gap: 8px; }
+.ans input { font: 15px var(--mono); width: 9.5em; max-width: 60%; padding: 6px 9px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+.ans input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.ans .unit { font: 13px var(--mono); color: var(--muted); }
+.ans .mark { font: 600 16px var(--mono); }
+.mark.good { color: var(--good); }
+.mark.bad { color: var(--bad); }
+.btn-small.check { background: var(--accent); color: #fff; border-color: var(--accent); }
