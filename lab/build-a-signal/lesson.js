@@ -74,7 +74,10 @@
     return [
       [r`b_n=\frac{4A}{\pi n}\ (n\ \text{odd}),\qquad b_n=0\ (n\ \text{even})`, '← step 5, scaled by A'],
       [r`b_1=\frac{4\times ${A}}{\pi}=${F(4 * A / Math.PI)}\ \text{mm/s}`, '← 1X'],
-      [r`b_2=0`, '← even: forced to zero'],
+      [r`b_2=\frac{2}{T}\Big[\int_0^{T/2}\!A\sin(2\omega_0 t)\,dt-\int_{T/2}^{T}\!A\sin(2\omega_0 t)\,dt\Big]`, '← why is 2X zero? work it out'],
+      [r`\int_0^{T/2}\!\sin(2\omega_0 t)\,dt=\frac{1-\cos(2\omega_0\cdot\tfrac{T}{2})}{2\omega_0}=\frac{1-\cos 2\pi}{2\omega_0}=0`, '← a whole 2X cycle fits in each half'],
+      [r`\int_{T/2}^{T}\!\sin(2\omega_0 t)\,dt=\frac{\cos 2\pi-\cos 4\pi}{2\omega_0}=0`, '← its up and down areas cancel'],
+      [r`b_2=\frac{2A}{T}\,(0-0)=0`, '← zero, exactly: see the sketch'],
       [r`b_3=\frac{4\times ${A}}{3\pi}=${F(4 * A / (3 * Math.PI))}\ \text{mm/s}`, '← a third of 1X'],
       [r`f_3=3\times\frac{${R}}{60}=${F(R / 20, 2)}\ \text{Hz}`, '← where 3X sits'],
       [r`\frac{b_n}{b_1}=\frac{1}{n}<${p / 100}\ \Rightarrow\ n>${F(100 / p, 2)}\ \Rightarrow\ n=${n}`, '← first odd n that fits'],
@@ -213,6 +216,11 @@
           const c = g.col, { A, p } = s.ex, C = coeffs('square', SHAPES.square.f);
           const P = g.plot({ ...WAVE, y: [-1.7 * A, 1.7 * A] });
           P.axes({ grid: [1, 2], ticks: TICKS });
+          if (s.showSol) {                                   // why b2 = 0: the areas cancel
+            const prod = (x) => A * Math.sign(Math.sin(TAU * x)) * Math.sin(2 * TAU * x);
+            P.area(prod, { from: 0, to: 3, alpha: 0.3 });
+            P.curve((x) => A * Math.sin(2 * TAU * x), { color: c.blue, width: 1.4, alpha: 0.7 });
+          }
           P.curve((x) => A * Math.sign(Math.sin(TAU * x)), { color: c.ink, width: 2.6, glow: true });
           const B = g.plot({ ...SPEC, y: [0, 1.35 * 4 * A / Math.PI] });
           const amps = [0]; for (let k = 1; k <= 12; k++) amps.push(A * C.amp[k]);
@@ -221,7 +229,7 @@
           g.ctx.setLineDash([5, 4]); g.ctx.strokeStyle = c.bad; g.ctx.lineWidth = 1.2;
           g.ctx.beginPath(); g.ctx.moveTo(B.X(0.5), y); g.ctx.lineTo(B.X(12.5), y); g.ctx.stroke(); g.ctx.setLineDash([]);
           g.text(`${p}% of 1X`, B.X(12.4), y - 8, { size: 11, color: c.bad, align: 'right' });
-          api.legend([[`square wave, A = ${A} mm/s`, c.ink], ['1X shown; the rest is yours', c.blue]]);
+          api.legend(s.showSol ? [[`square wave, A = ${A} mm/s`, c.ink], ['2X', c.blue], ['f × 2X: areas cancel', c.good]] : [[`square wave, A = ${A} mm/s`, c.ink], ['1X shown; the rest is yours', c.blue]]);
         },
       },
     ],

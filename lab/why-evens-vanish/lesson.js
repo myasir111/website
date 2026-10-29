@@ -74,7 +74,12 @@
       [r`\text{DC}=\frac{A}{\pi}=\frac{${A}}{\pi}=${F(A / P)}`, '← the offset'],
       [r`1\text{X}=\frac{A}{2}=${F(A / 2)}`, ''],
       [r`2\text{X}=\frac{2A}{\pi(2^2-1)}=\frac{2\times ${A}}{3\pi}=${F(2 * A / (3 * P))}`, '← even: allowed now'],
-      [r`3\text{X}=0`, '← no odd terms beyond 1X'],
+      [r`b_3=\frac{2}{T}\int_0^{T/2}\!A\sin(\omega_0 t)\sin(3\omega_0 t)\,dt`, '← why is 3X zero? f = 0 on the 2nd half'],
+      [r`\sin\alpha\sin\beta=\tfrac12\big[\cos(\alpha-\beta)-\cos(\alpha+\beta)\big]`, '← product-to-sum rule'],
+      [r`b_3=\frac{A}{T}\int_0^{T/2}\!\big[\cos(2\omega_0 t)-\cos(4\omega_0 t)\big]dt=\frac{A}{T}\Big[\frac{\sin 2\omega_0 t}{2\omega_0}-\frac{\sin 4\omega_0 t}{4\omega_0}\Big]_0^{T/2}`, ''],
+      [r`=\frac{A}{T}\Big[\frac{\sin 2\pi}{2\omega_0}-\frac{\sin 4\pi}{4\omega_0}\Big]=0`, '← sin 2π = sin 4π = 0'],
+      [r`a_3=\frac{A}{T}\int_0^{T/2}\!\big[\sin(4\omega_0 t)-\sin(2\omega_0 t)\big]dt=\frac{A}{T}\Big[\frac{1-\cos4\pi}{4\omega_0}-\frac{1-\cos 2\pi}{2\omega_0}\Big]=0`, '← cosine part: zero too'],
+      [r`3\text{X}=\sqrt{a_3^2+b_3^2}=0`, '← green and red cancel: see the sketch'],
       [r`4\text{X}=\frac{2A}{\pi(4^2-1)}=\frac{2\times ${A}}{15\pi}=${F(2 * A / (15 * P))}`, '← falls like 1/n²'],
       [r`\frac{2\text{X}}{1\text{X}}=\frac{2A/3\pi}{A/2}=\frac{4}{3\pi}\approx 0.424`, '← same for any A'],
     ];
@@ -267,11 +272,15 @@
           const P = g.plot({ ...WAVE, y: [-1.5 * A, 1.5 * A] });
           P.axes({ grid: [0.5, 1, 1.5], ticks: TICKS });
           P.curve((x) => A * Math.sin(TAU * x), { color: c.muted, width: 1.4, dash: [5, 5] });
+          if (s.showSol) {                                   // why 3X = 0: the areas cancel
+            P.area((x) => f(x) * Math.sin(3 * TAU * x), { from: 0, to: 2, alpha: 0.3 });
+            P.curve((x) => A * Math.sin(3 * TAU * x), { color: c.blue, width: 1.4, alpha: 0.6 });
+          }
           P.curve(f, { color: c.ink, width: 2.8, glow: true });
           const B = g.plot({ ...SPEC, y: [0, 0.75 * A] });
           const vals = [A / Math.PI, A / 2, ...Array.from({ length: 8 }, (_, i) => ((i + 2) % 2 ? 0 : 2 * A / (Math.PI * ((i + 2) ** 2 - 1))))];
           B.bars(s.showSol ? vals : vals.map(() => 0), { ghost: true });
-          api.legend([[`peak A = ${A} mm/s, cut at zero`, c.ink], ['the full sine', c.muted]]);
+          api.legend(s.showSol ? [[`peak A = ${A} mm/s, cut at zero`, c.ink], ['3X', c.blue], ['f × 3X: areas cancel', c.good]] : [[`peak A = ${A} mm/s, cut at zero`, c.ink], ['the full sine', c.muted]]);
         },
       },
     ],
