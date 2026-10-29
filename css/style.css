@@ -162,6 +162,8 @@ section[id] { scroll-margin-top: 20px; }
 /* ---------- tools ---------- */
 .tool { display: grid; grid-template-columns: minmax(260px, 340px) 1fr; gap: 24px; align-items: start; }
 @media (max-width: 760px) { .tool { grid-template-columns: 1fr; } }
+.tool > * { min-width: 0; }                                 /* let tool columns shrink on phones */
+.tool .panel { overflow-x: auto; }                         /* wide result tables scroll inside their panel */
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
 .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; font-size: 14px; }
 .field span { color: var(--muted); }
@@ -226,3 +228,4 @@ a.cite:hover { border-color: var(--accent); text-decoration: none; }
 /* footer */
 .site-footer { border-top: 1px solid var(--line); margin-top: 80px; padding: 28px 0 40px; font-size: 14px; color: var(--muted); }
 .site-footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.site-footer .wrap > :last-child { margin-left: auto; }   /* stays on the right even when the footer wraps */

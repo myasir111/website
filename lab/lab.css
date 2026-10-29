@@ -12,11 +12,11 @@
   :root { --good: #3cc46f; --bad: #f0644d; --blue: #5aa2f0; --paper: #14181d; --rule: #222932; --margin: #5a3a32; }
 }
 
+/* lesson pages: title and links sit on the site column (.wrap); the lesson itself is a
+   wide figure, centred on the same axis, because the sketch and the working need the room */
 .lab-wrap { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
-.lab-head { padding: 40px 0 18px; }
-.lab-head .eyebrow a { color: inherit; }
-.lab-head h1 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 8px; }
-.lab-head .lede { font-size: 17px; }
+.lab-hero { padding-bottom: 28px; }
+.lab-hero .eyebrow a { color: inherit; }
 
 /* layout: the sheet of paper (sketch + working) on the left, the guide on the right.
    On phones: sketch, then the guide, then the working. */
