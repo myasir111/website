@@ -195,15 +195,20 @@ const Lab = (() => {
       workEl.querySelectorAll('.writing').forEach((r) => r.classList.remove('writing'));
       for (let i = written + 1; i <= cur; i++) {
         const lines = (typeof W[i] === 'function' ? W[i](s) : W[i]) || [];
-        lines.forEach(([src, note], j) => {
+        lines.forEach(([src, note, tag], j) => {
           const row = document.createElement('div');
           row.className = 'wline' + (i === cur ? ' now' : '');
           row.dataset.step = i;
           const num = document.createElement('span'); num.className = 'wnum'; num.textContent = j === 0 ? String(i + 1) : '';
-          const m = document.createElement('span'); m.className = 'wmath'; tex(src, m, false);
+          // a line starting with '>' is a sentence ("We know that…", "Substituting (2) in (1):")
+          const say = src.startsWith('>');
+          const m = document.createElement('span'); m.className = say ? 'wsay' : 'wmath';
+          if (say) { m.innerHTML = src.slice(1).trim(); autoMath(m); } else tex(src, m, false);
+          if (say) row.classList.add('say');
           const body = document.createElement('span'); body.className = 'wbody'; body.appendChild(m);
           if (note) { const n = document.createElement('span'); n.className = 'wnote'; n.textContent = note; body.appendChild(n); }
-          row.append(num, body);
+          const tg = document.createElement('span'); tg.className = 'wtag'; tg.textContent = tag ? `(${tag})` : '';
+          row.append(num, body, tg);
           if (animate && i === cur) row.style.setProperty('--d', (0.25 + 0.75 * j) + 's'), row.classList.add('writing');
           workEl.appendChild(row);
         });

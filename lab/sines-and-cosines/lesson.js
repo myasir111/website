@@ -30,38 +30,52 @@
     return P;
   }
 
-  // the working, line by line, as you'd write it on paper: [maths, margin note]
+  // the working, as it would be written in class: sentences ('>'), equations, margin notes,
+  // and equation numbers on the right that later lines refer back to
   const r = String.raw;
   const WORK = [
     [
-      [r`\text{point on a circle: }\ (A\cos\theta,\ A\sin\theta)`, '← height is the y part'],
-      [r`\theta=\omega t`, '← angle grows steadily'],
-      [r`x(t)=A\sin(\omega t)`, '← height against time'],
-      [r`\omega T=2\pi\ \Rightarrow\ \omega=\frac{2\pi}{T}=2\pi f`, '← one full turn'],
+      ['>A point on the shaft goes round a circle of radius \\(A\\). At angle \\(\\theta\\) it is at'],
+      [r`(x,\,y)=(A\cos\theta,\ A\sin\theta)`, '← its height is the y part', 1],
+      ['>The shaft turns steadily, so the angle grows at a constant rate \\(\\omega\\):'],
+      [r`\theta=\omega t`, '', 2],
+      ['>Substituting (2) in the height from (1):'],
+      [r`x(t)=A\sin(\omega t)`, '← height against time: a sine', 3],
+      ['>One full turn is \\(\\theta=2\\pi\\), reached after one period \\(T\\). From (2), \\(\\omega T=2\\pi\\), so'],
+      [r`\omega=\frac{2\pi}{T}=2\pi f`, '← f = turns per second', 4],
     ],
     [
-      [r`x(t)=A\sin(n\,\omega_0 t)`, '← n turns per revolution'],
-      [r`n=1:\ 1\text{X},\quad n=2:\ 2\text{X},\quad n=3:\ 3\text{X}`, '← orders'],
+      ['>A feature that comes round \\(n\\) times per revolution has \\(n\\) times the angle rate. Putting \\(\\omega=n\\,\\omega_0\\) in (3):'],
+      [r`x(t)=A\sin(n\,\omega_0 t)`, '← n = order', 5],
+      [r`n=1:\ 1\text{X},\qquad n=2:\ 2\text{X},\qquad n=3:\ 3\text{X}`, ''],
     ],
     [
-      [r`x(t)=A\sin(\omega t+\varphi)`, '← a head start of φ'],
-      [r`\sin(a+b)=\sin a\cos b+\cos a\sin b`, '← angle-sum rule'],
-      [r`\varphi=\tfrac{\pi}{2}:\ \sin\!\big(\omega t+\tfrac{\pi}{2}\big)=\sin\omega t\cdot 0+\cos\omega t\cdot 1`, ''],
-      [r`=\cos(\omega t)`, '← a cosine is a sine, 90° ahead'],
+      ['>A point that starts at angle \\(\\varphi\\) instead of 0 has \\(\\theta=\\omega t+\\varphi\\), so from (1)'],
+      [r`x(t)=A\sin(\omega t+\varphi)`, '← φ is the phase', 6],
+      ['>We know the angle-sum rule:'],
+      [r`\sin(a+b)=\sin a\cos b+\cos a\sin b`, '', 7],
+      ['>Put \\(a=\\omega t\\), \\(b=\\tfrac{\\pi}{2}\\) in (7). We know that \\(\\cos\\tfrac{\\pi}{2}=0\\) and \\(\\sin\\tfrac{\\pi}{2}=1\\):'],
+      [r`\sin\!\big(\omega t+\tfrac{\pi}{2}\big)=\sin\omega t\cdot 0+\cos\omega t\cdot 1=\cos(\omega t)`, '← a cosine is a sine, 90° ahead', 8],
     ],
     [
-      [r`c\sin(\omega t+\varphi)=c\cos\varphi\,\sin\omega t+c\sin\varphi\,\cos\omega t`, '← expand, rule from step 3'],
-      [r`\text{match with } a\cos\omega t+b\sin\omega t:\quad b=c\cos\varphi,\ \ a=c\sin\varphi`, ''],
-      [r`a^2+b^2=c^2\big(\sin^2\varphi+\cos^2\varphi\big)=c^2`, '← square and add'],
-      [r`c=\sqrt{a^2+b^2},\qquad \tan\varphi=\frac{a}{b}`, '← divide'],
+      ['>Expand \\(c\\sin(\\omega t+\\varphi)\\) using (7):'],
+      [r`c\sin(\omega t+\varphi)=c\cos\varphi\,\sin\omega t+c\sin\varphi\,\cos\omega t`, '', 9],
+      ['>For (9) to equal \\(a\\cos\\omega t+b\\sin\\omega t\\) at every \\(t\\), the parts must match:'],
+      [r`b=c\cos\varphi,\qquad a=c\sin\varphi`, '', 10],
+      ['>Square both parts of (10) and add. We know that \\(\\sin^2\\varphi+\\cos^2\\varphi=1\\):'],
+      [r`a^2+b^2=c^2\big(\sin^2\varphi+\cos^2\varphi\big)=c^2`, '', 11],
+      ['>Taking the square root of (11), and dividing the two parts of (10):'],
+      [r`c=\sqrt{a^2+b^2},\qquad \tan\varphi=\frac{a}{b}`, '← size and phase', 12],
     ],
     [
-      [r`f_1=\frac{\text{rpm}}{60}\ \text{Hz}`, '← revolutions per second'],
-      [r`1490\ \text{rpm}:\ \ f_1=\frac{1490}{60}\approx 24.8\ \text{Hz}`, ''],
-      [r`f_n=n\,f_1:\ \ 2\text{X}\approx 49.7\ \text{Hz},\ \ 3\text{X}\approx 74.5\ \text{Hz}`, ''],
+      ['>Running speed in rpm is revolutions per minute. Dividing by 60 seconds per minute gives revolutions per second, which is 1X in hertz:'],
+      [r`f_1=\frac{\text{rpm}}{60}`, '', 13],
+      ['>By (5), the \\(n\\)th order turns \\(n\\) times faster:'],
+      [r`f_n=n\,f_1`, '', 14],
+      ['>For example, at 1490 rpm, (13) and (14) give'],
+      [r`f_1=\frac{1490}{60}\approx 24.8\ \text{Hz},\qquad f_2\approx 49.7\ \text{Hz},\qquad f_3\approx 74.5\ \text{Hz}`, ''],
     ],
   ];
-
 
   // ---- calculator exercise: random but realistic numbers
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -75,17 +89,22 @@
     if (!s.showSol) return [];
     const { R, a, b } = s.ex, f1 = R / 60, c = Math.hypot(a, b), ph = Math.atan2(a, b) * 180 / Math.PI;
     return [
-      [r`f_1=\frac{\text{rpm}}{60}`, '← rev per minute → rev per second'],
-      [r`f_1=\frac{${R}\ \text{rev/min}}{60\ \text{s/min}}=${F(f1)}\ \text{rev/s}=${F(f1)}\ \text{Hz}`, '← 1X'],
-      [r`f_2=2\times f_1=2\times ${F(f1)}=${F(2 * f1)}\ \text{Hz}`, '← 2X: twice per turn'],
-      [r`T=\frac{1}{f_1}=\frac{1}{${F(f1)}}=${F(1 / f1, 5)}\ \text{s}`, '← time for one turn'],
-      [r`T=${F(1 / f1, 5)}\times 1000=${F(1000 / f1)}\ \text{ms}`, '← seconds → milliseconds'],
-      [r`a\cos\omega t+b\sin\omega t=c\,\sin(\omega t+\varphi),\quad c=\sqrt{a^2+b^2},\ \tan\varphi=\tfrac{a}{b}`, '← from step 4'],
-      [r`a^2=${a}^2=${F(a * a)},\qquad b^2=${b}^2=${F(b * b)}`, '← square each part'],
-      [r`a^2+b^2=${F(a * a)}+${F(b * b)}=${F(a * a + b * b)}`, '← add'],
-      [r`c=\sqrt{${F(a * a + b * b)}}=${F(c)}\ \text{mm/s}`, '← square root'],
-      [r`\tan\varphi=\frac{a}{b}=\frac{${a}}{${b}}=${F(a / b, 4)}`, '← divide'],
-      [r`\varphi=\tan^{-1}(${F(a / b, 4)})=${F(ph, 1)}^\circ`, '← calculator in degrees mode'],
+      ['>Worked solution. 1X: substituting the speed in (13),'],
+      [r`f_1=\frac{${R}\ \text{rev/min}}{60\ \text{s/min}}=${F(f1)}\ \text{rev/s}=${F(f1)}\ \text{Hz}`, '', 15],
+      ['>2X: putting \\(n=2\\) and (15) in (14):'],
+      [r`f_2=2\times ${F(f1)}=${F(2 * f1)}\ \text{Hz}`, ''],
+      ['>Time for one turn. From (4), \\(T=1/f\\); using (15):'],
+      [r`T=\frac{1}{${F(f1)}}=${F(1 / f1, 5)}\ \text{s}=${F(1 / f1, 5)}\times 1000\ \text{ms}=${F(1000 / f1)}\ \text{ms}`, ''],
+      ['>Amplitude, from (12). First square each part:'],
+      [r`a^2=${a}^2=${F(a * a)},\qquad b^2=${b}^2=${F(b * b)}`, ''],
+      ['>Add them:'],
+      [r`a^2+b^2=${F(a * a)}+${F(b * b)}=${F(a * a + b * b)}`, ''],
+      ['>Take the square root:'],
+      [r`c=\sqrt{${F(a * a + b * b)}}=${F(c)}\ \text{mm/s}`, '← the 1X peak'],
+      ['>Phase, from (12). Divide:'],
+      [r`\tan\varphi=\frac{${a}}{${b}}=${F(a / b, 4)}`, ''],
+      ['>Then take the inverse tangent (calculator in degrees mode):'],
+      [r`\varphi=\tan^{-1}(${F(a / b, 4)})=${F(ph, 1)}^\circ`, '← the answer'],
     ];
   });
 
