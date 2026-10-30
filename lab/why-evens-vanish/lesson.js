@@ -286,7 +286,7 @@
                  <li>If a wave satisfies \\(f(t+T/2)=-f(t)\\), every even harmonic and the DC term are exactly zero. Square and triangle waves both do.</li>
                  <li>On a machine, a distortion that is the same in both directions adds odd harmonics. A one-sided one (looseness against a stop, a rub, clipping on one side) brings in the even harmonics and a DC offset.</li>
                </ul>
-               <p>See it in 3D in the <a href="../../explainers/">harmonics video</a>, or build waves harmonic by harmonic in the <a href="../build-a-signal/">next lesson</a>.</p>`,
+               <p>See it in 3D in the <a href="../../explainers/watch-harmonics-in-3d/">harmonics video</a>, or build waves harmonic by harmonic in the <a href="../build-a-signal/">next lesson</a>.</p>`,
         draw(g, s, t, api) {
           const c = g.col;
           const cut = (x) => Math.max(Math.sin(TAU * x), 0);

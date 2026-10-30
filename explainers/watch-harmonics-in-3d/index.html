@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Watch Harmonics Come Apart · Nodal</title>
+  <meta name="description" content="A 3D animation of signals splitting into their harmonics, and why a symmetric wave has exactly zero even harmonics: shift it half a turn, flip it, and it lands on itself.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Why do we see harmonics? Watch a signal come apart">
+  <meta property="og:description" content="Square, sawtooth, triangle, a clipped sine and a real machine signal, pulled apart into their harmonics in 3D. Plus why the even lanes are exactly zero.">
+  <meta property="og:image" content="https://nodallab.dev/explainers/watch-harmonics-in-3d/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    .video { width: 100%; border-radius: 12px; border: 1px solid var(--line); background: #111110; display: block; margin: 28px 0 8px; }
+    .eq { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+    .series-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; font-size: 15px; }
+    table.ex { border-collapse: collapse; width: 100%; font-size: 15px; margin: 12px 0; }
+    table.ex th, table.ex td { text-align: left; padding: 8px 10px; border-top: 1px solid var(--line); vertical-align: top; }
+    table.ex th { font: 12px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .table-wrap { overflow-x: auto; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../" class="active">Explainers</a>
+      <a href="../../lab/">Lab</a>
+      <a href="../../tools/">Tools</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow">Harmonics series · Part 3</p>
+    <h1>Watch a signal come apart</h1>
+    <p class="meta">October 2026 · 3 min 45 s video, with sound</p>
+  </section>
+
+  <video class="video" controls playsinline preload="metadata" poster="poster.jpg">
+    <source src="harmonics-in-3d.mp4" type="video/mp4">
+    Your browser can't play this video. <a href="harmonics-in-3d.mp4">Download it</a> instead.
+  </video>
+  <p class="meta">The video from the LinkedIn post. Captions are on screen; sound on for the full effect.</p>
+
+  <div class="prose">
+    <h2>The story</h2>
+    <p>Every signal sits in 3D: <b>time</b> across, <b>harmonic</b> going back (1X, 2X, 3X… each in its own lane), <b>amplitude</b> up. Each sine and cosine inside the signal peels out into its lane, and from the side the lanes become the spectrum.</p>
+    <ul>
+      <li>A <b>pure sine</b> splits into one lane: one peak at 1X.</li>
+      <li>A <b>real machine signal</b> (imbalance, misalignment, an impact every turn) splits into peaks everywhere.</li>
+      <li>The reason: the signal repeats every revolution, \(f(t+T)=f(t)\), and only sines and cosines at whole multiples of running speed fit that repeat. The shape decides which lanes fill.</li>
+    </ul>
+
+    <h2>Why the even lanes are exactly zero</h2>
+    <p>The square wave fills only the odd lanes. The video stops to show why. Shift the wave by half a turn and flip it, and it lands exactly on itself:</p>
+    <div class="eq">$$f\!\left(t+\tfrac{T}{2}\right)=-f(t)$$</div>
+    <p>Give each harmonic the same test. Half a turn is \(n\) half-cycles of the \(n\)th harmonic, so</p>
+    <div class="eq">$$\sin\!\Big(n\omega_0\big(t+\tfrac{T}{2}\big)\Big)=\sin(n\omega_0 t+n\pi)=(-1)^n\sin(n\omega_0 t).$$</div>
+    <p>Odd harmonics flip with the wave and pass. Even ones come back the right way up, so the flip inverts them. For the whole wave to pass, each even part must equal its own negative:</p>
+    <div class="eq">$$b_n=-b_n\quad\Rightarrow\quad b_n=0\qquad(n\ \text{even}).$$</div>
+    <p>The video shows it a second way too: each coefficient is an area, \(b_n=\tfrac{2}{T}\int_0^T f(t)\sin(n\omega_0 t)\,dt\). For 2X the green and red areas cancel exactly; for 3X they add up to \(4/(3\pi)\approx0.42\).</p>
+    <p class="callout">Work through this yourself, line by line, in <a href="../../lab/why-evens-vanish/">Lab lesson 3: Why the even harmonics vanish</a>, with a calculator exercise at the end.</p>
+
+    <h2>The examples</h2>
+    <div class="table-wrap">
+      <table class="ex">
+        <thead><tr><th>Shape</th><th>Lanes that fill</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Square</td><td>Odd only, falling as \(1/n\)</td><td>Half-wave symmetric; jumps</td></tr>
+          <tr><td>Sawtooth</td><td>Every lane, \(1/n\)</td><td>No flip symmetry</td></tr>
+          <tr><td>Triangle</td><td>Odd only, falling as \(1/n^2\)</td><td>Symmetric; corners instead of jumps</td></tr>
+          <tr><td>Sine cut on one side</td><td>1X, the evens, and a DC offset</td><td>One-sided limit breaks the symmetry</td></tr>
+          <tr><td>Machine signal</td><td>1X, 2X, and a band around 4X–7X</td><td>Imbalance, misalignment, a ringing impact</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Harmonics aren't extra signals. They're the shape of one repeating motion, written as sines and cosines.</p>
+
+    <h2>Downloads</h2>
+    <ul class="downloads">
+      <li><a href="harmonics-in-3d-code.zip" download>harmonics-in-3d-code.zip</a> <span class="muted">· the Manim code: timeline, maths, animation, mascot and sound, with a README</span></li>
+      <li><a href="harmonics-in-3d.mp4" download>harmonics-in-3d.mp4</a> <span class="muted">· the video, 1080p</span></li>
+    </ul>
+
+    <h2>Further reading</h2>
+    <ul class="ref-list">
+      <li>J. Fourier (1822). <i>Théorie analytique de la chaleur.</i><span class="what">Where the idea that any repeating function is a sum of sines comes from.</span></li>
+      <li>E. M. Stein &amp; R. Shakarchi (2003). <i>Fourier Analysis: An Introduction.</i> Princeton University Press.<span class="what">A careful introduction to Fourier series, including symmetry and convergence.</span></li>
+      <li>R. B. Randall. <i>Vibration-based Condition Monitoring.</i> Wiley.<span class="what">How harmonics are read on real machines.</span></li>
+    </ul>
+
+    <div class="series-nav">
+      <a href="../why-harmonics/">← Part 2: Why we see harmonics</a>
+      <a href="../../lab/">Try it in the Lab →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+</body>
+</html>
