@@ -41,7 +41,7 @@
   <section class="hero" style="padding-bottom:0">
     <p class="eyebrow">FFT series · Part 1</p>
     <h1>The half of the FFT your analyser throws away</h1>
-    <p class="meta">November 2026 · 2 min 35 s video, with sound</p>
+    <p class="meta">November 2026 · 2 min 41 s video, with sound</p>
   </section>
 
   <video class="video" controls playsinline preload="metadata" poster="poster.jpg">
@@ -52,10 +52,6 @@
 
   <div class="prose">
     <h2>The puzzle</h2>
-    <figure class="fig">
-      <img src="three-signals.jpg" alt="A square wave, a spiky wave and a noisy-looking wave above one shared spectrum with peaks at 1X, 3X, 5X and so on" loading="lazy" width="1080" height="1080">
-      <figcaption>Three signals built from exactly the same harmonics at the same heights. Only their phases differ.</figcaption>
-    </figure>
     <p>A square wave, a sharp spike and something that looks like noise all give the same amplitude spectrum. The shape went somewhere: into the half of the FFT that the spectrum doesn't show.</p>
 
     <h2>Every frequency is an arrow</h2>
@@ -84,8 +80,8 @@
     <h2>Why analysts keep the phase</h2>
     <ul>
       <li><b>Balancing.</b> The 1X phase, measured against a once-per-revolution reference, locates the heavy spot (allowing for the rotor's lag), so you know where to put the correction weight.</li>
-      <li><b>Across a coupling.</b> Comparing 1X phase on both sides helps separate faults: roughly in phase often points to imbalance, roughly 180° apart (especially axially) to misalignment. It's a guide, read together with amplitudes and directions.</li>
-      <li><b>Resonance.</b> As speed passes through a natural frequency, the phase shifts by up to 180°, passing 90° at the peak. A large phase change with an amplitude peak is a strong sign of resonance.</li>
+      <li><b>Across a coupling.</b> Comparing 1X phase on both sides helps separate faults. A shift of about 180° across the coupling, especially in the axial direction, is a classic sign of misalignment. It's a guide, read together with amplitudes and directions. Why phase can tell imbalance from misalignment is a story for another post.</li>
+      <li><b>Resonance.</b> As speed passes through a natural frequency, the phase shifts by up to 180°, passing 90° at the natural frequency, close to the amplitude peak. A large phase change with an amplitude peak is a strong sign of resonance.</li>
     </ul>
     <p>Phase only means something relative to a reference: a tachometer or keyphasor for absolute phase, or a second sensor measured at the same time for relative phase.</p>
 
