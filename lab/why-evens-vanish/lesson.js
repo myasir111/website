@@ -143,7 +143,7 @@
 
   Lab.lesson({
     work: WORK,
-    next: '../',
+    next: '../fft-by-hand/',
     state: { shift: 0.5, n: 2, b2: 0.3, clip: 1 },
     steps: [
       {

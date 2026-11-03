@@ -2,6 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://nodallab.dev/</loc></url>
   <url><loc>https://nodallab.dev/explainers/</loc></url>
+  <url><loc>https://nodallab.dev/explainers/fft-phase/</loc></url>
   <url><loc>https://nodallab.dev/explainers/what-the-fft-shows/</loc></url>
   <url><loc>https://nodallab.dev/explainers/why-harmonics/</loc></url>
   <url><loc>https://nodallab.dev/explainers/watch-harmonics-in-3d/</loc></url>
@@ -25,4 +26,5 @@
   <url><loc>https://nodallab.dev/lab/sines-and-cosines/</loc></url>
   <url><loc>https://nodallab.dev/lab/build-a-signal/</loc></url>
   <url><loc>https://nodallab.dev/lab/why-evens-vanish/</loc></url>
+  <url><loc>https://nodallab.dev/lab/fft-by-hand/</loc></url>
 </urlset>
