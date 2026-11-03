@@ -41,7 +41,7 @@
   <section class="hero" style="padding-bottom:0">
     <p class="eyebrow">FFT series · Part 1</p>
     <h1>The half of the FFT your analyser throws away</h1>
-    <p class="meta">November 2026 · 2 min 41 s video, with sound</p>
+    <p class="meta">November 2026 · 3 min 27 s video, with sound</p>
   </section>
 
   <video class="video" controls playsinline preload="metadata" poster="poster.jpg">
@@ -59,7 +59,12 @@
     <div class="eq">$$e^{i\omega t}=\cos\omega t+i\sin\omega t.$$</div>
 
     <h2>Why half the FFT is a mirror</h2>
-    <p>A real vibration only moves one way, so it is two arrows turning in opposite directions, whose sideways parts cancel:</p>
+    <p>A real vibration moves along one line, but a single spinning arrow's tip also goes up and down. Fix that by adding a twin of the same size, spinning the other way. At every moment the twin is the first arrow's mirror image across the real axis.</p>
+    <ul>
+      <li>When both point along the real axis, they sit on top of each other. Added tip to tail, they make one arrow twice as long: the peak of the wave.</li>
+      <li>A quarter turn later, one points straight up and the other straight down. Added, they cancel to zero.</li>
+      <li>In between, the up and down parts always cancel, so the sum only slides back and forth along the real axis. That is a cosine:</li>
+    </ul>
     <div class="eq">$$\cos\omega t=\tfrac12\,e^{\,i\omega t}+\tfrac12\,e^{-i\omega t}.$$</div>
     <p>So every peak appears twice, at \(+f\) and \(-f\), each with half the size. For a real signal the second half of the FFT is the mirror of the first, \(X_{N-n}=\overline{X_n}\). Analysers drop it and double the rest: the peak you read is \(2|X_n|\).</p>
 
