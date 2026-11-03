@@ -178,7 +178,7 @@ const Lab = (() => {
       verdict(text, cls) { if (verdictEl) { verdictEl.textContent = text || ''; verdictEl.className = 'verdict ' + (cls || ''); } },
       refresh() { show(cur, false, false); },
       rewrite() {
-        workEl.querySelectorAll(`.wline[data-step="${cur}"]`).forEach((r) => r.remove());
+        workEl.querySelectorAll(`.wline[data-step="${cur}"], .whead[data-step="${cur}"]`).forEach((r) => r.remove());
         written = cur - 1; renderWork(true);
       },
       set(key, v) { s[key] = v; const el = panel.querySelector(`[data-key="${key}"]`); if (el && el.type === 'range') { el.value = v; el.dispatchEvent(new Event('input')); } },
@@ -188,6 +188,7 @@ const Lab = (() => {
        derivation written out by hand; the current step writes itself in */
     const workEl = document.querySelector(cfg.work_el || '#working');
     let written = -1;                       // last step whose lines are already on the page
+    const folded = new Set();               // steps whose working is folded away (cfg.heads)
     function renderWork(animate) {
       if (!workEl) return;
       const W = cfg.work || [];
@@ -195,11 +196,24 @@ const Lab = (() => {
       workEl.querySelectorAll('.writing').forEach((r) => r.classList.remove('writing'));
       for (let i = written + 1; i <= cur; i++) {
         const lines = (typeof W[i] === 'function' ? W[i](s) : W[i]) || [];
-        lines.forEach(([src, note, tag], j) => {
+        if (cfg.heads && lines.length) {
+          const h = document.createElement('button');
+          h.type = 'button'; h.className = 'whead' + (folded.has(i) ? ' folded' : '') + (i === cur ? ' now' : '');
+          h.dataset.step = i;
+          h.innerHTML = `<span class="wnum">${i + 1}</span><span class="wh-t">${steps[i].part ? `<span class="part">${steps[i].part}</span> · ` : ''}${steps[i].title}</span>`;
+          h.setAttribute('aria-expanded', String(!folded.has(i)));
+          h.addEventListener('click', () => {
+            const f = !folded.has(i); f ? folded.add(i) : folded.delete(i);
+            h.classList.toggle('folded', f); h.setAttribute('aria-expanded', String(!f));
+            workEl.querySelectorAll(`.wline[data-step="${i}"]`).forEach((r) => r.classList.toggle('folded', f));
+          });
+          workEl.appendChild(h);
+        }
+        lines.forEach(([src, note, tag, opt], j) => {
           const row = document.createElement('div');
-          row.className = 'wline' + (i === cur ? ' now' : '');
+          row.className = 'wline' + (i === cur ? ' now' : '') + (opt === 'box' ? ' boxed' : '') + (folded.has(i) ? ' folded' : '');
           row.dataset.step = i;
-          const num = document.createElement('span'); num.className = 'wnum'; num.textContent = j === 0 ? String(i + 1) : '';
+          const num = document.createElement('span'); num.className = 'wnum'; num.textContent = j === 0 && !cfg.heads ? String(i + 1) : '';
           // a line starting with '>' is a sentence ("We know that…", "Substituting (2) in (1):")
           const say = src.startsWith('>');
           const m = document.createElement('span'); m.className = say ? 'wsay' : 'wmath';
@@ -213,7 +227,7 @@ const Lab = (() => {
           workEl.appendChild(row);
         });
       }
-      workEl.querySelectorAll('.wline').forEach((r) => r.classList.toggle('now', +r.dataset.step === cur));
+      workEl.querySelectorAll('.wline, .whead').forEach((r) => r.classList.toggle('now', +r.dataset.step === cur));
       written = cur;
       const last = workEl.querySelector('.wline.now');
       if (animate && last && workEl.getBoundingClientRect().top < innerHeight) {
@@ -301,7 +315,7 @@ const Lab = (() => {
         b.addEventListener('click', () => show(j)); prog.appendChild(b);
       });
       panel.appendChild(prog);
-      panel.insertAdjacentHTML('beforeend', `<p class="step-count">Step ${cur + 1} of ${steps.length}</p><h2></h2><div class="text"></div>`);
+      panel.insertAdjacentHTML('beforeend', `<p class="step-count">Step ${cur + 1} of ${steps.length}${st.part ? ` · <span class="part">${st.part}</span>` : ''}</p><h2></h2><div class="text"></div>`);
       panel.querySelector('h2').textContent = st.title;
       const text = panel.querySelector('.text'); text.innerHTML = (typeof st.text === 'function' ? st.text(s) : st.text) || ''; autoMath(text);
       if (st.tex && !cfg.work) { const d = document.createElement('div'); d.className = 'tex'; panel.appendChild(d); tex(st.tex, d); }

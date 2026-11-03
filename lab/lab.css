@@ -124,3 +124,22 @@
 .mark.good { color: var(--good); }
 .mark.bad { color: var(--bad); }
 .btn-small.check { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* lesson parts and foldable working (lessons with cfg.heads) */
+.step-count .part { color: var(--accent); }
+.whead { display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: center; width: 100%; margin: 14px 0 2px; padding: 8px 0 4px;
+  background: none; border: 0; border-top: 1px dashed var(--line); color: var(--muted); font: 600 12.5px var(--mono); text-transform: uppercase;
+  letter-spacing: 0.06em; text-align: left; cursor: pointer; }
+.whead:first-child { margin-top: 0; border-top: 0; }
+.whead .wnum { padding-top: 0; }
+.whead .wh-t { padding-left: 12px; }
+.whead .wh-t::after { content: " ▾"; }
+.whead.folded .wh-t::after { content: " ▸ show"; }
+.whead .part { color: var(--accent-2); }
+.whead.now { color: var(--ink); }
+.whead.now .wnum { color: var(--accent); }
+.whead:hover { color: var(--ink); }
+.wline.folded { display: none; }
+.wline.boxed .wmath { justify-self: start; border: 1.5px solid var(--accent); border-radius: 8px; padding: 6px 12px; margin: 4px 0 4px 10px; }
+@media (max-width: 900px) { .whead { grid-template-columns: 34px minmax(0, 1fr); } }
+.panel .hint { font-size: 14px; color: var(--muted); }
