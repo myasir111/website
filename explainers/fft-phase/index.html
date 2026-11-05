@@ -20,6 +20,10 @@
     .fig { margin: 22px 0; }
     .fig img { width: 100%; max-width: 520px; border-radius: 10px; border: 1px solid var(--line); display: block; }
     .fig figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; max-width: 520px; }
+    .slides { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 2px 14px; margin: 18px 0 6px; }
+    .slides a { flex: 0 0 auto; scroll-snap-align: start; }
+    .slides img { width: 240px; height: auto; border-radius: 8px; border: 1px solid var(--line); display: block; }
+    @media (max-width: 560px) { .slides img { width: 72vw; } }
     .series-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; font-size: 15px; }
   </style>
 </head>
@@ -49,6 +53,27 @@
     Your browser can't play this video. <a href="fft-phase.mp4">Download it</a> instead.
   </video>
   <p class="meta">The video from the LinkedIn post. Captions are on screen; sound on for the full effect.</p>
+
+  <h2>The carousel</h2>
+  <div class="slides" aria-label="Carousel slides">
+    <a href="slides/s-01.jpg"><img src="slides/s-01.jpg" alt="Slide 1: The half of the FFT your analyser throws away" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-02.jpg"><img src="slides/s-02.jpg" alt="Slide 2: Three signals, one spectrum" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-03.jpg"><img src="slides/s-03.jpg" alt="Slide 3: Every bin is two numbers" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-04.jpg"><img src="slides/s-04.jpg" alt="Slide 4: Each frequency is an arrow" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-05.jpg"><img src="slides/s-05.jpg" alt="Slide 5: Why half the FFT is a mirror" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-06.jpg"><img src="slides/s-06.jpg" alt="Slide 6: What the two numbers measure" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-07.jpg"><img src="slides/s-07.jpg" alt="Slide 7: Size and phase" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-08.jpg"><img src="slides/s-08.jpg" alt="Slide 8: One bin, by hand" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-09.jpg"><img src="slides/s-09.jpg" alt="Slide 9: Phase is the shape" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-10.jpg"><img src="slides/s-10.jpg" alt="Slide 10: Phase needs a reference" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-11.jpg"><img src="slides/s-11.jpg" alt="Slide 11: In the field: balancing" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-12.jpg"><img src="slides/s-12.jpg" alt="Slide 12: In the field: across a coupling" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-13.jpg"><img src="slides/s-13.jpg" alt="Slide 13: In the field: through a resonance" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-14.jpg"><img src="slides/s-14.jpg" alt="Slide 14: What this means for the analyst" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-15.jpg"><img src="slides/s-15.jpg" alt="Slide 15: Sources and further reading" loading="lazy" width="864" height="1080"></a>
+    <a href="slides/s-16.jpg"><img src="slides/s-16.jpg" alt="Slide 16: Next: when the signal doesn't fit the window" loading="lazy" width="864" height="1080"></a>
+  </div>
+  <p class="meta">Scroll sideways · tap a slide to enlarge · <a href="fft-phase-carousel.pdf">open the PDF</a></p>
 
   <div class="prose">
     <h2>The puzzle</h2>
@@ -94,6 +119,8 @@
     <ul class="downloads">
       <li><a href="fft-phase-code.zip" download>fft-phase-code.zip</a> <span class="muted">· the Manim code: timeline, animation, sound and the three-signals figure, with a README</span></li>
       <li><a href="fft-phase.mp4" download>fft-phase.mp4</a> <span class="muted">· the video, 1080p</span></li>
+      <li><a href="fft-phase-carousel.pdf" download>fft-phase-carousel.pdf</a> <span class="muted">· the 16-slide carousel</span></li>
+      <li><a href="phase_carousel.py" download>phase_carousel.py</a> <span class="muted">· the script that builds the carousel (Matplotlib); every number on the slides is computed in it</span></li>
     </ul>
 
     <h2>Further reading</h2>
