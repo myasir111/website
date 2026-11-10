@@ -30,61 +30,53 @@
 </header>
 
 <main class="wrap">
-  <section class="hero" style="padding-bottom:0">
+  <section class="hero" data-plate-top>
     <p class="eyebrow">Lab</p>
-    <h1>Build the maths <em>yourself</em></h1>
+    <h1>Build the maths yourself</h1>
     <p class="lede">Short lessons that build one idea at a time, like a lecture on a whiteboard, except you can drag the sliders and test every step. Each lesson keeps the key equations on the board as you go.</p>
   </section>
-  <div class="plate-strip" data-plate-host>
-    <canvas data-plate data-rest="8" data-grains="0.03" data-modes="8,3,1 5,2,-1 10,2,1" aria-hidden="true"></canvas>
-    <span class="strip-cap" data-plate-label></span>
-  </div>
 
-  <h2><span class="kick">Four lessons</span>Harmonics and the FFT, from scratch</h2>
-  <div class="cards lab-cards">
-    <a class="card" href="sines-and-cosines/">
-      <canvas class="spark" data-spark="sine" aria-hidden="true"></canvas>
-      <span class="num">Lesson 1</span>
-      <h3>Sines and cosines</h3>
-      <p>A point going round a shaft, traced over time: amplitude, frequency, phase, and why a sine plus a cosine is one shifted sine.</p>
-      <span class="steps">11 steps · full derivation · 2 worked examples · calculator exercise</span>
-    </a>
-    <a class="card" href="build-a-signal/">
-      <canvas class="spark" data-spark="sum" aria-hidden="true"></canvas>
-      <span class="num">Lesson 2</span>
-      <h3>Build a signal from harmonics</h3>
-      <p>Why only whole multiples of running speed fit a repeating signal, and how sines and cosines add up to any shape.</p>
-      <span class="steps">12 steps · full derivation · 2 worked examples · calculator exercise</span>
-    </a>
-    <a class="card" href="why-evens-vanish/">
-      <canvas class="spark" data-spark="square" aria-hidden="true"></canvas>
-      <span class="num">Lesson 3</span>
-      <h3>Why the even harmonics vanish</h3>
-      <p>Shift a wave half a turn, flip it, and see why a symmetric wave has exactly zero 2X, 4X, 6X, and what breaks it.</p>
-      <span class="steps">14 steps · full derivation · 2 worked examples · calculator exercise</span>
-    </a>
-    <a class="card" href="fft-by-hand/">
-      <canvas class="spark" data-spark="samples" aria-hidden="true"></canvas>
-      <span class="num">Lesson 4</span>
-      <h3>An FFT by hand</h3>
-      <p>Derive the FFT from the Fourier series, line by line, then solve two examples on a calculator: real and imaginary parts, size, phase and the mirror.</p>
-      <span class="steps">15 steps · full derivation · 2 worked examples · calculator exercise</span>
-    </a>
-  </div>
+  <section class="block" data-mode="3,5,1">
+    <header class="block-head rise"><div><p class="label">Four lessons, in order</p><h2>Harmonics and the FFT, from scratch</h2></div></header>
+    <div class="lessons">
+      <a class="lesson-row" href="sines-and-cosines/"><span class="n">1</span>
+        <div class="body"><h3>Sines and cosines</h3><p>A point going round a shaft, traced over time: amplitude, frequency, phase, and why a sine plus a cosine is one shifted sine.</p><span class="what">11 steps, a full derivation, two worked examples and a calculator exercise</span></div>
+        <canvas class="spark" data-spark="sine" aria-hidden="true"></canvas></a>
+      <a class="lesson-row" href="build-a-signal/"><span class="n">2</span>
+        <div class="body"><h3>Build a signal from harmonics</h3><p>Why only whole multiples of running speed fit a repeating signal, and how sines and cosines add up to any shape.</p><span class="what">12 steps, a full derivation, two worked examples and a calculator exercise</span></div>
+        <canvas class="spark" data-spark="sum" aria-hidden="true"></canvas></a>
+      <a class="lesson-row" href="why-evens-vanish/"><span class="n">3</span>
+        <div class="body"><h3>Why the even harmonics vanish</h3><p>Shift a wave half a turn, flip it, and see why a symmetric wave has exactly zero 2X, 4X, 6X, and what breaks it.</p><span class="what">14 steps, a full derivation, two worked examples and a calculator exercise</span></div>
+        <canvas class="spark" data-spark="square" aria-hidden="true"></canvas></a>
+      <a class="lesson-row" href="fft-by-hand/"><span class="n">4</span>
+        <div class="body"><h3>An FFT by hand</h3><p>Derive the FFT from the Fourier series, line by line, then solve two examples on a calculator: real and imaginary parts, size, phase and the mirror.</p><span class="what">15 steps, a full derivation, two worked examples and a calculator exercise</span></div>
+        <canvas class="spark" data-spark="samples" aria-hidden="true"></canvas></a>
+    </div>
+  </section>
 
-  <h2><span class="kick">Coming next</span>Lessons 5 and 6</h2>
-  <div class="cards">
-    <div class="card next"><canvas class="spark" data-spark="bins" aria-hidden="true"></canvas><span class="tag">Lesson 5 · Signal processing</span><h3>Leakage and windows</h3><p>Derive why a tone between two bins leaks, what a Hann window does to it, and the amplitude correction. The video and an interactive board are already in the <a href="../explainers/leakage-aliasing/">leakage and aliasing explainer</a>.</p><span class="soon">In progress</span></div>
-    <div class="card next"><canvas class="spark" data-spark="alias" aria-hidden="true"></canvas><span class="tag">Lesson 6 · Time–frequency</span><h3>Wavelets for engineers</h3><p>When a signal changes over time and one spectrum isn't enough.</p><span class="soon">Planned</span></div>
-  </div>
-  <p class="muted" style="margin-top:28px;font-size:15px">Each lesson goes with a post in the <a href="../explainers/">explainer series</a>. Under every board there is a "Read the whole lesson as notes" section with all the text and maths on one page. The code for every board is plain JavaScript in this site's repository.</p>
+  <section class="block" data-mode="2,9,-1">
+    <header class="block-head rise"><div><p class="label">Coming next</p><h2>Lessons 5 and 6</h2></div></header>
+    <div class="lessons">
+      <div class="lesson-row later"><span class="n">5</span>
+        <div class="body"><h3>Leakage and windows</h3><p>Derive why a tone between two bins leaks, what a Hann window does to it, and the amplitude correction. The video and an interactive board are already in the <a href="../explainers/leakage-aliasing/">leakage and aliasing explainer</a>.</p><span class="what">In progress</span></div>
+        <canvas class="spark" data-spark="bins" aria-hidden="true"></canvas></div>
+      <div class="lesson-row later"><span class="n">6</span>
+        <div class="body"><h3>Wavelets for engineers</h3><p>When a signal changes over time and one spectrum isn't enough.</p><span class="what">Planned</span></div>
+        <canvas class="spark" data-spark="alias" aria-hidden="true"></canvas></div>
+    </div>
+    <p class="muted" style="margin-top:32px;font-size:15px;max-width:60em">Each lesson goes with a post in the <a href="../explainers/">explainer series</a>. Under every board there is a "Read the whole lesson as notes" section with all the text and maths on one page. The code for every board is plain JavaScript in this site's repository.</p>
+  </section>
 </main>
 
 <footer class="site-footer">
   <div class="wrap">
     <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
-    <span>© 2026 Muhammad Yasir</span>
-    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
   </div>
 </footer>
 <script defer src="../js/plate.js"></script>

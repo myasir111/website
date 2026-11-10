@@ -14,7 +14,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="article">
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="./">nodal<span>.</span></a>
@@ -35,10 +35,6 @@
     <p class="lede">64 books, standards, papers and free tools, most of them gathered while building and verifying the calculations in <a href="tools/#skipper">Skipper</a> and the <a href="tools/">tools</a> on this site.</p>
     <p class="jump"><a href="#start">Start here</a> · <a href="#piping">Piping vibration</a> · <a href="#examples">Worked examples to check your calculations</a> · <a href="#machinery">Machinery diagnostics &amp; condition monitoring</a> · <a href="#signal">Signal processing</a> · <a href="#structural">Structural dynamics &amp; finite elements</a> · <a href="#rotor">Rotordynamics &amp; bearings</a> · <a href="#codes">Piping codes &amp; components</a> · <a href="#fatigue">Fatigue</a> · <a href="#software">Open-source software &amp; free libraries</a></p>
   </section>
-  <div class="plate-strip" data-plate-host>
-    <canvas data-plate data-rest="8" data-grains="0.03" data-modes="6,2,1 10,3,-1 7,1,1" aria-hidden="true"></canvas>
-    <span class="strip-cap" data-plate-label></span>
-  </div>
 
   <div class="prose">
     <section id="start">
@@ -250,8 +246,12 @@
 <footer class="site-footer">
   <div class="wrap">
     <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
-    <span>© 2026 Muhammad Yasir</span>
-    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
   </div>
 </footer>
 <script defer src="js/plate.js"></script>

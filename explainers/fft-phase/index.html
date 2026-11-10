@@ -29,7 +29,7 @@
   </style>
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "TechArticle", "headline": "The half of the FFT your analyser throws away", "description": "The FFT gives two numbers per frequency, a real and an imaginary part. Your spectrum shows their size; the phase it drops is the shape. A 3D video, the maths, and how analysts use phase.", "author": {"@type": "Person", "name": "Muhammad Yasir", "url": "https://nodallab.dev/about.html"}, "datePublished": "2026-11-03", "dateModified": "2026-11-10", "image": "https://nodallab.dev/explainers/fft-phase/og.jpg", "mainEntityOfPage": "https://nodallab.dev/explainers/fft-phase/"}, {"@type": "VideoObject", "name": "The half of the FFT your analyser throws away", "description": "The FFT gives two numbers per frequency, a real and an imaginary part. Your spectrum shows their size; the phase it drops is the shape. A 3D video, the maths, and how analysts use phase.", "thumbnailUrl": "https://nodallab.dev/explainers/fft-phase/poster.jpg", "uploadDate": "2026-11-03", "duration": "PT3M28S", "contentUrl": "https://nodallab.dev/explainers/fft-phase/fft-phase.mp4"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Explainers", "item": "https://nodallab.dev/explainers/"}, {"@type": "ListItem", "position": 2, "name": "The half of the FFT your analyser throws away"}]}]}</script>
 </head>
-<body>
+<body class="article">
 <div class="progress-bar" aria-hidden="true"></div>
 <header class="site-header">
   <div class="wrap">
@@ -143,14 +143,19 @@
 <footer class="site-footer">
   <div class="wrap">
     <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
-    <span>© 2026 Muhammad Yasir</span>
-    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
   </div>
 </footer>
 
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
         onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<script src="../../js/plate.js" defer></script>
 <script defer src="../../js/site.js"></script>
 </body>
 </html>

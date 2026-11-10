@@ -26,7 +26,7 @@
   </style>
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "TechArticle", "headline": "Why do we see harmonics? Watch a signal come apart", "description": "A 3D animation of signals splitting into their harmonics, and why a symmetric wave has exactly zero even harmonics: shift it half a turn, flip it, and it lands on itself.", "author": {"@type": "Person", "name": "Muhammad Yasir", "url": "https://nodallab.dev/about.html"}, "datePublished": "2026-10-30", "dateModified": "2026-11-10", "image": "https://nodallab.dev/explainers/watch-harmonics-in-3d/og.jpg", "mainEntityOfPage": "https://nodallab.dev/explainers/watch-harmonics-in-3d/"}, {"@type": "VideoObject", "name": "Why do we see harmonics? Watch a signal come apart", "description": "A 3D animation of signals splitting into their harmonics, and why a symmetric wave has exactly zero even harmonics: shift it half a turn, flip it, and it lands on itself.", "thumbnailUrl": "https://nodallab.dev/explainers/watch-harmonics-in-3d/poster.jpg", "uploadDate": "2026-10-30", "duration": "PT3M46S", "contentUrl": "https://nodallab.dev/explainers/watch-harmonics-in-3d/harmonics-in-3d.mp4"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Explainers", "item": "https://nodallab.dev/explainers/"}, {"@type": "ListItem", "position": 2, "name": "Why do we see harmonics? Watch a signal come apart"}]}]}</script>
 </head>
-<body>
+<body class="article">
 <div class="progress-bar" aria-hidden="true"></div>
 <header class="site-header">
   <div class="wrap">
@@ -111,14 +111,19 @@
 <footer class="site-footer">
   <div class="wrap">
     <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
-    <span>© 2026 Muhammad Yasir</span>
-    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
   </div>
 </footer>
 
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
         onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<script src="../../js/plate.js" defer></script>
 <script defer src="../../js/site.js"></script>
 </body>
 </html>

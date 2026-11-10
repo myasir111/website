@@ -14,9 +14,10 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
+  <script>try{if(!sessionStorage.getItem('nodal-plate')&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&localStorage.getItem('nodal-motion')!=='off')document.documentElement.classList.add('intro');setTimeout(function(){document.documentElement.classList.remove('intro')},3500)}catch(e){}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://nodallab.dev/#site","url":"https://nodallab.dev/","name":"Nodal","description":"Vibration, dynamics and noise, explained with animated videos, step-by-step maths, tools and code.","publisher":{"@id":"https://nodallab.dev/#person"}},{"@type":"Person","@id":"https://nodallab.dev/#person","name":"Muhammad Yasir","jobTitle":"Vibration Engineer","url":"https://nodallab.dev/about.html","sameAs":["https://www.linkedin.com/in/muhammad-yasir-ali-khan/"],"knowsAbout":["Vibration analysis","Condition monitoring","Flow-induced vibration","Acoustic-induced vibration","Rotating machinery diagnostics","Signal processing"]}]}</script>
 </head>
-<body class="home">
+<body class="home" data-modes="3,5,1 2,5,-1 3,8,1 4,6,-1 2,7,1 1,6,-1">
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="./">nodal<span>.</span></a>
@@ -30,141 +31,131 @@
   </div>
 </header>
 
-<section class="plate-hero" data-plate-host aria-labelledby="hero-title">
-  <canvas data-plate data-probe data-cycle="9" data-grains="0.0115"
-    data-modes="3,5,1 2,5,-1 3,8,1 4,6,-1 2,7,1 1,6,-1 2,4,1"
-    role="img" aria-label="Animation: sand on a vibrating plate is thrown off the parts that move and settles on the nodal lines, the parts that stay still. Click to change the vibration mode."></canvas>
-  <div class="plate-scrim" aria-hidden="true"></div>
-  <div class="wrap plate-copy">
-    <p class="eyebrow">Vibration · Dynamics · Noise</p>
-    <h1 class="kinetic" id="hero-title" aria-label="Vibration, made visible."><span class="ln"><span>Vibration,</span></span><span class="ln"><span>made <em>visible.</em></span></span></h1>
-    <p class="lede">I'm <a href="about.html">Muhammad Yasir</a>, a vibration engineer. Nodal is where my explainers live in full: animated videos, step-by-step maths you can work through, calculators, and the code behind all of it.</p>
-    <div class="btn-row">
-      <a class="btn primary" href="explainers/">Watch the explainers</a>
-      <a class="btn" href="lab/">Open the Lab</a>
-    </div>
-  </div>
-  <div class="wrap plate-ui">
-    <p class="plate-note">Sand on a vibrating plate settles where the plate doesn't move: the <em>nodal lines</em>. It's where Nodal gets its name.</p>
-    <div class="plate-ctl">
-      <span class="plate-mode" data-plate-label aria-live="polite"></span>
-      <button type="button" class="chip" data-plate-next>Change mode</button>
-      <button type="button" class="chip" data-plate-pause aria-pressed="false">Pause</button>
-    </div>
-  </div>
-</section>
-
-<main class="wrap">
-  <div class="stats">
-    <div class="stat"><b>4+ yrs</b><span>vibration &amp; reliability engineering</span></div>
-    <div class="stat"><b>Cat III</b><span>ISO 18436-2 vibration analyst</span></div>
-    <div class="stat"><b>CMRP</b><span>maintenance &amp; reliability</span></div>
-    <div class="stat"><b>3 countries</b><span>project work in UAE, Bahrain, Iraq</span></div>
-  </div>
-
-  <h2><span class="kick">Latest</span>The FFT series</h2>
-  <div class="cards">
-    <a class="card feature" href="explainers/leakage-aliasing/">
-      <img class="thumb" data-preview="explainers/leakage-aliasing/leakage-aliasing.mp4" src="explainers/leakage-aliasing/poster.jpg" alt="" width="1920" height="1080">
-      <div class="body">
-        <span class="tag">FFT · Part 2 · New</span>
-        <h3>Leakage and aliasing: the FFT's two traps</h3>
-        <p>Why one clean tone smears across every bin, why a fast signal shows up at the wrong frequency, and the fix for each.</p>
-        <span class="status">Video · Interactive · Manim code</span>
+<main>
+  <section class="hero-plate" data-probe-zone data-plate-top aria-labelledby="hero-title">
+    <div class="wrap hp-grid">
+      <div class="hp-copy">
+        <p class="label">Muhammad Yasir, vibration engineer</p>
+        <h1 class="kinetic" id="hero-title" aria-label="Vibration, made visible."><span class="ln"><span>Vibration,</span></span><span class="ln"><span>made visible.</span></span></h1>
+        <p class="lede">Nodal is where my explainers live in full: animated videos, step-by-step maths you can work through, calculators, and the code behind all of it.</p>
+        <div class="btn-row">
+          <a class="btn primary" href="explainers/">Watch the explainers</a>
+          <a class="btn" href="lab/">Open the Lab</a>
+        </div>
       </div>
-    </a>
-    <a class="card" href="explainers/fft-phase/">
-      <img class="thumb" data-preview="explainers/fft-phase/fft-phase.mp4" src="explainers/fft-phase/poster.jpg" alt="" loading="lazy" width="1920" height="1080">
-      <span class="tag">FFT · Part 1</span>
-      <h3>The half of the FFT your analyser throws away</h3>
-      <p>Real and imaginary parts, the mirror, and why phase is the shape.</p>
-      <span class="status">Video · Carousel · Lab lesson</span>
-    </a>
-    <a class="card" href="lab/fft-by-hand/">
-      <canvas class="spark" data-spark="samples" aria-hidden="true"></canvas>
-      <span class="tag">Lab · Lesson 4</span>
-      <h3>An FFT by hand</h3>
-      <p>The full derivation, then two examples on a calculator, every operation shown.</p>
-      <span class="status">15 steps · worked examples</span>
-    </a>
+      <div class="hp-read">
+        <p>Behind every page is sand on a vibrating plate. It's thrown off the parts that move and settles on the nodal lines, the parts that stay still. Click the plate to change the mode.</p>
+        <span class="plate-mode" data-plate-label aria-live="polite"></span>
+        <div class="hp-ctl">
+          <button type="button" class="chip" data-plate-next>Change mode</button>
+          <button type="button" class="chip" data-plate-pause aria-pressed="false">Pause</button>
+        </div>
+      </div>
+    </div>
+    <span class="scroll-cue" aria-hidden="true"></span>
+  </section>
+
+  <div class="wrap">
+    <section class="block" data-mode="2,5,-1">
+      <header class="block-head rise">
+        <div><p class="label">Latest</p><h2>The FFT series</h2></div>
+        <a href="explainers/">All explainers</a>
+      </header>
+      <div class="rows">
+        <a class="row" href="explainers/leakage-aliasing/">
+          <div class="media"><img data-preview="explainers/leakage-aliasing/leakage-aliasing.mp4" src="explainers/leakage-aliasing/poster.jpg" alt="" width="1920" height="1080"></div>
+          <div class="body">
+            <span class="part">Part 2, new</span>
+            <h3><span>Leakage and aliasing: the FFT's two traps</span></h3>
+            <p>Why one clean tone smears across every bin, why a fast signal shows up at the wrong frequency, and the fix for each.</p>
+            <span class="what">Video, interactive board and Manim code</span>
+          </div>
+        </a>
+        <a class="row" href="explainers/fft-phase/">
+          <div class="media"><img data-preview="explainers/fft-phase/fft-phase.mp4" src="explainers/fft-phase/poster.jpg" alt="" loading="lazy" width="1920" height="1080"></div>
+          <div class="body">
+            <span class="part">Part 1</span>
+            <h3><span>The half of the FFT your analyser throws away</span></h3>
+            <p>Real and imaginary parts, the mirror, and why phase is the shape.</p>
+            <span class="what">Video, carousel and a Lab lesson</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="block" data-mode="3,8,1">
+      <header class="block-head rise">
+        <div><p class="label">Start here</p><h2>The harmonics series</h2></div>
+        <a href="explainers/">All explainers</a>
+      </header>
+      <div class="rows compact">
+        <a class="row" href="explainers/what-the-fft-shows/">
+          <div class="media"><img data-preview="explainers/what-the-fft-shows/what-the-fft-shows.mp4" src="explainers/what-the-fft-shows/poster.jpg" alt="" loading="lazy" width="1920" height="1080"></div>
+          <div class="body"><span class="part">Part 1</span><h3><span>What the FFT actually shows</span></h3><p>A signal pulled apart into its sine waves in 3D. From the side, it's the spectrum.</p></div>
+        </a>
+        <a class="row" href="explainers/why-harmonics/">
+          <div class="media"><img src="explainers/why-harmonics/og.jpg" alt="" loading="lazy" width="1200" height="630"></div>
+          <div class="body"><span class="part">Part 2</span><h3><span>Why we see harmonics</span></h3><p>Square, sawtooth, triangle, a clipped sine and a real machine signal, built harmonic by harmonic.</p></div>
+        </a>
+        <a class="row" href="explainers/watch-harmonics-in-3d/">
+          <div class="media"><img data-preview="explainers/watch-harmonics-in-3d/harmonics-in-3d.mp4" src="explainers/watch-harmonics-in-3d/poster.jpg" alt="" loading="lazy" width="1920" height="1080"></div>
+          <div class="body"><span class="part">Part 3</span><h3><span>Watch a signal come apart</span></h3><p>Every example split into its harmonics in 3D, and why a symmetric wave has exactly zero even harmonics.</p></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="block" data-mode="4,6,-1">
+      <header class="block-head rise"><div><p class="label">Also here</p><h2>Work through it yourself</h2></div></header>
+      <div class="index">
+        <a href="lab/"><b>The Lab</b><span>Four lessons that derive every formula, then solve worked examples line by line, with boards you can drag.</span><small>4 lessons, 52 steps</small></a>
+        <a href="tools/"><b>Vibration tools</b><span>An FFT analyser for your own data, AIV sound power, dead-leg resonance, pipe span and plate frequencies, bearing and gear frequencies.</span><small>13 calculators</small></a>
+        <a href="tools/#skipper"><b>Skipper</b><span>A complete offline package for vibration screening, analysis and reporting.</span><small>Under development</small></a>
+        <a href="resources.html"><b>Resources</b><span>The books, standards, papers and free tools I actually recommend.</span><small>64 references</small></a>
+      </div>
+    </section>
+
+    <section class="block" data-mode="2,7,1">
+      <header class="block-head rise"><div><p class="label">Now</p><h2>What I'm working on</h2></div></header>
+      <div class="facts">
+        <div class="stats">
+          <div class="stat"><b>4+ yrs</b><span>vibration and reliability engineering</span></div>
+          <div class="stat"><b>Cat III</b><span>ISO 18436-2 vibration analyst</span></div>
+          <div class="stat"><b>CMRP</b><span>maintenance and reliability</span></div>
+          <div class="stat"><b>3 countries</b><span>project work in the UAE, Bahrain and Iraq</span></div>
+        </div>
+        <div class="now-wrap">
+          <ul class="now">
+            <li><span class="k">Day job</span><span>Vibration engineer at Wood, Abu Dhabi: FIV/AIV studies and site diagnostics for gas processing facilities.</span></li>
+            <li><span class="k">Building</span><span><a href="tools/#skipper">Skipper</a>, a complete offline vibration analysis package (under development).</span></li>
+            <li><span class="k">Writing</span><span>The FFT series: phase, then leakage and aliasing. Wavelets are next.</span></li>
+            <li><span class="k">Working toward</span><span>Chartered Engineer (CEng) through IMechE.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" data-mode="1,6,-1">
+      <header class="block-head rise"><div><p class="label">Changelog</p><h2>What changed</h2></div></header>
+      <ul class="log">
+        <li><time datetime="2026-11-10">2026-11-10</time><span>The whole site now sits on a vibrating plate: its sand settles on the nodal lines, re-forms as you move through a page, and carries across from page to page. Wider layout, and each Lab lesson fits on one screen. FFT series Part 2, <a href="explainers/leakage-aliasing/">Leakage and aliasing</a>, added with an interactive leakage board.</span></li>
+        <li><time datetime="2026-11-05">2026-11-05</time><span>Phase carousel added to <a href="explainers/fft-phase/">FFT Part 1</a>.</span></li>
+        <li><time datetime="2026-11-03">2026-11-03</time><span>FFT series started. The <a href="lab/">Lab</a> lessons now derive every formula first, then solve two worked examples each.</span></li>
+        <li><time datetime="2026-10-28">2026-10-28</time><span>Resources expanded to 64 references across ten topics. Tools section reached 13 calculators, each with a Method and sources section.</span></li>
+        <li><time datetime="2026-10-27">2026-10-27</time><span>Site launched at nodallab.dev.</span></li>
+      </ul>
+    </section>
   </div>
-
-  <h2><span class="kick">Start here</span>The harmonics series</h2>
-  <div class="cards">
-    <a class="card" href="explainers/what-the-fft-shows/">
-      <img class="thumb" data-preview="explainers/what-the-fft-shows/what-the-fft-shows.mp4" src="explainers/what-the-fft-shows/poster.jpg" alt="" loading="lazy" width="1920" height="1080">
-      <span class="tag">Part 1</span>
-      <h3>What the FFT actually shows</h3>
-      <p>A signal pulled apart into its sine waves in 3D. From the side, it's the spectrum.</p>
-      <span class="status">Video · Manim code</span>
-    </a>
-    <a class="card" href="explainers/why-harmonics/">
-      <img class="thumb" src="explainers/why-harmonics/og.jpg" alt="" loading="lazy" width="1200" height="630">
-      <span class="tag">Part 2</span>
-      <h3>Why we see harmonics</h3>
-      <p>Square, sawtooth, triangle, a clipped sine and a real machine signal, built harmonic by harmonic.</p>
-      <span class="status">Carousel · Interactive · Python</span>
-    </a>
-    <a class="card" href="explainers/watch-harmonics-in-3d/">
-      <img class="thumb" data-preview="explainers/watch-harmonics-in-3d/harmonics-in-3d.mp4" src="explainers/watch-harmonics-in-3d/poster.jpg" alt="" loading="lazy" width="1920" height="1080">
-      <span class="tag">Part 3</span>
-      <h3>Watch a signal come apart</h3>
-      <p>Every example split into its harmonics in 3D, and why a symmetric wave has exactly zero even harmonics.</p>
-      <span class="status">Video · Manim code</span>
-    </a>
-  </div>
-
-  <h2><span class="kick">Also here</span>Lab, tools and reading</h2>
-  <div class="cards">
-    <a class="card" href="lab/">
-      <canvas class="spark" data-spark="sum" aria-hidden="true"></canvas>
-      <span class="tag">Step-by-step maths</span>
-      <h3>The Lab</h3>
-      <p>Four lessons that derive every formula, then solve worked examples line by line, with boards you can drag.</p>
-    </a>
-    <a class="card" href="tools/">
-      <canvas class="spark" data-spark="bins" aria-hidden="true"></canvas>
-      <span class="tag">Calculators</span>
-      <h3>Vibration tools</h3>
-      <p>13 calculators: an FFT analyser for your own data, AIV sound power, dead-leg acoustic resonance, pipe span and plate frequencies, bearing and gear frequencies, and more.</p>
-    </a>
-    <a class="card" href="tools/#skipper">
-      <canvas class="spark" data-spark="sine" aria-hidden="true"></canvas>
-      <span class="tag">Software package</span>
-      <h3>Skipper Vibration Analysis Suite</h3>
-      <p>A complete offline package for vibration screening, analysis and reporting.</p>
-      <span class="status">Under development</span>
-    </a>
-    <a class="card" href="resources.html">
-      <span class="tag">Reading list</span>
-      <h3>Resources</h3>
-      <p>The books, standards and explainers I actually recommend.</p>
-    </a>
-  </div>
-
-  <h2><span class="kick">Now</span>What I'm working on</h2>
-  <ul class="now">
-    <li><span class="k">Day job</span><span>Vibration engineer at Wood, Abu Dhabi: FIV/AIV studies and site diagnostics for gas processing facilities.</span></li>
-    <li><span class="k">Building</span><span><a href="tools/#skipper">Skipper</a>, a complete offline vibration analysis package (under development).</span></li>
-    <li><span class="k">Writing</span><span>The FFT series: phase, then leakage and aliasing. Wavelets are next.</span></li>
-    <li><span class="k">Working toward</span><span>Chartered Engineer (CEng) through IMechE.</span></li>
-  </ul>
-
-  <h2><span class="kick">Changelog</span>What changed</h2>
-  <ul class="log">
-    <li><time datetime="2026-11-10">2026-11-10</time><span>Redesign: the home page is now a vibrating plate whose sand settles on the nodal lines, and each Lab lesson fits on one screen, so the board never scrolls away. New look, taken from the videos. FFT series Part 2, <a href="explainers/leakage-aliasing/">Leakage and aliasing</a>, added with an interactive leakage board. Every Lab lesson can now be read as one page of notes.</span></li>
-    <li><time datetime="2026-11-05">2026-11-05</time><span>Phase carousel added to <a href="explainers/fft-phase/">FFT Part 1</a>.</span></li>
-    <li><time datetime="2026-11-03">2026-11-03</time><span>FFT series started. The <a href="lab/">Lab</a> lessons now derive every formula first, then solve two worked examples each.</span></li>
-    <li><time datetime="2026-10-28">2026-10-28</time><span>Resources expanded to 64 references across ten topics. Tools section reached 13 calculators, each with a Method &amp; sources section.</span></li>
-    <li><time datetime="2026-10-27">2026-10-27</time><span>Site launched at nodallab.dev.</span></li>
-  </ul>
 </main>
 
 <footer class="site-footer">
   <div class="wrap">
     <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
-    <span>© 2026 Muhammad Yasir</span>
-    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
   </div>
 </footer>
 

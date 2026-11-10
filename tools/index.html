@@ -29,15 +29,11 @@
 </header>
 
 <main class="wrap">
-  <section class="hero" style="padding-bottom:0">
+  <section class="hero" data-plate-top>
     <p class="eyebrow">Tools</p>
     <h1>Vibration calculators</h1>
     <p class="lede">Engineering calculators that run in your browser. No install, no sign-up, and nothing you type or load is sent anywhere. Every tool documents its method, assumptions and limits, how it was verified, and the sources behind it, linked to the <a href="../resources.html">Resources</a> page.</p>
   </section>
-  <div class="plate-strip" data-plate-host>
-    <canvas data-plate data-rest="8" data-grains="0.03" data-modes="9,2,-1 6,3,1 11,3,1" aria-hidden="true"></canvas>
-    <span class="strip-cap" data-plate-label></span>
-  </div>
 
   <div class="skipper" id="skipper">
     <div class="skipper-head">
@@ -57,94 +53,42 @@
     <p class="note" style="margin:0">Not released yet. Follow on <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a> for updates.</p>
   </div>
 
-  <div class="tool-group">
+  <section class="dir-group" data-mode="2,5,-1">
     <h2>Signal analysis</h2>
-    <div class="cards">
-      <a class="card" href="fft-analyser/">
-        <span class="tag">New · Analyser</span>
-        <h3>FFT spectrum analyser</h3>
-        <p>Load a CSV time signal and get a windowed, averaged spectrum with peak list, overall RMS and CSV export.</p>
-      </a>
-      <a class="card" href="fft-setup/">
-        <span class="tag">New · Planning</span>
-        <h3>FFT setup planner</h3>
-        <p>F<sub>max</sub>, lines and averages to sample rate, resolution and acquisition time, with a separation check.</p>
-      </a>
-      <a class="card" href="vibration-units/">
-        <span class="tag">Conversion</span>
-        <h3>Vibration unit converter</h3>
-        <p>Acceleration, velocity and displacement at any frequency, in peak, RMS or peak-to-peak.</p>
-      </a>
-      <a class="card" href="damping/">
-        <span class="tag">New · Conversion</span>
-        <h3>Damping converter</h3>
-        <p>Damping ratio, Q, loss factor, log decrement and half-power bandwidth: enter one, get the rest.</p>
-      </a>
+    <div class="dir">
+      <a href="fft-analyser/"><b>FFT spectrum analyser</b><span>Load a CSV time signal and get a windowed, averaged spectrum with peak list, overall RMS and CSV export.</span></a>
+      <a href="fft-setup/"><b>FFT setup planner</b><span>F<sub>max</sub>, lines and averages to sample rate, resolution and acquisition time, with a separation check.</span></a>
+      <a href="vibration-units/"><b>Vibration unit converter</b><span>Acceleration, velocity and displacement at any frequency, in peak, RMS or peak-to-peak.</span></a>
+      <a href="damping/"><b>Damping converter</b><span>Damping ratio, Q, loss factor, log decrement and half-power bandwidth: enter one, get the rest.</span></a>
     </div>
-  </div>
+  </section>
 
-  <div class="tool-group">
+  <section class="dir-group" data-mode="4,6,1">
     <h2>Machinery diagnostics</h2>
-    <div class="cards">
-      <a class="card" href="bearing-frequencies/">
-        <span class="tag">Bearings</span>
-        <h3>Bearing defect frequencies</h3>
-        <p>BPFO, BPFI, BSF and FTF from bearing geometry and shaft speed, with harmonics.</p>
-      </a>
-      <a class="card" href="gear-belt/">
-        <span class="tag">New · Gears &amp; belts</span>
-        <h3>Gear mesh &amp; belt frequencies</h3>
-        <p>GMF, shaft speeds, hunting tooth and assembly phase frequencies, and belt frequency.</p>
-      </a>
+    <div class="dir">
+      <a href="bearing-frequencies/"><b>Bearing defect frequencies</b><span>BPFO, BPFI, BSF and FTF from bearing geometry and shaft speed, with harmonics.</span></a>
+      <a href="gear-belt/"><b>Gear mesh &amp; belt frequencies</b><span>GMF, shaft speeds, hunting tooth and assembly phase frequencies, and belt frequency.</span></a>
     </div>
-  </div>
+  </section>
 
-  <div class="tool-group">
+  <section class="dir-group" data-mode="3,7,-1">
     <h2>Structural dynamics</h2>
-    <div class="cards">
-      <a class="card" href="sdof/">
-        <span class="tag">SDOF</span>
-        <h3>SDOF natural frequency &amp; transmissibility</h3>
-        <p>Natural frequency from stiffness and mass, and the response to a forcing frequency, with a live plot.</p>
-      </a>
-      <a class="card" href="beam-frequency/">
-        <span class="tag">Piping / beams</span>
-        <h3>Pipe span natural frequency</h3>
-        <p>First four bending modes of a pipe or beam span, with contents and insulation, plus animated mode shapes.</p>
-      </a>
-      <a class="card" href="plate-frequency/">
-        <span class="tag">New · Panels</span>
-        <h3>Plate natural frequency</h3>
-        <p>Modes of a rectangular panel (duct walls, enclosures) with mode-shape maps and an excitation check.</p>
-      </a>
-      <a class="card" href="miles-equation/">
-        <span class="tag">Random</span>
-        <h3>Miles' equation</h3>
-        <p>RMS response of an SDOF system to flat random base excitation.</p>
-      </a>
+    <div class="dir">
+      <a href="sdof/"><b>SDOF natural frequency &amp; transmissibility</b><span>Natural frequency from stiffness and mass, and the response to a forcing frequency, with a live plot.</span></a>
+      <a href="beam-frequency/"><b>Pipe span natural frequency</b><span>First four bending modes of a pipe or beam span, with contents and insulation, plus animated mode shapes.</span></a>
+      <a href="plate-frequency/"><b>Plate natural frequency</b><span>Modes of a rectangular panel (duct walls, enclosures) with mode-shape maps and an excitation check.</span></a>
+      <a href="miles-equation/"><b>Miles' equation</b><span>RMS response of an SDOF system to flat random base excitation.</span></a>
     </div>
-  </div>
+  </section>
 
-  <div class="tool-group">
+  <section class="dir-group" data-mode="2,8,1">
     <h2>Piping &amp; flow</h2>
-    <div class="cards">
-      <a class="card" href="aiv-sound-power/">
-        <span class="tag">New · AIV</span>
-        <h3>AIV sound power level</h3>
-        <p>Carucci–Mueller sound power from a valve, PSV or orifice, with choked-flow check and sensitivity.</p>
-      </a>
-      <a class="card" href="acoustic-resonance/">
-        <span class="tag">New · Pulsation</span>
-        <h3>Acoustic resonance &amp; dead legs</h3>
-        <p>Speed of sound, pipe and side-branch acoustic modes, and the flow velocities that can excite them.</p>
-      </a>
-      <a class="card" href="vortex-shedding/">
-        <span class="tag">FIV</span>
-        <h3>Vortex shedding frequency</h3>
-        <p>Strouhal shedding frequency for a cylinder in flow, compared against a structure's natural frequency.</p>
-      </a>
+    <div class="dir">
+      <a href="aiv-sound-power/"><b>AIV sound power level</b><span>Carucci–Mueller sound power from a valve, PSV or orifice, with choked-flow check and sensitivity.</span></a>
+      <a href="acoustic-resonance/"><b>Acoustic resonance &amp; dead legs</b><span>Speed of sound, pipe and side-branch acoustic modes, and the flow velocities that can excite them.</span></a>
+      <a href="vortex-shedding/"><b>Vortex shedding frequency</b><span>Strouhal shedding frequency for a cylinder in flow, compared against a structure's natural frequency.</span></a>
     </div>
-  </div>
+  </section>
 
   <p class="note" style="margin-top:40px">These are for quick checks and preliminary estimates. For design decisions, use your own verified methods and the applicable standards. Spotted a bug or want a calculator added? Message me on <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>.</p>
 
@@ -153,8 +97,12 @@
 <footer class="site-footer">
   <div class="wrap">
     <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
-    <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
-    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
   </div>
 </footer>
 

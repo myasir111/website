@@ -41,35 +41,78 @@
     const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
   }));
 
-  // ---------------------------------------------------------------- video previews: a poster plays muted while you hover its card
-  // Only with a fine pointer, only after a short pause (so passing over cards loads nothing), never under reduced motion.
-  if (FINE && !REDUCE) document.querySelectorAll('img.thumb[data-preview]').forEach((img) => {
-    const card = img.closest('.card'); let v = null, tag = null, timer = 0;
-    const place = (el) => { el.style.left = img.offsetLeft + 'px'; el.style.top = img.offsetTop + 'px'; el.style.width = img.offsetWidth + 'px'; el.style.height = img.offsetHeight + 'px'; };
-    card.addEventListener('pointerenter', () => { timer = setTimeout(() => {
+  // ---------------------------------------------------------------- video previews: a poster plays muted while you hover it
+  // Only with a fine pointer, only after a short pause (so passing over posters loads nothing), never with motion off.
+  if (FINE && !REDUCE) document.querySelectorAll('img[data-preview]').forEach((img) => {
+    const host = img.closest('.media') || img.closest('.card'), inRow = !!img.closest('.media'), trigger = img.closest('a') || host;
+    let v = null, timer = 0;
+    const place = () => { if (inRow) return; v.style.left = img.offsetLeft + 'px'; v.style.top = img.offsetTop + 'px'; v.style.width = img.offsetWidth + 'px'; v.style.height = img.offsetHeight + 'px'; };
+    trigger.addEventListener('pointerenter', () => { if (root.classList.contains('still')) return; timer = setTimeout(() => {
       if (!v) {
         v = document.createElement('video'); v.className = 'preview'; v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
         v.setAttribute('aria-hidden', 'true'); v.src = img.dataset.preview;
         v.addEventListener('loadedmetadata', () => { try { v.currentTime = Math.min(+(img.dataset.from || 12), v.duration * 0.4); } catch (e) {} }, { once: true });   // skip the title card
-        tag = document.createElement('span'); tag.className = 'preview-tag'; tag.textContent = 'Preview';
-        card.append(v, tag);
+        host.append(v);
       }
-      place(v); tag.style.left = (img.offsetLeft + 10) + 'px'; tag.style.top = (img.offsetTop + 10) + 'px';
+      place();
       // reveal only once real frames are showing; a browser that can't decode the file keeps the poster
-      const reveal = () => { if (v.videoWidth > 0 && !v.paused) { v.classList.add('on'); tag.classList.add('on'); } };
-      v.addEventListener('timeupdate', reveal, { once: true });
+      v.addEventListener('timeupdate', () => { if (v.videoWidth > 0 && !v.paused) v.classList.add('on'); }, { once: true });
       v.play().catch(() => {});
     }, 260); });
-    card.addEventListener('pointerleave', () => { clearTimeout(timer); if (v) { v.classList.remove('on'); tag.classList.remove('on'); setTimeout(() => v && !v.classList.contains('on') && v.pause(), 350); } });
+    trigger.addEventListener('pointerleave', () => { clearTimeout(timer); if (v) { v.classList.remove('on'); setTimeout(() => v && !v.classList.contains('on') && v.pause(), 350); } });
   });
 
-  // ---------------------------------------------------------------- wide maths that scrolls sideways can be reached by keyboard
-  const focusWide = () => document.querySelectorAll('.eq, .nmath, .formula, .tex').forEach((m) => {
-    const wide = m.scrollWidth > m.clientWidth + 1;
-    if (wide && !m.hasAttribute('tabindex')) { m.tabIndex = 0; m.setAttribute('role', 'region'); m.setAttribute('aria-label', 'Equation, scrolls sideways'); m.dataset.wide = '1'; }
-    else if (!wide && m.dataset.wide) { m.removeAttribute('tabindex'); m.removeAttribute('role'); m.removeAttribute('aria-label'); delete m.dataset.wide; }
-  });
-  addEventListener('load', focusWide); addEventListener('resize', focusWide);
+  // ---------------------------------------------------------------- header: one indicator under the current page that slides to what you point at
+  const nav = document.querySelector('.site-header .nav');
+  if (nav) {
+    const ind = document.createElement('span'); ind.className = 'nav-ind'; nav.appendChild(ind);
+    const at = (a) => { if (!a) { ind.style.opacity = 0; return; } ind.style.opacity = 1; ind.style.width = a.offsetWidth + 'px'; ind.style.transform = `translateX(${a.offsetLeft}px)`; };
+    const home = () => at(nav.querySelector('a.active'));
+    nav.querySelectorAll('a').forEach((a) => { a.addEventListener('pointerenter', () => at(a)); a.addEventListener('focus', () => at(a)); });
+    nav.addEventListener('pointerleave', home); nav.addEventListener('focusout', home);
+    ind.style.transition = 'none'; home(); requestAnimationFrame(() => { ind.style.transition = ''; });
+    addEventListener('resize', home);
+    if (document.fonts) document.fonts.ready.then(home);
+    // phones: a menu button that opens the links over the sand
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'menu-btn'; btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'site-nav');
+    btn.innerHTML = '<i aria-hidden="true"></i><span>Menu</span>';
+    nav.id = nav.id || 'site-nav';
+    nav.parentElement.appendChild(btn);
+    const setOpen = (o) => { root.classList.toggle('menu-open', o); btn.setAttribute('aria-expanded', String(o)); btn.querySelector('span').textContent = o ? 'Close' : 'Menu'; };
+    btn.addEventListener('click', () => setOpen(!root.classList.contains('menu-open')));
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.classList.contains('menu-open')) { setOpen(false); btn.focus(); } });
+    nav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  }
+
+  // ---------------------------------------------------------------- articles: an "On this page" rail in the left margin
+  if (document.body.classList.contains('article')) {
+    const hs = [...document.querySelectorAll('main h2')].filter((h) => !h.closest('.method, .sim, .panel'));
+    if (hs.length >= 3) {
+      const rail = document.createElement('nav'); rail.className = 'rail'; rail.setAttribute('aria-label', 'On this page');
+      rail.innerHTML = '<p>On this page</p>';
+      hs.forEach((h, i) => {
+        if (!h.id) h.id = 's-' + (h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48) || i);
+        const a = document.createElement('a'); a.href = '#' + h.id; a.textContent = h.textContent; rail.appendChild(a);
+      });
+      document.querySelector('main').appendChild(rail);
+      const links = [...rail.querySelectorAll('a')];
+      const spy = () => { let cur = 0; hs.forEach((h, i) => { if (h.getBoundingClientRect().top < innerHeight * 0.35) cur = i; }); links.forEach((a, i) => a.classList.toggle('on', i === cur)); };
+      addEventListener('scroll', spy, { passive: true }); spy();
+    }
+  }
+
+  // ---------------------------------------------------------------- section heads and lists arrive once, as their section's pattern forms
+  const later = document.querySelectorAll('.rise, .rows > .row, .lessons > *, .index > a, .dir > a');
+  if (REDUCE || !('IntersectionObserver' in window)) later.forEach((c) => c.classList.add('in'));
+  else {
+    const io2 = new IntersectionObserver((es) => {
+      let i = 0;
+      es.forEach((e) => { if (e.isIntersecting) { e.target.style.setProperty('--i', i++); e.target.classList.add('in'); io2.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -10% 0px' });
+    later.forEach((c) => io2.observe(c));
+    setTimeout(() => later.forEach((c) => c.classList.add('in')), 4000);     // never leave anything hidden
+  }
 
   // ---------------------------------------------------------------- cards arrive in order
   const cards = document.querySelectorAll('.cards > *');
@@ -197,4 +240,18 @@
     draw();
     if (!REDUCE) requestAnimationFrame(loop);
   });
+})();
+
+/* Wide maths that scrolls sideways must be reachable by keyboard (WCAG 2.1.1). Re-checked after KaTeX renders and on resize. */
+(function () {
+  function focusWide() {
+    document.querySelectorAll('.eq, .nmath, .formula, .tex, .wmath, .katex-display').forEach(function (el) {
+      var wide = el.scrollWidth > el.clientWidth + 1;
+      if (wide && !el.hasAttribute('tabindex')) { el.setAttribute('tabindex', '0'); el.setAttribute('role', 'region'); el.setAttribute('aria-label', 'Equation, scroll sideways'); el.dataset.fw = '1'; }
+      else if (!wide && el.dataset.fw) { el.removeAttribute('tabindex'); el.removeAttribute('role'); el.removeAttribute('aria-label'); delete el.dataset.fw; }
+    });
+  }
+  window.addEventListener('load', function () { focusWide(); setTimeout(focusWide, 1200); setTimeout(focusWide, 3000); });
+  var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(focusWide, 200); });
+  new MutationObserver(function () { clearTimeout(t); t = setTimeout(focusWide, 150); }).observe(document.body, { childList: true, subtree: true });
 })();

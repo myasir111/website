@@ -31,7 +31,7 @@
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Leakage and aliasing: the FFT's two traps","description":"Why one clean tone smears across every FFT bin, why a fast signal shows up at the wrong frequency, and the fix for each.","author":{"@type":"Person","name":"Muhammad Yasir","url":"https://nodallab.dev/about.html"},"datePublished":"2026-11-07","dateModified":"2026-11-10","image":"https://nodallab.dev/explainers/leakage-aliasing/og.jpg","mainEntityOfPage":"https://nodallab.dev/explainers/leakage-aliasing/"},{"@type":"VideoObject","name":"Leakage and aliasing: the FFT's two traps","description":"An animated explainer with captions and sound: the FFT sees one record and assumes it repeats; a tone between bins leaks; a window fixes it; a tone above half the sample rate aliases; sampling faster and filtering first fixes that.","thumbnailUrl":"https://nodallab.dev/explainers/leakage-aliasing/poster.jpg","uploadDate":"2026-11-07","duration":"PT3M26S","contentUrl":"https://nodallab.dev/explainers/leakage-aliasing/leakage-aliasing.mp4"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Explainers","item":"https://nodallab.dev/explainers/"},{"@type":"ListItem","position":2,"name":"Leakage and aliasing"}]}]}</script>
 </head>
-<body>
+<body class="article">
 <div class="progress-bar" aria-hidden="true"></div>
 <header class="site-header">
   <div class="wrap">
@@ -148,8 +148,12 @@
 <footer class="site-footer">
   <div class="wrap">
     <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
-    <span>© 2026 Muhammad Yasir</span>
-    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
   </div>
 </footer>
 
@@ -210,6 +214,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
         onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<script src="../../js/plate.js" defer></script>
 <script defer src="../../js/site.js"></script>
 </body>
 </html>

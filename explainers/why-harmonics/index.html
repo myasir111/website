@@ -32,7 +32,7 @@
     .series-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; font-size: 15px; }
   </style>
 </head>
-<body>
+<body class="article">
 <div class="progress-bar" aria-hidden="true"></div>
 <header class="site-header">
   <div class="wrap">
@@ -197,8 +197,12 @@ square     sgn(sin w0 t)                         1   1.2732   1.2732
 <footer class="site-footer">
   <div class="wrap">
     <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
-    <span>© 2026 Muhammad Yasir</span>
-    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
   </div>
 </footer>
 
@@ -206,6 +210,7 @@ square     sgn(sin w0 t)                         1   1.2732   1.2732
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
         onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
 <script defer src="harmonics-builder.js"></script>
+<script src="../../js/plate.js" defer></script>
 <script defer src="../../js/site.js"></script>
 </body>
 </html>
