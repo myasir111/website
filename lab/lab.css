@@ -79,9 +79,13 @@
 
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .progress { display: flex; gap: 6px; flex-wrap: wrap; }
-.progress button { width: 26px; height: 6px; border-radius: 3px; border: 0; padding: 0; background: var(--line); cursor: pointer; }
-.progress button.done { background: color-mix(in srgb, var(--accent) 45%, var(--line)); }
-.progress button.on { background: var(--accent); }
+.progress { gap: 2px 4px; }
+/* each step marker is a 24 px tall target with the 6 px bar drawn inside it */
+.progress button { position: relative; width: 28px; height: 24px; border: 0; padding: 0; background: none; cursor: pointer; }
+.progress button::before { content: ""; position: absolute; left: 1px; right: 1px; top: 9px; height: 6px; border-radius: 3px; background: var(--line); transition: background .2s; }
+.progress button:hover::before { background: color-mix(in srgb, var(--accent) 30%, var(--line)); }
+.progress button.done::before { background: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.progress button.on::before { background: var(--accent); }
 .step-count { font: 12px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin: 0; }
 .panel h2 { margin: 0; font-size: 24px; }
 .panel .text p { margin: 0 0 10px; }
@@ -160,3 +164,28 @@
 .neq.boxed .nmath { justify-self: start; border: 1.5px solid var(--accent); border-radius: 8px; padding: 0 12px; }
 @media (max-width: 600px) { .nstep { padding: 4px 14px 14px; } .notes > summary { padding: 14px; } }
 @media print { .notes > summary { display: none; } .notes { border: 0; } }
+
+/* ------------------------------------------------------------------ the Lab on one screen
+   Desktop: the lesson is a fixed-height stage. The board, the guide and the working are always in
+   view; the working scrolls inside its own sheet, so Next never pushes the board off the screen.
+   Phones: the board stays pinned at the top while the guide and working scroll under it. */
+.lesson { scroll-margin-top: calc(var(--hdr) + 8px); }
+.fs-btn { font: 12px var(--mono); color: var(--ink-2); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; min-height: 26px; cursor: pointer; }
+.fs-btn:hover { border-color: var(--accent); color: var(--ink); }
+.board-foot .foot-r { display: flex; align-items: center; gap: 10px; }
+@media (min-width: 960px) and (min-height: 620px) {
+  .lesson { height: calc(100dvh - var(--hdr) - 18px); grid-template-rows: minmax(0, 1.12fr) minmax(0, 1fr); align-items: stretch; }
+  .sketch { display: flex; flex-direction: column; min-height: 0; }
+  .sketch canvas { flex: 1 1 auto; height: auto; min-height: 0; }
+  .working { position: relative; overflow-y: auto; overscroll-behavior: contain; min-height: 0; background-attachment: local, local; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .panel { position: relative; top: auto; height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .panel .nav-row { position: sticky; bottom: -20px; margin: auto -22px -20px; padding: 12px 22px 16px; background: linear-gradient(transparent, var(--surface) 30%); }
+  .panel .kbd-hint { display: none; }
+}
+@media (max-width: 959px), (max-height: 619px) {
+  .sketch { position: sticky; top: var(--hdr); z-index: 5; box-shadow: 0 14px 24px -16px #000; }
+  .sketch canvas { height: 34dvh; min-height: 190px; max-height: 360px; }
+  .panel { scroll-margin-top: 10px; }
+}
+.lesson:fullscreen { height: 100vh !important; padding: 14px; background: var(--bg); max-width: none; }
+.lesson:fullscreen .sketch { position: static; }

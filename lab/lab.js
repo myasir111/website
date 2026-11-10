@@ -228,12 +228,38 @@ const Lab = (() => {
         });
       }
       workEl.querySelectorAll('.wline, .whead').forEach((r) => r.classList.toggle('now', +r.dataset.step === cur));
+      // a long equation scrolls sideways on narrow screens: let the keyboard reach it too
+      requestAnimationFrame(() => workEl.querySelectorAll('.wmath').forEach((m) => {
+        if (m.scrollWidth > m.clientWidth + 1) { m.tabIndex = 0; m.setAttribute('role', 'region'); m.setAttribute('aria-label', 'Equation, scrolls sideways'); }
+        else if (m.tabIndex === 0) { m.removeAttribute('tabindex'); m.removeAttribute('role'); m.removeAttribute('aria-label'); }
+      }));
       written = cur;
-      const last = workEl.querySelector('.wline.now');
-      if (animate && last && workEl.getBoundingClientRect().top < innerHeight) {
-        const lines = workEl.querySelectorAll('.wline.now'), end = lines[lines.length - 1];
-        const r = end.getBoundingClientRect();
-        if (r.bottom > innerHeight - 20 && innerWidth > 900) setTimeout(() => end.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300);
+      // keep the newest working in view by scrolling the working sheet itself, never the page:
+      // on the desktop stage the sheet has its own scroll, so the board above it stays put
+      const lines = workEl.querySelectorAll('.wline.now, .whead.now');
+      if (lines.length && stageMode()) {
+        const first = lines[0], end = lines[lines.length - 1];
+        const top = first.offsetTop - 12, bottom = end.offsetTop + end.offsetHeight + 24;
+        const want = Math.max(top - Math.max(0, workEl.clientHeight - (bottom - top)), Math.min(top, bottom - workEl.clientHeight));
+        workEl.scrollTo({ top: Math.max(0, want), behavior: animate && !REDUCE ? 'smooth' : 'auto' });
+      }
+    }
+    const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lessonEl = canvas.closest('.lesson');
+    // desktop stage: the working sheet scrolls inside itself (see lab.css)
+    const stageMode = () => !!workEl && getComputedStyle(workEl).overflowY === 'auto';
+    // bring the whole lesson into view when you move between steps
+    function frameStage() {
+      if (!lessonEl || document.fullscreenElement) return;
+      const hdr = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hdr')) || 60;
+      if (stageMode()) {
+        const r = lessonEl.getBoundingClientRect();
+        if (Math.abs(r.top - (hdr + 8)) > 4) window.scrollBy({ top: r.top - (hdr + 8), behavior: REDUCE ? 'auto' : 'smooth' });
+      } else {
+        // phones: the board is pinned; put the start of the step just under it
+        const sk = canvas.closest('.sketch'), b = sk ? sk.getBoundingClientRect().bottom : hdr;
+        const pr = panel.getBoundingClientRect();
+        if (pr.top < b - 2 || pr.top > b + 40) window.scrollBy({ top: pr.top - b - 10, behavior: REDUCE ? 'auto' : 'smooth' });
       }
     }
 
@@ -331,13 +357,15 @@ const Lab = (() => {
       nav.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
         const d = +b.dataset.go;
         if (d > 0 && cur === steps.length - 1) { if (cfg.next) location.href = cfg.next; return; }
-        show(cur + d);
+        show(cur + d); frameStage();
+        panel.querySelector(`[data-go="${d}"]`)?.focus({ preventScroll: true });
       }));
       panel.appendChild(nav);
       panel.insertAdjacentHTML('beforeend', '<p class="kbd-hint">Tip: ← → keys move between steps.</p>');
       if (st.enter) st.enter(s, api);
       api.verdict('');
       t0 = performance.now();
+      panel.scrollTop = 0;
       renderWork(animate);
       if (push) history.replaceState(null, '', `#step-${cur + 1}`);
     }
@@ -350,11 +378,22 @@ const Lab = (() => {
     }
 
     window.addEventListener('resize', () => g.resize());
+    if ('ResizeObserver' in window) new ResizeObserver(() => g.resize()).observe(canvas);   // the stage changes the board's height
     window.addEventListener('keydown', (e) => {
       if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
-      if (e.key === 'ArrowRight') show(cur + 1);
-      if (e.key === 'ArrowLeft') show(cur - 1);
+      if (e.key === 'ArrowRight') { show(cur + 1); frameStage(); }
+      if (e.key === 'ArrowLeft') { show(cur - 1); frameStage(); }
     });
+    // full screen: the lesson alone, nothing else on screen
+    const foot = document.querySelector('.board-foot');
+    if (foot && lessonEl && lessonEl.requestFullscreen) {
+      const right = document.createElement('div'); right.className = 'foot-r';
+      const vEl = foot.querySelector('#verdict'); if (vEl) right.appendChild(vEl);
+      const fs = document.createElement('button'); fs.type = 'button'; fs.className = 'fs-btn'; fs.textContent = '⤢ Full screen';
+      fs.addEventListener('click', () => (document.fullscreenElement ? document.exitFullscreen() : lessonEl.requestFullscreen()).catch(() => {}));
+      document.addEventListener('fullscreenchange', () => { fs.textContent = document.fullscreenElement ? '⤡ Exit full screen' : '⤢ Full screen'; g.resize(); renderWork(false); });
+      right.appendChild(fs); foot.appendChild(right);
+    }
     const m = location.hash.match(/step-(\d+)/);
     const startAt = m ? +m[1] - 1 : 0;
     for (let j = 0; j <= startAt; j++) seen.add(j);

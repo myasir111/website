@@ -34,6 +34,10 @@
     <h1>Vibration calculators</h1>
     <p class="lede">Engineering calculators that run in your browser. No install, no sign-up, and nothing you type or load is sent anywhere. Every tool documents its method, assumptions and limits, how it was verified, and the sources behind it, linked to the <a href="../resources.html">Resources</a> page.</p>
   </section>
+  <div class="plate-strip" data-plate-host>
+    <canvas data-plate data-rest="8" data-grains="0.03" data-modes="9,2,-1 6,3,1 11,3,1" aria-hidden="true"></canvas>
+    <span class="strip-cap" data-plate-label></span>
+  </div>
 
   <div class="skipper" id="skipper">
     <div class="skipper-head">
@@ -148,11 +152,13 @@
 
 <footer class="site-footer">
   <div class="wrap">
+    <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
     <span>© 2026 Muhammad Yasir · Calculators are for preliminary engineering estimates; verify against your own methods and applicable standards.</span>
     <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
   </div>
 </footer>
 
+<script defer src="../js/plate.js"></script>
 <script defer src="../js/site.js"></script>
 </body>
 </html>

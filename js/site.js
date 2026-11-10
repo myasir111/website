@@ -1,6 +1,7 @@
 /* Nodal site motion. Everything here is an enhancement: pages read fine without it.
    - cards arrive in order when they scroll into view
-   - the home hero: a signal peeled into its harmonic lanes, then seen from the side as a spectrum
+   - the home hero is the sand plate (js/plate.js); this file sets --hdr for screen-filling layouts
+   - card borders that light up where the pointer is, and muted video previews on poster cards
    - sparks: small drawings on cards that move only while you hover or focus the card
    - Wiggle, the series mascot, whose eyes follow the pointer
    - a reading-progress line on long pages
@@ -29,6 +30,47 @@
   const onScreen = (el, cb) => { if (!('IntersectionObserver' in window)) { cb(true); return; }
     new IntersectionObserver((es) => es.forEach((e) => cb(e.isIntersecting)), { threshold: 0.05 }).observe(el); };
 
+  // ---------------------------------------------------------------- header height, for layouts that fill the screen
+  const hdr = document.querySelector('.site-header');
+  if (hdr) { const setH = () => root.style.setProperty('--hdr', hdr.offsetHeight + 'px'); setH();
+    if ('ResizeObserver' in window) new ResizeObserver(setH).observe(hdr); }
+
+  // ---------------------------------------------------------------- cards: border lit where the pointer is
+  const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (FINE) document.querySelectorAll('a.card').forEach((c) => c.addEventListener('pointermove', (e) => {
+    const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  }));
+
+  // ---------------------------------------------------------------- video previews: a poster plays muted while you hover its card
+  // Only with a fine pointer, only after a short pause (so passing over cards loads nothing), never under reduced motion.
+  if (FINE && !REDUCE) document.querySelectorAll('img.thumb[data-preview]').forEach((img) => {
+    const card = img.closest('.card'); let v = null, tag = null, timer = 0;
+    const place = (el) => { el.style.left = img.offsetLeft + 'px'; el.style.top = img.offsetTop + 'px'; el.style.width = img.offsetWidth + 'px'; el.style.height = img.offsetHeight + 'px'; };
+    card.addEventListener('pointerenter', () => { timer = setTimeout(() => {
+      if (!v) {
+        v = document.createElement('video'); v.className = 'preview'; v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
+        v.setAttribute('aria-hidden', 'true'); v.src = img.dataset.preview;
+        v.addEventListener('loadedmetadata', () => { try { v.currentTime = Math.min(+(img.dataset.from || 12), v.duration * 0.4); } catch (e) {} }, { once: true });   // skip the title card
+        tag = document.createElement('span'); tag.className = 'preview-tag'; tag.textContent = 'Preview';
+        card.append(v, tag);
+      }
+      place(v); tag.style.left = (img.offsetLeft + 10) + 'px'; tag.style.top = (img.offsetTop + 10) + 'px';
+      // reveal only once real frames are showing; a browser that can't decode the file keeps the poster
+      const reveal = () => { if (v.videoWidth > 0 && !v.paused) { v.classList.add('on'); tag.classList.add('on'); } };
+      v.addEventListener('timeupdate', reveal, { once: true });
+      v.play().catch(() => {});
+    }, 260); });
+    card.addEventListener('pointerleave', () => { clearTimeout(timer); if (v) { v.classList.remove('on'); tag.classList.remove('on'); setTimeout(() => v && !v.classList.contains('on') && v.pause(), 350); } });
+  });
+
+  // ---------------------------------------------------------------- wide maths that scrolls sideways can be reached by keyboard
+  const focusWide = () => document.querySelectorAll('.eq, .nmath, .formula, .tex').forEach((m) => {
+    const wide = m.scrollWidth > m.clientWidth + 1;
+    if (wide && !m.hasAttribute('tabindex')) { m.tabIndex = 0; m.setAttribute('role', 'region'); m.setAttribute('aria-label', 'Equation, scrolls sideways'); m.dataset.wide = '1'; }
+    else if (!wide && m.dataset.wide) { m.removeAttribute('tabindex'); m.removeAttribute('role'); m.removeAttribute('aria-label'); delete m.dataset.wide; }
+  });
+  addEventListener('load', focusWide); addEventListener('resize', focusWide);
+
   // ---------------------------------------------------------------- cards arrive in order
   const cards = document.querySelectorAll('.cards > *');
   if (REDUCE || !('IntersectionObserver' in window)) cards.forEach((c) => c.classList.add('in'));
@@ -55,99 +97,6 @@
     const path = () => { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); };
     if (glow) { ctx.globalAlpha = 0.12 * alpha; ctx.lineWidth = width * 3.4; path(); ctx.stroke(); }
     ctx.globalAlpha = alpha; ctx.lineWidth = width; path(); ctx.stroke(); ctx.globalAlpha = 1;
-  }
-
-  // ---------------------------------------------------------------- the hero lane world
-  // A machine signal (truth block below) drawn in a 3D world: time runs along x, each harmonic
-  // has its own lane going back, amplitude is up. Peel the signal into its lanes; from the side
-  // the lane heights are the spectrum. Same picture as the videos.
-  const stage = document.querySelector('#stage');
-  if (stage) {
-    const AMP = [0.55, 0.30, 0.12, 0.20, 0.15, 0.10, 0.06, 0.04];          // 1X..8X of the demo signal
-    const PH = [0.0, 0.9, 2.1, 0.4, 1.7, 2.9, 0.8, 2.2];
-    const K = AMP.length, NP = 220, XL = 6.4, DY = 0.62, FLOOR = -1.45, BAR_X = XL / 2 + 0.5, BAR_S = 2.0;
-    const ts = Array.from({ length: NP }, (_, i) => i / (NP - 1));
-    const lane = AMP.map((a, k) => ts.map((t) => a * Math.sin(TAU * (k + 1) * 2 * t + PH[k])));   // two turns shown
-    const laneY = (k) => (k - K / 2) * DY;                                 // k = 0 is the front, 1..K the lanes
-    const VIEW = { front: [2, 0], persp: [16, 44], side: [3, 88] };         // elevation, azimuth (degrees)
-    const LOOP = 18;
-    let playing = !REDUCE, visible = true, t0 = performance.now(), tHold = REDUCE ? 7.5 : 0, px = 0, pxT = 0;
-    const btn = document.querySelector('#stage-toggle'), cap = document.querySelector('#stage-cap');
-    if (btn) btn.addEventListener('click', () => {
-      playing = !playing; btn.textContent = playing ? 'Pause' : 'Play'; btn.setAttribute('aria-pressed', String(!playing));
-      if (playing) { t0 = performance.now() - tHold * 1000; requestAnimationFrame(frame); }
-    });
-    if (btn && REDUCE) { btn.textContent = 'Play'; btn.setAttribute('aria-pressed', 'true'); }
-    stage.addEventListener('pointermove', (e) => { const r = stage.getBoundingClientRect(); pxT = ((e.clientX - r.left) / r.width - 0.5) * 2; });
-    stage.addEventListener('pointerleave', () => { pxT = 0; });
-    onScreen(stage, (v) => { const was = visible; visible = v; if (v && !was && playing) { t0 = performance.now() - tHold * 1000; requestAnimationFrame(frame); } });
-
-    function state(t) {
-      // timeline (seconds): draw the signal, peel into lanes, hold, turn to the side (spectrum), come back, rebuild
-      const draw = arrive(seg(t, 0.2, 2.0));
-      const peel = (k) => arrive(seg(t, 2.4 + 0.22 * k, 4.2 + 0.22 * k)) * (1 - arrive(seg(t, 14.6 + 0.1 * (K - k), 16.2 + 0.1 * (K - k))));
-      const toP = inout(seg(t, 2.0, 4.4)), toS = inout(seg(t, 8.2, 10.2)), backP = inout(seg(t, 12.2, 14.0)), toF = inout(seg(t, 14.6, 17.0));
-      const mix = (a, b, u) => a + (b - a) * u;
-      let el = mix(VIEW.front[0], VIEW.persp[0], toP), az = mix(VIEW.front[1], VIEW.persp[1], toP);
-      el = mix(el, VIEW.side[0], toS); az = mix(az, VIEW.side[1], toS);
-      el = mix(el, VIEW.persp[0], backP); az = mix(az, VIEW.persp[1], backP);
-      el = mix(el, VIEW.front[0], toF); az = mix(az, VIEW.front[1], toF);
-      const sideness = toS * (1 - backP), fade = 1 - seg(t, 17.2, 17.9);
-      const label = t < 2.2 ? 'One signal' : t < 8.2 ? 'Its harmonics, lane by lane' : t < 12.4 ? 'From the side: the spectrum' : 'Back together';
-      return { draw, peel, el, az, sideness, fade, label };
-    }
-
-    function render(t) {
-      const { ctx, w, h } = fit(stage);
-      ctx.clearRect(0, 0, w, h);
-      const S = state(t);
-      px += (pxT - px) * 0.08;
-      const e = (S.el * Math.PI) / 180, th = ((S.az + px * 5 * (1 - S.sideness)) * Math.PI) / 180;
-      // fit the world's bounding box to the canvas at every view (no hand-tuned zooms)
-      const raw = (x, y, z) => { const x1 = x * Math.cos(th) + y * Math.sin(th), y1 = -x * Math.sin(th) + y * Math.cos(th);
-        const s = 18 / (18 + y1 * Math.cos(e) - z * Math.sin(e)); return [x1 * s, (z * Math.cos(e) + y1 * Math.sin(e)) * s]; };
-      let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
-      for (const x of [-XL / 2 - 0.1, BAR_X + 0.6]) for (const y of [laneY(0) - 0.3, laneY(K) + 0.3]) for (const z of [FLOOR, 1.5]) {
-        const p = raw(x, y, z); x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }
-      const zoom = 1.0 * Math.min(w / (x1 - x0), (h - 34) / (y1 - y0));
-      const ox = w / 2 - zoom * (x0 + x1) / 2, oy = (h - 34) / 2 + zoom * (y0 + y1) / 2;
-      const P = (x, y, z) => { const p = raw(x, y, z); return [ox + p[0] * zoom, oy - p[1] * zoom]; };
-      const wx = (t_) => (t_ - 0.5) * XL;
-      const A = S.fade;
-      // floor grid
-      for (let k = 0; k <= K; k++) line(ctx, [P(wx(0), laneY(k), FLOOR), P(wx(1), laneY(k), FLOOR)], C.line, 1, 0.9 * A, false);
-      for (let i = 0; i <= 8; i++) line(ctx, [P(wx(i / 8), laneY(0) - 0.25, FLOOR), P(wx(i / 8), laneY(K) + 0.25, FLOOR)], C.line, 1, 0.9 * A, false);
-      line(ctx, [P(wx(0), laneY(0), 0), P(wx(1) + 0.15, laneY(0), 0)], '#5a5955', 1.4, A, false);
-      line(ctx, [P(BAR_X, laneY(0) - 0.2, 0), P(BAR_X, laneY(K) + 0.25, 0)], '#5a5955', 1.4, A, false);
-      // lanes and bars (back to front so nearer lanes draw over farther ones)
-      const dim = 1 - 0.8 * S.sideness;
-      for (let k = K; k >= 1; k--) {
-        const m = S.peel(k - 1);
-        if (m < 0.004) continue;
-        const y = laneY(0) + (laneY(k) - laneY(0)) * m;
-        line(ctx, ts.map((t_, i) => P(wx(t_), y, lane[k - 1][i])), k === 1 ? C.blue : C.orange, 2.2, Math.min(1, 3 * m) * dim * A);
-        const hgt = AMP[k - 1] * m * BAR_S;
-        line(ctx, [P(BAR_X, laneY(k), 0), P(BAR_X, laneY(k), hgt)], k === 1 ? C.blue : C.orange, 9, A, false, 'butt');
-        if (m > 0.6) { const p = P(BAR_X + 0.42, laneY(k), 0); ctx.globalAlpha = (m - 0.6) / 0.4 * A * (k % 2 === 1 || S.sideness > 0.6 ? 1 : 0);
-          ctx.fillStyle = C.muted; ctx.font = '600 11px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(k + 'X', p[0], p[1] + 10); ctx.globalAlpha = 1; }
-      }
-      // the signal in front: the sum of whatever has not been peeled away yet
-      const n = Math.max(2, Math.round(NP * S.draw));
-      const front = [];
-      for (let i = 0; i < n; i++) { let z = 0; for (let k = 0; k < K; k++) z += lane[k][i] * (1 - S.peel(k)); front.push(P(wx(ts[i]), laneY(0), z)); }
-      line(ctx, front, C.ink, 2.8, dim * A);
-      if (cap && cap.textContent !== S.label) cap.textContent = S.label;
-    }
-
-    function frame(now) {
-      if (!playing || !visible) return;
-      tHold = ((now - t0) / 1000) % LOOP;
-      render(tHold);
-      requestAnimationFrame(frame);
-    }
-    addEventListener('resize', () => render(tHold));
-    render(tHold);
-    if (playing) requestAnimationFrame(frame);
   }
 
   // ---------------------------------------------------------------- sparks: card drawings, alive only on hover / focus
