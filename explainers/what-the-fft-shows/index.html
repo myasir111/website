@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="theme-color" content="#0c0c0b">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>What the FFT Shows · Nodal</title>
+  <link rel="canonical" href="https://nodallab.dev/explainers/what-the-fft-shows/">
   <meta name="description" content="A 3D animation of a signal pulled apart into its sine waves: the spectrum is the same function, seen from the side.">
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
   <meta property="og:title" content="What is the FFT actually showing you?">
   <meta property="og:description" content="One signal, pulled apart into its sine waves in 3D. Look from the side and you get the spectrum.">
   <meta property="og:image" content="https://nodallab.dev/explainers/what-the-fft-shows/og.jpg">
+  <meta property="og:url" content="https://nodallab.dev/explainers/what-the-fft-shows/">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <link rel="stylesheet" href="../../css/style.css">
   <style>
@@ -19,8 +20,10 @@
     .eq { overflow-x: auto; padding: 4px 0; }
     .series-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; font-size: 15px; }
   </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "TechArticle", "headline": "What is the FFT actually showing you?", "description": "A 3D animation of a signal pulled apart into its sine waves: the spectrum is the same function, seen from the side.", "author": {"@type": "Person", "name": "Muhammad Yasir", "url": "https://nodallab.dev/about.html"}, "datePublished": "2026-10-27", "dateModified": "2026-11-10", "image": "https://nodallab.dev/explainers/what-the-fft-shows/og.jpg", "mainEntityOfPage": "https://nodallab.dev/explainers/what-the-fft-shows/"}, {"@type": "VideoObject", "name": "What is the FFT actually showing you?", "description": "A 3D animation of a signal pulled apart into its sine waves: the spectrum is the same function, seen from the side.", "thumbnailUrl": "https://nodallab.dev/explainers/what-the-fft-shows/poster.jpg", "uploadDate": "2026-10-27", "duration": "PT1M12S", "contentUrl": "https://nodallab.dev/explainers/what-the-fft-shows/what-the-fft-shows.mp4"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Explainers", "item": "https://nodallab.dev/explainers/"}, {"@type": "ListItem", "position": 2, "name": "What is the FFT actually showing you?"}]}]}</script>
 </head>
 <body>
+<div class="progress-bar" aria-hidden="true"></div>
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="../../">nodal<span>.</span></a>
@@ -41,7 +44,7 @@
     <p class="meta">October 2026 · 72-second video</p>
   </section>
 
-  <video class="video" controls playsinline preload="metadata" poster="poster.jpg">
+  <video class="video" controls playsinline preload="none" poster="poster.jpg">
     <source src="what-the-fft-shows.mp4" type="video/mp4">
     Your browser can't play this video. <a href="what-the-fft-shows.mp4">Download it</a> instead.
   </video>
@@ -100,5 +103,6 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
         onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<script defer src="../../js/site.js"></script>
 </body>
 </html>

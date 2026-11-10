@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="theme-color" content="#0c0c0b">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Explainers · Nodal</title>
+  <link rel="canonical" href="https://nodallab.dev/explainers/">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <meta property="og:image" content="https://nodallab.dev/assets/og.png">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -28,32 +28,49 @@
 <main class="wrap">
   <section class="hero" style="padding-bottom:0">
     <p class="eyebrow">Explainers</p>
-    <h1>Vibration, explained visually</h1>
-    <p class="lede">The full versions of my LinkedIn posts: interactive simulations, the maths, and downloadable code and data.</p>
+    <h1>Vibration, explained <em>visually</em></h1>
+    <p class="lede">The full versions of my LinkedIn posts: the videos, the maths, interactive boards, and the code and data to download.</p>
   </section>
 
-  <h2>FFT series</h2>
+  <h2><span class="kick">Series 2</span>The FFT</h2>
   <div class="cards">
     <a class="card" href="fft-phase/">
-      <span class="tag">Part 1 · Video</span>
+      <img class="thumb" src="fft-phase/poster.jpg" alt="" width="1920" height="1080">
+      <span class="tag">Part 1 · Video + carousel</span>
       <h3>The half of the FFT your analyser throws away</h3>
       <p>Real and imaginary parts, why half the FFT is a mirror, the winding machine, and why phase is the shape.</p>
     </a>
+    <a class="card" href="leakage-aliasing/">
+      <img class="thumb" src="leakage-aliasing/poster.jpg" alt="" width="1920" height="1080">
+      <span class="tag">Part 2 · Video + interactive</span>
+      <h3>Leakage and aliasing: the FFT's two traps</h3>
+      <p>Why one clean tone smears across every bin, why a fast signal shows up at the wrong frequency, and the fix for each.</p>
+    </a>
+    <div class="card next">
+      <canvas class="spark" data-spark="leak" aria-hidden="true"></canvas>
+      <span class="tag">Coming next</span>
+      <h3>Wavelets</h3>
+      <p>For signals that change over time, when one spectrum isn't enough.</p>
+      <span class="soon">Planned</span>
+    </div>
   </div>
 
-  <h2>Harmonics series</h2>
+  <h2><span class="kick">Series 1</span>Harmonics</h2>
   <div class="cards">
     <a class="card" href="what-the-fft-shows/">
+      <img class="thumb" src="what-the-fft-shows/poster.jpg" alt="" loading="lazy" width="1920" height="1080">
       <span class="tag">Part 1 · Video</span>
       <h3>What the FFT actually shows</h3>
       <p>A signal pulled apart into its sine waves in 3D. From the side, it's the spectrum.</p>
     </a>
     <a class="card" href="why-harmonics/">
+      <img class="thumb" src="why-harmonics/og.jpg" alt="" loading="lazy" width="1200" height="630">
       <span class="tag">Part 2 · Carousel + interactive</span>
       <h3>Why we see harmonics</h3>
       <p>Square, sawtooth, triangle, a clipped sine and a real machine signal, built harmonic by harmonic.</p>
     </a>
     <a class="card" href="watch-harmonics-in-3d/">
+      <img class="thumb" src="watch-harmonics-in-3d/poster.jpg" alt="" loading="lazy" width="1920" height="1080">
       <span class="tag">Part 3 · Video</span>
       <h3>Watch a signal come apart</h3>
       <p>Every example split into its harmonics in 3D, and why a symmetric wave has exactly zero even harmonics.</p>
@@ -68,5 +85,6 @@
     <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
   </div>
 </footer>
+<script defer src="../js/site.js"></script>
 </body>
 </html>

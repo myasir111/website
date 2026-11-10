@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#0c0c0b">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FFT Leakage and Aliasing, Explained · Nodal</title>
+  <link rel="canonical" href="https://nodallab.dev/explainers/leakage-aliasing/">
+  <meta name="description" content="Why one clean tone smears across every FFT bin (leakage), why a fast signal shows up at the wrong frequency (aliasing), and the fix for each: windows, sample rate and anti-alias filters.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Leakage and aliasing: the FFT's two traps">
+  <meta property="og:description" content="A tone between two bins smears across all of them. A tone above half the sample rate shows up somewhere else. A video, an interactive board and the maths.">
+  <meta property="og:image" content="https://nodallab.dev/explainers/leakage-aliasing/og.jpg">
+  <meta property="og:url" content="https://nodallab.dev/explainers/leakage-aliasing/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    .video { width: 100%; border-radius: 12px; border: 1px solid var(--line); background: #111110; display: block; margin: 28px 0 8px; aspect-ratio: 16 / 9; height: auto; }
+    .eq { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+    .series-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; font-size: 15px; }
+    .sim canvas { height: 150px; }
+    .sim canvas#spec { height: 170px; }
+    .readout { display: flex; gap: 8px 24px; flex-wrap: wrap; margin-top: 12px; font-size: 14px; color: var(--muted); }
+    .readout b { font-family: var(--mono); color: var(--accent); font-weight: 600; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .two .cap h3 { font: 400 26px/1.1 var(--serif); margin: 6px 0 8px; }
+    .two .cap .fix { color: var(--good); font-weight: 600; }
+    @media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Leakage and aliasing: the FFT's two traps","description":"Why one clean tone smears across every FFT bin, why a fast signal shows up at the wrong frequency, and the fix for each.","author":{"@type":"Person","name":"Muhammad Yasir","url":"https://nodallab.dev/about.html"},"datePublished":"2026-11-07","dateModified":"2026-11-10","image":"https://nodallab.dev/explainers/leakage-aliasing/og.jpg","mainEntityOfPage":"https://nodallab.dev/explainers/leakage-aliasing/"},{"@type":"VideoObject","name":"Leakage and aliasing: the FFT's two traps","description":"An animated explainer with captions and sound: the FFT sees one record and assumes it repeats; a tone between bins leaks; a window fixes it; a tone above half the sample rate aliases; sampling faster and filtering first fixes that.","thumbnailUrl":"https://nodallab.dev/explainers/leakage-aliasing/poster.jpg","uploadDate":"2026-11-07","duration":"PT3M26S","contentUrl":"https://nodallab.dev/explainers/leakage-aliasing/leakage-aliasing.mp4"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Explainers","item":"https://nodallab.dev/explainers/"},{"@type":"ListItem","position":2,"name":"Leakage and aliasing"}]}]}</script>
+</head>
+<body>
+<div class="progress-bar" aria-hidden="true"></div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../" class="active">Explainers</a>
+      <a href="../../lab/">Lab</a>
+      <a href="../../tools/">Tools</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Explainers</a> · FFT series · Part 2</p>
+    <h1>Leakage and aliasing: the FFT's <em>two traps</em></h1>
+    <p class="meta">November 2026 · 3 min 26 s video, with sound · interactive</p>
+  </section>
+
+  <video class="video" controls playsinline preload="none" poster="poster.jpg" width="1920" height="1080">
+    <source src="leakage-aliasing.mp4" type="video/mp4">
+    Your browser can't play this video. <a href="leakage-aliasing.mp4">Download it</a> instead.
+  </video>
+  <p class="meta">The video from the LinkedIn post. No voice: captions are on screen, and the sound includes a tone you can hear aliasing.</p>
+
+  <div class="prose">
+    <p><b>What the video shows.</b> An FFT works on one short record of the signal and treats it as if it repeated forever. A tone that fits the record a whole number of times lands in one bin. A tone that doesn't fit spills into every bin: that is leakage, and a window reduces it. Separately, a tone above half the sample rate is recorded as a lower frequency: that is aliasing, and the fix is to sample faster and filter first.</p>
+
+    <div class="two">
+      <div class="cap"><span class="cap-n">TRAP 1</span><h3>Leakage</h3><p>A tone between two bins smears across all of them. <span class="fix">Fix: window it.</span></p></div>
+      <div class="cap"><span class="cap-n">TRAP 2</span><h3>Aliasing</h3><p>A tone above half the sample rate shows up somewhere else. <span class="fix">Fix: sample faster, filter first.</span></p></div>
+    </div>
+
+    <h2>One record, repeated forever</h2>
+    <p>An analyser never sees your whole signal. It takes one record, \(N\) samples long, and the maths of the FFT assumes that record repeats end to end. Both traps come from that one assumption.</p>
+    <p>The bins of an FFT sit at whole numbers of cycles per record:</p>
+    <div class="eq">$$f_k=k\,\frac{f_s}{N},\qquad k=0,1,2,\dots$$</div>
+    <p>where \(f_s\) is the sample rate. In the video each bin is a lane, and only tones with exactly 1, 2, 3… cycles in the record have a lane of their own.</p>
+
+    <h2>Trap 1: leakage</h2>
+    <p>A tone with exactly 4 cycles in the record lands in bin 4 and nowhere else. Give it 4.5 cycles and there is no bin for it, so its energy spreads over all of them. For a tone of amplitude \(A\) with \(f\) cycles in the record, the bins read approximately</p>
+    <div class="eq">$$|X_k|\approx A\left|\frac{\sin\pi(k-f)}{\pi(k-f)}\right|.$$</div>
+    <p>When \(f\) is a whole number this is \(A\) in one bin and zero in the rest. Halfway between two bins, the two nearest bins each read about 64% of \(A\), and the rest fall away only slowly.</p>
+
+    <h3>Why it leaks: the seam</h3>
+    <p>Repeat a record that holds 4.5 cycles and the end doesn't meet the start: \(x(0)=A\) but \(x(T)=A\cos(2\pi\cdot4.5)=-A\). Every seam has a jump, and a jump is sharp. As the harmonics series showed, a sharp edge needs many frequencies to build. Those extra frequencies are the leaked bins.</p>
+
+    <h3>Try it</h3>
+  </div>
+
+  <div class="sim" id="leak-sim">
+    <div class="sim-head">
+      <span class="sim-label" style="margin:0">Leakage board · 64 samples per record</span>
+      <div class="seg" role="group" aria-label="Window"><button type="button" class="on" data-win="rect">No window</button><button type="button" data-win="hann">Hann window</button></div>
+    </div>
+    <p class="sim-label">The record, repeated three times (the seams are marked)</p>
+    <canvas id="rec" role="img" aria-label="The record repeated three times, with a marker at each seam"></canvas>
+    <p class="sim-label">The spectrum the FFT reports</p>
+    <canvas id="spec" role="img" aria-label="Bar chart of the FFT bins 1 to 12"></canvas>
+    <div class="controls">
+      <label><span>Cycles in the record: <span class="val" id="fval">4.50</span></span>
+        <input type="range" id="f" min="3" max="6" step="0.05" value="4.5" aria-label="Cycles in the record"></label>
+    </div>
+    <div class="readout"><span>Jump at the seam: <b id="jump">0</b></span><span>Tallest bin: <b id="peak">0</b> of A</span><span>Largest far bin (9 to 12): <b id="far">0</b> dB</span></div>
+  </div>
+
+  <div class="prose">
+    <p>Slide to a whole number and the seams close and the spectrum collapses to one bar. Switch the window on at 4.5 and watch the far bins drop.</p>
+
+    <h2>The fix: a window</h2>
+    <p>A window fades the record in and out so both ends meet at zero. The most common one in vibration work is the Hann (Hanning) window:</p>
+    <div class="eq">$$w[n]=\tfrac12\left(1-\cos\frac{2\pi n}{N}\right).$$</div>
+    <p>With no jump at the seam, the leak stays close to the true frequency. In the video's example (4.5 cycles, 64 samples), the largest of the far bins 9 to 12 drops from about −17 dB to about −47 dB relative to the peak.</p>
+    <p>The price is a slightly wider peak, because the window itself has a spectrum. A window also lowers the reading, so analysers multiply the result back up: by 2 for the amplitude of a Hann-windowed tone. For general machine spectra that trade is almost always worth it. When you need the most accurate amplitude of a single tone, a flat-top window is the usual choice; for a transient that fits inside the record, such as a hammer impact, use no window (or a force/exponential pair).</p>
+
+    <h2>Trap 2: aliasing</h2>
+    <p>Leakage smears a frequency. Aliasing moves it somewhere else entirely.</p>
+    <p>Picture a point on a shaft turning 11 times a second, sampled 12 times a second. Between two samples it turns 11/12 of a turn forward, which looks exactly like 1/12 of a turn backward. The samples show a shaft turning slowly backward, once a second:</p>
+    <div class="eq">$$\sin\!\left(2\pi\cdot11\cdot\tfrac{n}{12}\right)=-\sin\!\left(2\pi\cdot\tfrac{n}{12}\right).$$</div>
+    <p>In the spectrum, everything above half the sample rate folds back, like paper folded at \(f_s/2\). A tone at \(f\) is seen at</p>
+    <div class="eq">$$f_{\text{seen}}=\left|\,f-f_s\cdot\operatorname{round}\!\left(\frac{f}{f_s}\right)\right|,\qquad |11-12|=1\ \text{Hz}.$$</div>
+    <p>Once it has been sampled, an aliased tone is indistinguishable from a real one at that frequency. No processing afterwards can remove it.</p>
+
+    <h2>The fix: sample fast enough, and filter first</h2>
+    <p>Sample faster than twice the highest frequency present (the Nyquist rule):</p>
+    <div class="eq">$$f_s>2\,f_{\max}.$$</div>
+    <p>At 24 samples a second each step of the 11 Hz shaft is less than half a turn, and the samples follow the real motion.</p>
+    <p>But you rarely control what is in the signal. Noise at 15 Hz, sampled at 12 Hz, folds to \(15-12=3\) Hz and lands on top of a real 3 Hz component. So an analyser puts an analogue low-pass filter, the anti-alias filter, before the sampler to remove everything above \(f_s/2\).</p>
+    <p class="callout">In practice: a real filter can't cut off instantly, so vibration analysers sample at about 2.56 times the top frequency you ask for, not 2. That is why a 400-line spectrum comes from 1,024 samples. If you set up a data acquisition system yourself, check that its anti-alias filter is on and suits the sample rate.</p>
+
+    <h2>Downloads</h2>
+    <ul class="downloads">
+      <li><a href="leakage_aliasing.py" download>leakage_aliasing.py</a> <span class="muted">· the Manim code for the whole video, including the sound and a numerical check of every claim in the captions</span></li>
+      <li><a href="leakage-aliasing.mp4" download>leakage-aliasing.mp4</a> <span class="muted">· the video, 1080p</span></li>
+    </ul>
+
+    <h2>Further reading</h2>
+    <ul class="ref-list">
+      <li>F. J. Harris (1978). On the use of windows for harmonic analysis with the discrete Fourier transform. <i>Proceedings of the IEEE</i>, 66(1), 51–83.<span class="what">The standard reference on windows: leakage, side lobes and what each window costs.</span></li>
+      <li>C. E. Shannon (1949). Communication in the presence of noise. <i>Proceedings of the IRE</i>, 37(1), 10–21.<span class="what">The sampling theorem.</span></li>
+      <li>E. O. Brigham (1988). <i>The Fast Fourier Transform and Its Applications.</i> Prentice Hall.<span class="what">Leakage and aliasing derived from the transform itself.</span></li>
+      <li>R. B. Randall. <i>Vibration-based Condition Monitoring.</i> Wiley.<span class="what">Windows, sampling and anti-alias filtering as used on machines.</span></li>
+    </ul>
+
+    <div class="series-nav">
+      <a href="../fft-phase/">← Part 1: The half of the FFT your analyser throws away</a>
+      <a href="../../lab/fft-by-hand/">Work an FFT by hand in the Lab →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Muhammad Yasir</span>
+    <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+// Leakage board: one tone, f cycles in a 64-sample record, with or without a Hann window (x2 corrected).
+(function () {
+  const N = 64, A = 1, K = 12, TAU = Math.PI * 2;
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const rec = document.getElementById('rec'), spec = document.getElementById('spec'), fIn = document.getElementById('f');
+  let win = 'rect';
+  const hann = (u) => 0.5 * (1 - Math.cos(TAU * u));
+  function bins(f) {
+    const out = [];
+    for (let k = 1; k <= K; k++) {
+      let re = 0, im = 0;
+      for (let n = 0; n < N; n++) {
+        const w = win === 'hann' ? 2 * hann(n / N) : 1, x = A * Math.cos(TAU * f * n / N) * w;
+        re += x * Math.cos(TAU * k * n / N); im -= x * Math.sin(TAU * k * n / N);
+      }
+      out.push(2 * Math.hypot(re, im) / N);
+    }
+    return out;
+  }
+  function fit(c) { const d = Math.min(devicePixelRatio || 1, 2), w = c.clientWidth, h = c.clientHeight; c.width = w * d; c.height = h * d; const g = c.getContext('2d'); g.setTransform(d, 0, 0, d, 0, 0); return [g, w, h]; }
+  function draw() {
+    const f = +fIn.value, ink = css('--ink'), muted = css('--muted'), line = css('--line'), blue = css('--blue'), orange = '#d95926', bad = css('--bad'), good = css('--good');
+    document.getElementById('fval').textContent = f.toFixed(2);
+    const x = (u) => A * Math.cos(TAU * f * u) * (win === 'hann' ? hann(u) : 1);
+    let [g, w, h] = fit(rec);
+    g.strokeStyle = line; g.lineWidth = 1; g.beginPath(); g.moveTo(0, h / 2); g.lineTo(w, h / 2); g.stroke();
+    for (let r = 0; r < 3; r++) {
+      g.strokeStyle = r === 1 ? ink : muted; g.lineWidth = r === 1 ? 2.4 : 1.6; g.beginPath();
+      for (let i = 0; i <= 200; i++) { const u = i / 200, px = w * (r + u) / 3, py = h / 2 - x(u) * h * 0.4; i ? g.lineTo(px, py) : g.moveTo(px, py); }
+      g.stroke();
+    }
+    const jump = Math.abs(x(1) - x(0));
+    [1, 2].forEach((s) => { g.strokeStyle = jump > 0.02 ? bad : good; g.lineWidth = 2.5; g.beginPath(); g.arc(w * s / 3, h / 2 - (x(0) + x(1)) / 2 * h * 0.4, 13, 0, TAU); g.stroke(); });
+    const b = bins(f); [g, w, h] = fit(spec);
+    const base = h - 24, top = 1.1;
+    g.strokeStyle = line; g.lineWidth = 1; g.beginPath(); g.moveTo(0, base); g.lineTo(w, base); g.stroke();
+    b.forEach((v, i) => {
+      const px = w * (i + 0.5) / K, bh = v / top * (base - 8);
+      g.fillStyle = Math.abs(i + 1 - f) < 0.75 ? blue : orange; g.fillRect(px - 7, base - bh, 14, bh);
+      g.fillStyle = muted; g.font = '12px "JetBrains Mono", monospace'; g.textAlign = 'center'; g.fillText(String(i + 1), px, h - 6);
+    });
+    const peak = Math.max(...b), far = Math.max(...b.slice(8));
+    document.getElementById('jump').textContent = jump.toFixed(2) + ' A';
+    document.getElementById('peak').textContent = peak.toFixed(2);
+    document.getElementById('far').textContent = far / peak < 1e-6 ? 'below −120' : (20 * Math.log10(far / peak)).toFixed(0);
+  }
+  fIn.addEventListener('input', draw);
+  document.querySelectorAll('#leak-sim [data-win]').forEach((bt) => bt.addEventListener('click', () => {
+    win = bt.dataset.win; document.querySelectorAll('#leak-sim [data-win]').forEach((x) => x.classList.toggle('on', x === bt)); draw();
+  }));
+  addEventListener('resize', draw); draw();
+})();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<script defer src="../../js/site.js"></script>
+</body>
+</html>

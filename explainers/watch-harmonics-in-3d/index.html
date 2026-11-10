@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="theme-color" content="#0c0c0b">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Watch Harmonics Come Apart · Nodal</title>
+  <link rel="canonical" href="https://nodallab.dev/explainers/watch-harmonics-in-3d/">
   <meta name="description" content="A 3D animation of signals splitting into their harmonics, and why a symmetric wave has exactly zero even harmonics: shift it half a turn, flip it, and it lands on itself.">
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
   <meta property="og:title" content="Why do we see harmonics? Watch a signal come apart">
   <meta property="og:description" content="Square, sawtooth, triangle, a clipped sine and a real machine signal, pulled apart into their harmonics in 3D. Plus why the even lanes are exactly zero.">
   <meta property="og:image" content="https://nodallab.dev/explainers/watch-harmonics-in-3d/og.jpg">
+  <meta property="og:url" content="https://nodallab.dev/explainers/watch-harmonics-in-3d/">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <link rel="stylesheet" href="../../css/style.css">
   <style>
@@ -23,8 +24,10 @@
     table.ex th { font: 12px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
     .table-wrap { overflow-x: auto; }
   </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "TechArticle", "headline": "Why do we see harmonics? Watch a signal come apart", "description": "A 3D animation of signals splitting into their harmonics, and why a symmetric wave has exactly zero even harmonics: shift it half a turn, flip it, and it lands on itself.", "author": {"@type": "Person", "name": "Muhammad Yasir", "url": "https://nodallab.dev/about.html"}, "datePublished": "2026-10-30", "dateModified": "2026-11-10", "image": "https://nodallab.dev/explainers/watch-harmonics-in-3d/og.jpg", "mainEntityOfPage": "https://nodallab.dev/explainers/watch-harmonics-in-3d/"}, {"@type": "VideoObject", "name": "Why do we see harmonics? Watch a signal come apart", "description": "A 3D animation of signals splitting into their harmonics, and why a symmetric wave has exactly zero even harmonics: shift it half a turn, flip it, and it lands on itself.", "thumbnailUrl": "https://nodallab.dev/explainers/watch-harmonics-in-3d/poster.jpg", "uploadDate": "2026-10-30", "duration": "PT3M46S", "contentUrl": "https://nodallab.dev/explainers/watch-harmonics-in-3d/harmonics-in-3d.mp4"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Explainers", "item": "https://nodallab.dev/explainers/"}, {"@type": "ListItem", "position": 2, "name": "Why do we see harmonics? Watch a signal come apart"}]}]}</script>
 </head>
 <body>
+<div class="progress-bar" aria-hidden="true"></div>
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="../../">nodal<span>.</span></a>
@@ -45,7 +48,7 @@
     <p class="meta">October 2026 · 3 min 45 s video, with sound</p>
   </section>
 
-  <video class="video" controls playsinline preload="metadata" poster="poster.jpg">
+  <video class="video" controls playsinline preload="none" poster="poster.jpg">
     <source src="harmonics-in-3d.mp4" type="video/mp4">
     Your browser can't play this video. <a href="harmonics-in-3d.mp4">Download it</a> instead.
   </video>
@@ -115,5 +118,6 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
         onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<script defer src="../../js/site.js"></script>
 </body>
 </html>
