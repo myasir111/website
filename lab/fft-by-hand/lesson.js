@@ -362,7 +362,7 @@
   Lab.lesson({
     work: WORK,
     heads: true,
-    next: '../',
+    next: '../leakage-and-windows/',
     state: { n: 1, pf: 'cos', pp: 1, on: 1, om: 2, oc: 'cc', pn: 1, pt: 'cos', n2: 1 },
     steps: [
       {
@@ -593,7 +593,7 @@
         part: 'Summary',
         title: 'On one card',
         text: `<p>Four boxed results, each derived above: the DFT, what its real and imaginary parts are, how size and phase come out of it, and why half of it is a mirror.</p>
-               <p>Next in the series: what happens when the signal doesn’t fit a whole number of times in the window. That is leakage.</p>`,
+               <p>Next lesson: what happens when the signal doesn’t fit a whole number of times in the record. That is leakage.</p>`,
         draw(g, s, t, api) {
           const c = g.col, R = Math.min(g.h * 0.38, g.w * 0.22);
           phasor(g, 0.3, -0.4, g.w * 0.42, g.h * 0.45, R, 0.55);

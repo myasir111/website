@@ -109,6 +109,8 @@
     <p>With no jump at the seam, the leak stays close to the true frequency. In the video's example (4.5 cycles, 64 samples), the largest of the far bins 9 to 12 drops from about −17 dB to about −47 dB relative to the peak.</p>
     <p>The price is a slightly wider peak, because the window itself has a spectrum. A window also lowers the reading, so analysers multiply the result back up: by 2 for the amplitude of a Hann-windowed tone. For general machine spectra that trade is almost always worth it. When you need the most accurate amplitude of a single tone, a flat-top window is the usual choice; for a transient that fits inside the record, such as a hammer impact, use no window (or a force/exponential pair).</p>
 
+    <p class="callout">Derive both leakage formulas and the ×2 correction line by line, then work a pump signal on a calculator, in <a href="../../lab/leakage-and-windows/">Lab lesson 5: Leakage and windows</a>.</p>
+
     <h2>Trap 2: aliasing</h2>
     <p>Leakage smears a frequency. Aliasing moves it somewhere else entirely.</p>
     <p>Picture a point on a shaft turning 11 times a second, sampled 12 times a second. Between two samples it turns 11/12 of a turn forward, which looks exactly like 1/12 of a turn backward. The samples show a shaft turning slowly backward, once a second:</p>
@@ -140,7 +142,7 @@
 
     <div class="series-nav">
       <a href="../fft-phase/">← Part 1: The half of the FFT your analyser throws away</a>
-      <a href="../../lab/fft-by-hand/">Work an FFT by hand in the Lab →</a>
+      <a href="../../lab/leakage-and-windows/">Derive it in the Lab: Lesson 5 →</a>
     </div>
   </div>
 </main>
