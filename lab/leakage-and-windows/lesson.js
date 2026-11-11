@@ -266,7 +266,7 @@
   Lab.lesson({
     work: WORK,
     heads: true,
-    next: '../',
+    next: '../wavelets/',
     state: { d: 0.5, f6: 4.5, w6: 'rect', fm: 4, f9: 4.5, w9: 'hann', e1: 'hann' },
     steps: [
       {
@@ -412,7 +412,7 @@
         part: 'Summary',
         title: 'On one card',
         text: `<p>Four boxed results, each derived above. A tone on a bin is exact; a tone between bins leaks like \\(1/\\delta\\); a Hann window turns that into \\(1/\\delta^3\\) and is corrected by ×2.</p>
-               <p>Next in the series: wavelets, for signals that change over time.</p>`,
+               <p>Next: <a href="../wavelets/">Lesson 6, wavelets</a>, for signals that change over time.</p>`,
         controls: [{ type: 'choice', key: 'w9', options: [['rect', 'No window'], ['hann', 'Hann window']] }],
         draw(g, s, t, api) { recordAndBins(g, 4.5, s.w9 === 'hann', api, { formula: true }); },
       },

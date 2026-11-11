@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#0c0c0b">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wavelets for Vibration, Explained · Nodal</title>
+  <link rel="canonical" href="https://nodallab.dev/explainers/wavelets/">
+  <meta name="description" content="Why an FFT can't tell you when something happened, why short-time FFTs only half fix it, and how a wavelet map shows which frequency and when: a fan's hum as a band and each knock as a flash.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Wavelets: which frequency, and when">
+  <meta property="og:description" content="Two different signals can have exactly the same spectrum. A wavelet map tells them apart, and finds a knock that comes once per turn. A short film, an interactive board and the maths.">
+  <meta property="og:image" content="https://nodallab.dev/explainers/wavelets/og.jpg">
+  <meta property="og:url" content="https://nodallab.dev/explainers/wavelets/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    .video { width: 100%; border-radius: 12px; border: 1px solid var(--line); background: #000; display: block; margin: 28px 0 8px; aspect-ratio: 16 / 9; height: auto; }
+    .eq { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+    .series-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; font-size: 15px; }
+    .sim canvas { height: 150px; }
+    .sim canvas#score { height: 120px; }
+    .readout { display: flex; gap: 8px 24px; flex-wrap: wrap; margin-top: 12px; font-size: 14px; color: var(--muted); }
+    .readout b { font-family: var(--mono); color: var(--accent); font-weight: 600; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .two .cap h3 { font: 400 26px/1.1 var(--serif); margin: 6px 0 8px; }
+    .two .cap .fix { color: var(--good); font-weight: 600; }
+    @media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Wavelets: which frequency, and when","description":"Why an FFT can't tell you when something happened, why short-time FFTs only half fix it, and how a wavelet map shows which frequency and when.","author":{"@type":"Person","name":"Muhammad Yasir","url":"https://nodallab.dev/about.html"},"datePublished":"2026-11-11","dateModified":"2026-11-11","image":"https://nodallab.dev/explainers/wavelets/og.jpg","mainEntityOfPage":"https://nodallab.dev/explainers/wavelets/"},{"@type":"VideoObject","name":"Wavelets: which frequency, and when","description":"A short animated film with captions and music: two signals with the same spectrum, short-time FFTs and their one window size, a wavelet slid and stretched along a signal, and the wavelet map of a fan that knocks once per turn.","thumbnailUrl":"https://nodallab.dev/explainers/wavelets/poster.jpg","uploadDate":"2026-11-11","duration":"PT1M41S","contentUrl":"https://nodallab.dev/explainers/wavelets/wavelets.mp4"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Explainers","item":"https://nodallab.dev/explainers/"},{"@type":"ListItem","position":2,"name":"Wavelets"}]}]}</script>
+</head>
+<body class="article">
+<div class="progress-bar" aria-hidden="true"></div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../" class="active">Explainers</a>
+      <a href="../../lab/">Lab</a>
+      <a href="../../tools/">Tools</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Explainers</a> · FFT series · Part 3</p>
+    <h1>Wavelets: which frequency, <em>and when</em></h1>
+    <p class="meta">November 2026 · 1 min 41 s film, with music · interactive</p>
+  </section>
+
+  <video class="video" controls playsinline preload="none" poster="poster.jpg" width="1920" height="1080">
+    <source src="wavelets.mp4" type="video/mp4">
+    Your browser can't play this video. <a href="wavelets.mp4">Download it</a> instead.
+  </video>
+  <p class="meta">The film from the LinkedIn post. No voice: captions are on screen.</p>
+
+  <div class="prose">
+    <p><b>What the film shows.</b> A fan knocks once every turn. Two different signals, one playing 10 Hz then 25 Hz and the other playing the same thing backwards, have exactly the same FFT spectrum: a spectrum says which frequencies, not when. Short FFTs slid along the signal bring time back, but one window size can't be sharp in time and in frequency at once. A wavelet is a short burst that is slid along the signal and stretched: short for fast things, long for slow ones. On the fan, the hum is a steady band and each knock is a flash, 40 ms apart.</p>
+
+    <div class="two">
+      <div class="cap"><span class="cap-n">FFT</span><h3>Which frequencies</h3><p>One answer for the whole record. Anything that comes and goes is averaged away.</p></div>
+      <div class="cap"><span class="cap-n">WAVELETS</span><h3>Which, and when</h3><p>A map of frequency against time. <span class="fix">Short bursts for fast things, long ones for slow things.</span></p></div>
+    </div>
+
+    <h2>Two signals, one spectrum</h2>
+    <p>The FFT matches a signal against an arrow turning at each frequency, over the whole record:</p>
+    <div class="eq">$$X(f)=\int x(t)\,e^{-i2\pi ft}\,dt.$$</div>
+    <p>Play a record backwards and the spectrum's size doesn't change. For a real signal on \(0\le t\le T\), the reversed record \(x(T-t)\) has the transform \(e^{-i2\pi fT}\,\overline{X(f)}\): only the phase moves, so \(|X(f)|\) is identical. The order of events lives only in the phase, and a magnitude spectrum, which is what an analyser shows, throws it away.</p>
+    <p>That is fine for a steady machine. It isn't fine for something that comes and goes: an impact once per turn, a run-up, a valve that chatters for a second.</p>
+
+    <h2>First try: short FFTs</h2>
+    <p>Slide a short window \(w\) along the signal and take an FFT of each slice:</p>
+    <div class="eq">$$X(\tau,f)=\int x(t)\,w(t-\tau)\,e^{-i2\pi ft}\,dt.$$</div>
+    <p>That is the spectrogram, and it does bring time back. But the window has one length for every frequency. A short window locates events sharply and blurs frequency; a long one does the opposite. The trade can't be beaten: for any window, the spreads in time and frequency (as standard deviations of the window's energy) obey</p>
+    <div class="eq">$$\sigma_t\,\sigma_f\ \ge\ \frac{1}{4\pi},$$</div>
+    <p>with equality only for a Gaussian window (Gabor, 1946).</p>
+
+    <h2>The idea: a wavelet</h2>
+    <p>A wavelet is a short wave inside a bell. The one used in the film is the Morlet wavelet, a cosine-and-sine arrow under a Gaussian:</p>
+    <div class="eq">$$\psi(t)=e^{-t^2/2}\,e^{i\omega_0t},\qquad \omega_0=6.$$</div>
+    <p>Slide it to a time \(b\), stretch it by a scale \(a\), and match it against the signal:</p>
+    <div class="eq">$$W(a,b)=\frac{1}{\sqrt a}\int x(t)\,\psi^{*}\!\Big(\frac{t-b}{a}\Big)\,dt.$$</div>
+    <p>Each scale is a frequency, \(f=\omega_0/(2\pi a)\), and every stretched copy holds the same number of wiggles. So a fast row of the map uses a short burst and a slow row a long one. Every mark on the map has the same area in time and frequency; what changes is its shape.</p>
+
+    <h3>Try it</h3>
+  </div>
+
+  <div class="sim" id="wav-sim">
+    <div class="sim-head">
+      <span class="sim-label" style="margin:0">Wavelet board · 10 Hz for half a second, then 25 Hz</span>
+    </div>
+    <p class="sim-label">The signal, with the wavelet laid over it</p>
+    <canvas id="sig" role="img" aria-label="The signal, 10 hertz then 25 hertz, with a Morlet wavelet at the chosen time and frequency"></canvas>
+    <p class="sim-label">How well the wavelet matches, at every time</p>
+    <canvas id="score" role="img" aria-label="The wavelet's match with the signal as it slides along"></canvas>
+    <div class="controls">
+      <label><span>Wavelet frequency: <span class="val" id="fval">25 Hz</span></span>
+        <input type="range" id="f" min="5" max="50" step="0.5" value="25" aria-label="Wavelet frequency in hertz"></label>
+      <label><span>Slide it to: <span class="val" id="bval">0.70 s</span></span>
+        <input type="range" id="b" min="0" max="1" step="0.005" value="0.7" aria-label="Wavelet position in seconds"></label>
+    </div>
+    <div class="readout"><span>Scale a: <b id="ra">0</b></span><span>Length at half height: <b id="rt">0</b></span><span>Hears tones from: <b id="rf">0</b></span></div>
+  </div>
+
+  <div class="prose">
+    <p>Set the wavelet to 25 Hz: it matches only in the second half. Set it to 10 Hz: it is two and a half times longer and matches only in the first half. In between it matches neither well.</p>
+
+    <h2>On a machine: one knock per turn</h2>
+    <p>The film ends on a fan at 1,500 rpm: a 25 Hz hum, and a small knock once per turn that rings a resonance near 400 Hz. One turn takes</p>
+    <div class="eq">$$\frac{60\ \text{s}}{1500\ \text{turns}}=0.040\ \text{s}.$$</div>
+    <p>On the wavelet map the hum is a steady band and each knock is a flash. At 400 Hz the wavelet is short, so each flash lasts about 5.6 ms (at half height) and the knocks, 40 ms apart, stand out one by one. At 25 Hz the wavelet is long, so the same knock would smear over about 90 ms, but that row pins the hum to 25 ± 5 Hz. A single short-time FFT has to pick one of those two compromises for the whole map.</p>
+
+    <p class="callout">Derive the tone band, the knock flash, the area of a mark and how to read an amplitude off a map, then size the marks for this fan on a calculator, in <a href="../../lab/wavelets/">Lab lesson 6: Wavelets for engineers</a>.</p>
+
+    <h2>Reading a wavelet map in practice</h2>
+    <p><b>Brightness is not amplitude.</b> With the \(1/\sqrt a\) used here, a steady tone of amplitude \(A\) reads \(\tfrac{A}{2}\sqrt{2\pi a}\), so slow rows look brighter than they are. Some tools scale by \(1/a\) instead, which makes equal amplitudes equally bright. Check which one your software uses before comparing rows.</p>
+    <p><b>Watch the edges.</b> Near the start and end of a record the long, slow wavelets hang off the end of the data, so the slow rows are unreliable there. Torrence and Compo call this region the cone of influence; good tools shade it.</p>
+    <p><b>Where it helps.</b> Anything that changes during the record: impacts and rubs that come once per turn, run-ups and coast-downs, intermittent faults. For a steady machine an ordinary averaged spectrum is still the sharper tool.</p>
+
+    <h2>Downloads</h2>
+    <ul class="downloads">
+      <li><a href="wavelets.py" download>wavelets.py</a> <span class="muted">· the Manim code for the film, including a numerical check of every claim in the captions</span></li>
+      <li><a href="film.py" download>film.py</a> <span class="muted">· the film finish: slow camera pushes, vignette and grain</span></li>
+      <li><a href="score.py" download>score.py</a> <span class="muted">· the music, synthesised in NumPy</span></li>
+      <li><a href="wavelets.mp4" download>wavelets.mp4</a> <span class="muted">· the film, 1080p60</span></li>
+    </ul>
+
+    <h2>Further reading</h2>
+    <ul class="ref-list">
+      <li>C. Torrence and G. P. Compo (1998). A practical guide to wavelet analysis. <i>Bulletin of the American Meteorological Society</i>, 79(1), 61–78.<span class="what">The best place to start: the Morlet wavelet with ω₀ = 6, normalisation, the cone of influence and significance tests.</span></li>
+      <li>S. Mallat (2009). <i>A Wavelet Tour of Signal Processing</i>, 3rd ed. Academic Press.<span class="what">The full theory: time-frequency tiles, frames and fast wavelet transforms.</span></li>
+      <li>D. Gabor (1946). Theory of communication. <i>Journal of the IEE</i>, 93(26), 429–457.<span class="what">The time-frequency trade-off, and the Gaussian window that meets it exactly.</span></li>
+      <li>Z. K. Peng and F. L. Chu (2004). Application of the wavelet transform in machine condition monitoring and fault diagnostics: a review with bibliography. <i>Mechanical Systems and Signal Processing</i>, 18(2), 199–221.<span class="what">How wavelets have been used on real machines.</span></li>
+      <li>R. B. Randall. <i>Vibration-based Condition Monitoring.</i> Wiley.<span class="what">Time-frequency methods alongside the spectrum, on machines.</span></li>
+    </ul>
+
+    <div class="series-nav">
+      <a href="../leakage-aliasing/">← Part 2: Leakage and aliasing</a>
+      <a href="../../lab/wavelets/">Derive it in the Lab: Lesson 6 →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Wavelet board: x(t) = 10 Hz for 0..0.5 s then 25 Hz for 0.5..1 s (zero outside). One Morlet row |W(a, b)|, w0 = 6.
+(function () {
+  const TAU = Math.PI * 2, W0 = 6, FS = 400, HALF = Math.sqrt(2 * Math.log(2));
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const sig = document.getElementById('sig'), sc = document.getElementById('score'), fIn = document.getElementById('f'), bIn = document.getElementById('b');
+  const x = (t) => (t < 0 || t > 1 ? 0 : t < 0.5 ? Math.sin(TAU * 10 * t) : Math.sin(TAU * 25 * (t - 0.5)));
+  const N = 200, rowCache = {};
+  function row(f) {                       // |W| at N+1 times b in [0, 1], by a direct sum
+    if (rowCache[f]) return rowCache[f];
+    const a = W0 / (TAU * f), n = Math.ceil(3.5 * a * FS), out = [];
+    for (let i = 0; i <= N; i++) {
+      const b = i / N; let re = 0, im = 0;
+      for (let m = -n; m <= n; m++) { const t = b + m / FS, u = (t - b) / a, e = Math.exp(-u * u / 2), v = x(t); re += v * e * Math.cos(W0 * u); im -= v * e * Math.sin(W0 * u); }
+      out.push(Math.hypot(re, im) / FS / Math.sqrt(a));
+    }
+    return (rowCache[f] = out);
+  }
+  function fit(c) { const d = Math.min(devicePixelRatio || 1, 2), w = c.clientWidth, h = c.clientHeight; c.width = w * d; c.height = h * d; const g = c.getContext('2d'); g.setTransform(d, 0, 0, d, 0, 0); return [g, w, h]; }
+  function draw() {
+    const f = +fIn.value, b = +bIn.value, a = W0 / (TAU * f);
+    const ink = css('--ink'), muted = css('--muted'), line = css('--line'), blue = css('--blue'), orange = '#d95926', accent = css('--accent');
+    const mix = Math.min(1, Math.max(0, (f - 10) / 15));
+    document.getElementById('fval').textContent = f.toFixed(1).replace('.0', '') + ' Hz';
+    document.getElementById('bval').textContent = b.toFixed(2) + ' s';
+    document.getElementById('ra').textContent = (a * 1000).toFixed(1) + ' ms';
+    document.getElementById('rt').textContent = (2 * HALF * a * 1000).toFixed(0) + ' ms';
+    document.getElementById('rf').textContent = (f * (1 - HALF / W0)).toFixed(1) + ' to ' + (f * (1 + HALF / W0)).toFixed(1) + ' Hz';
+    let [g, w, h] = fit(sig);
+    const X = (t) => 8 + (w - 16) * t, Y = (y) => h / 2 - y * h * 0.38;
+    g.strokeStyle = line; g.lineWidth = 1; g.beginPath(); g.moveTo(X(0), Y(0)); g.lineTo(X(1), Y(0)); g.stroke();
+    [[0, 0.5, blue], [0.5, 1, orange]].forEach(([t0, t1, col]) => {
+      g.strokeStyle = col; g.globalAlpha = 0.5; g.lineWidth = 1.6; g.beginPath();
+      for (let i = 0; i <= 400; i++) { const t = t0 + (t1 - t0) * i / 400; i ? g.lineTo(X(t), Y(x(t))) : g.moveTo(X(t), Y(x(t))); }
+      g.stroke();
+    });
+    g.globalAlpha = 1; g.strokeStyle = ink; g.lineWidth = 2.6; g.beginPath(); let first = true;
+    for (let i = 0; i <= 600; i++) {
+      const u = -3.5 + 7 * i / 600, t = b + a * u; if (t < -0.01 || t > 1.01) continue;
+      const y = 0.95 * Math.exp(-u * u / 2) * Math.cos(W0 * u); first ? g.moveTo(X(t), Y(y)) : g.lineTo(X(t), Y(y)); first = false;
+    }
+    g.stroke();
+    const R = row(f), top = Math.max(...row(10), ...row(25)) * 1.08;
+    [g, w, h] = fit(sc);
+    const Ys = (v) => h - 18 - v / top * (h - 26);
+    g.strokeStyle = line; g.lineWidth = 1; g.beginPath(); g.moveTo(X(0), Ys(0)); g.lineTo(X(1), Ys(0)); g.stroke();
+    g.fillStyle = muted; g.font = '12px "JetBrains Mono", monospace'; g.textAlign = 'center';
+    [[0, 'left'], [0.5, 'center'], [1, 'right']].forEach(([t, al]) => { g.textAlign = al; g.fillText(t + ' s', X(t), h - 3); });
+    g.strokeStyle = mix < 0.5 ? blue : orange; g.lineWidth = 2.4; g.beginPath();
+    R.forEach((v, i) => (i ? g.lineTo(X(i / N), Ys(v)) : g.moveTo(X(i / N), Ys(v)))); g.stroke();
+    const vb = R[Math.round(b * N)];
+    g.fillStyle = accent; g.beginPath(); g.arc(X(b), Ys(vb), 5, 0, TAU); g.fill();
+  }
+  fIn.addEventListener('input', draw); bIn.addEventListener('input', draw);
+  addEventListener('resize', draw); draw();
+})();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<script src="../../js/plate.js" defer></script>
+<script defer src="../../js/site.js"></script>
+</body>
+</html>

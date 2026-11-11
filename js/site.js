@@ -151,6 +151,8 @@
       for (let k = 1; k <= N; k += 2) s += Math.sin(TAU * k * 2 * x) / k; return [[C.ink, 0.72 * s * 4 / Math.PI * 0.8]]; },
     phase: (x, t) => { let a = 0, b = 0; const ph = t * TAU * 0.25; for (let k = 1; k <= 9; k += 2) { a += Math.sin(TAU * k * 2 * x) / k; b += Math.sin(TAU * k * 2 * x + ph * k) / k; }
       return [[C.muted, 0.6 * a, 0.45], [C.blue, 0.6 * b]]; },
+    wavelet: (x, t) => { const c = 0.15 + 0.7 * (0.5 - 0.5 * Math.cos(TAU * t * 0.25)), u = (x - c) / 0.07;
+      return [[C.muted, 0.45 * Math.sin(TAU * (x < 0.5 ? 3 : 7.5) * x), 0.5], [C.orange, 0.8 * Math.exp(-u * u / 2) * Math.cos(6 * u)]]; },
     leak: (x, t) => { const f = 4 + 0.5 * (0.5 - 0.5 * Math.cos(TAU * t * 0.5)); return [[C.ink, 0.7 * Math.cos(TAU * f * x)]]; },
   };
   function sparkBars(ctx, w, h, t, kind) {

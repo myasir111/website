@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://nodallab.dev/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://nodallab.dev/</loc><lastmod>2026-11-11</lastmod></url>
   <url><loc>https://nodallab.dev/about.html</loc><lastmod>2026-11-10</lastmod></url>
   <url><loc>https://nodallab.dev/resources.html</loc><lastmod>2026-11-10</lastmod></url>
-  <url><loc>https://nodallab.dev/explainers/</loc><lastmod>2026-11-10</lastmod></url>
-  <url><loc>https://nodallab.dev/lab/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://nodallab.dev/explainers/</loc><lastmod>2026-11-11</lastmod></url>
+  <url><loc>https://nodallab.dev/lab/</loc><lastmod>2026-11-11</lastmod></url>
   <url><loc>https://nodallab.dev/tools/</loc><lastmod>2026-11-10</lastmod></url>
   <url><loc>https://nodallab.dev/explainers/fft-phase/</loc><lastmod>2026-11-10</lastmod></url>
-  <url><loc>https://nodallab.dev/explainers/leakage-aliasing/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://nodallab.dev/explainers/leakage-aliasing/</loc><lastmod>2026-11-11</lastmod></url>
+  <url><loc>https://nodallab.dev/explainers/wavelets/</loc><lastmod>2026-11-11</lastmod></url>
   <url><loc>https://nodallab.dev/explainers/watch-harmonics-in-3d/</loc><lastmod>2026-11-10</lastmod></url>
   <url><loc>https://nodallab.dev/explainers/what-the-fft-shows/</loc><lastmod>2026-11-10</lastmod></url>
   <url><loc>https://nodallab.dev/explainers/why-harmonics/</loc><lastmod>2026-11-10</lastmod></url>
@@ -15,6 +16,7 @@
   <url><loc>https://nodallab.dev/lab/fft-by-hand/</loc><lastmod>2026-11-10</lastmod></url>
   <url><loc>https://nodallab.dev/lab/sines-and-cosines/</loc><lastmod>2026-11-10</lastmod></url>
   <url><loc>https://nodallab.dev/lab/why-evens-vanish/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://nodallab.dev/lab/wavelets/</loc><lastmod>2026-11-11</lastmod></url>
   <url><loc>https://nodallab.dev/tools/acoustic-resonance/</loc><lastmod>2026-11-10</lastmod></url>
   <url><loc>https://nodallab.dev/tools/aiv-sound-power/</loc><lastmod>2026-11-10</lastmod></url>
   <url><loc>https://nodallab.dev/tools/beam-frequency/</loc><lastmod>2026-11-10</lastmod></url>
