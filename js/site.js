@@ -247,9 +247,10 @@
 /* Wide maths that scrolls sideways must be reachable by keyboard (WCAG 2.1.1). Re-checked after KaTeX renders and on resize. */
 (function () {
   function focusWide() {
-    document.querySelectorAll('.eq, .nmath, .formula, .tex, .wmath, .katex-display').forEach(function (el) {
-      var wide = el.scrollWidth > el.clientWidth + 1;
-      if (wide && !el.hasAttribute('tabindex')) { el.setAttribute('tabindex', '0'); el.setAttribute('role', 'region'); el.setAttribute('aria-label', 'Equation, scroll sideways'); el.dataset.fw = '1'; }
+    document.querySelectorAll('.eq, .nmath, .formula, .tex, .wmath, .katex-display, .table-wrap, .tool > .panel, .panel, pre').forEach(function (el) {
+      var o = getComputedStyle(el); if (!/(auto|scroll)/.test(o.overflowX + o.overflowY)) return;
+      var wide = el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1;
+      if (wide && !el.hasAttribute('tabindex')) { el.setAttribute('tabindex', '0'); el.setAttribute('role', 'region'); el.setAttribute('aria-label', 'Scrollable content'); el.dataset.fw = '1'; }
       else if (!wide && el.dataset.fw) { el.removeAttribute('tabindex'); el.removeAttribute('role'); el.removeAttribute('aria-label'); delete el.dataset.fw; }
     });
   }

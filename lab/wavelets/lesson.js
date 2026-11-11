@@ -303,7 +303,7 @@
       ['>The 1X frequency and its row’s scale, by (5):'],
       [r`f=\frac{${rpm}}{60}=${F(E.f, 3)}\ \text{Hz},\qquad a=\frac{6}{2\pi\times${F(E.f, 3)}}=${F(E.a * 1000, 3)}\ \text{ms}`, '', 30],
       ['>The band’s brightness, by (12):'],
-      [r`|W|=\frac{${F(A, 1)}}{2}\sqrt{2\pi\times${F(E.a, 5)}}=${F(A / 2, 2)}\times${F(Math.sqrt(TAU * E.a))}=${F(E.W, 3)}\ \text{mm/s·√s}`, ''],
+      [r`|W|=\frac{${F(A, 1)}}{2}\sqrt{2\pi\times${F(E.a, 5)}}=${F(A / 2, 2)}\times${F(Math.sqrt(TAU * E.a))}=${F(E.W, 3)}\ \text{mm/s}\cdot\sqrt{\text{s}}`, ''],
       ['>The length of a knock’s flash in that row, by (16):'],
       [r`\Delta t=2.355\times${F(E.a * 1000, 3)}=${F(E.dt * 1000, 1)}\ \text{ms}`, ''],
     ];

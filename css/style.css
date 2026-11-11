@@ -650,3 +650,8 @@ main :is(p, li, h1, h2, h3, .lede, .what, .part, .label, .eyebrow, dd, dt), .dir
   .notes .katex-display > .katex, .nstep .katex-display > .katex { font-size: 1em; }
 }
 .hp-copy h1 { margin-top: .2em; }
+/* Key projects: compact list (client and topic only) */
+#projects .job { padding: 12px 18px; margin-bottom: 0; align-items: baseline; border-radius: 0; border-width: 0 0 1px; border-bottom-color: var(--line); }
+#projects .job:last-of-type { border-bottom-color: transparent; }
+#projects .job h3 { margin: 0; font-size: 18px; }
+#projects .job:hover { background: transparent; }
