@@ -98,6 +98,30 @@
       document.querySelector('main').appendChild(rail);
       const links = [...rail.querySelectorAll('a')];
       const spy = () => { let cur = 0; hs.forEach((h, i) => { if (h.getBoundingClientRect().top < innerHeight * 0.35) cur = i; }); links.forEach((a, i) => a.classList.toggle('on', i === cur)); };
+      // The rail lives in the left margin, but the title and video run full width. Fade it out whenever any
+      // content (anything that is not the rail itself) would sit under it, so text never overlaps text.
+      const clear = () => {
+        const r = rail.getBoundingClientRect(), pad = 12;
+        const hitBox = (b) => b.width > 2 && b.height > 2 && b.left < r.right + pad && b.right > r.left - pad && b.top < r.bottom + pad && b.bottom > r.top - pad;
+        const shown = (el) => { const cs = getComputedStyle(el); return cs.display !== 'none' && cs.visibility !== 'hidden' && +cs.opacity > 0.05; };
+        // pictures, video, carousels and boards: their whole box counts
+        let hit = [...document.querySelectorAll('main img, main video, main canvas, main iframe, main .slides, main .video, main .sim, main .panel, main figure')]
+          .some((el) => !rail.contains(el) && shown(el) && hitBox(el.getBoundingClientRect()));
+        // text: only where the words really are, not the empty width of the paragraph
+        if (!hit) {
+          hit = [...document.querySelectorAll('main h1, main h2, main h3, main p, main li, main figcaption, main .meta, main .lede')].some((el) => {
+            if (rail.contains(el) || !shown(el)) return false;
+            const b = el.getBoundingClientRect();
+            if (b.bottom < r.top - pad || b.top > r.bottom + pad || b.left > r.right + pad) return false;
+            const rg = document.createRange(); rg.selectNodeContents(el);
+            return [...rg.getClientRects()].some(hitBox);
+          });
+        }
+        rail.classList.toggle('away', hit);
+      };
+      let tick = 0; const sched = () => { if (!tick) tick = requestAnimationFrame(() => { tick = 0; clear(); }); };
+      addEventListener('scroll', sched, { passive: true }); addEventListener('resize', sched); addEventListener('load', sched);
+      setTimeout(sched, 600); setTimeout(sched, 2000); sched();
       addEventListener('scroll', spy, { passive: true }); spy();
     }
   }

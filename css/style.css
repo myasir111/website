@@ -655,3 +655,5 @@ main :is(p, li, h1, h2, h3, .lede, .what, .part, .label, .eyebrow, dd, dt), .dir
 #projects .job:last-of-type { border-bottom-color: transparent; }
 #projects .job h3 { margin: 0; font-size: 18px; }
 #projects .job:hover { background: transparent; }
+.rail { transition: opacity .25s; }
+.rail.away { opacity: 0; pointer-events: none; }
