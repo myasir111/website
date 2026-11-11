@@ -29,7 +29,7 @@
     .two .cap .fix { color: var(--good); font-weight: 600; }
     @media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
   </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Wavelets: which frequency, and when","description":"Why an FFT can't tell you when something happened, why short-time FFTs only half fix it, and how a wavelet map shows which frequency and when.","author":{"@type":"Person","name":"Muhammad Yasir","url":"https://nodallab.dev/about.html"},"datePublished":"2026-11-11","dateModified":"2026-11-11","image":"https://nodallab.dev/explainers/wavelets/og.jpg","mainEntityOfPage":"https://nodallab.dev/explainers/wavelets/"},{"@type":"VideoObject","name":"Wavelets: which frequency, and when","description":"A short animated film with captions and music: two signals with the same spectrum, short-time FFTs and their one window size, a wavelet slid and stretched along a signal, and the wavelet map of a fan that knocks once per turn.","thumbnailUrl":"https://nodallab.dev/explainers/wavelets/poster.jpg","uploadDate":"2026-11-11","duration":"PT1M41S","contentUrl":"https://nodallab.dev/explainers/wavelets/wavelets.mp4"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Explainers","item":"https://nodallab.dev/explainers/"},{"@type":"ListItem","position":2,"name":"Wavelets"}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Wavelets: which frequency, and when","description":"Why an FFT can't tell you when something happened, why short-time FFTs only half fix it, and how a wavelet map shows which frequency and when.","author":{"@type":"Person","name":"Muhammad Yasir","url":"https://nodallab.dev/about.html"},"datePublished":"2026-11-11","dateModified":"2026-11-11","image":"https://nodallab.dev/explainers/wavelets/og.jpg","mainEntityOfPage":"https://nodallab.dev/explainers/wavelets/"},{"@type":"VideoObject","name":"Wavelets: which frequency, and when","description":"A short animated film with captions and music: two signals with the same spectrum, short-time FFTs and their one window size, boxes in time and frequency, a wavelet multiplied against a signal, slid and stretched, and the wavelet map of a fan that knocks once per turn.","thumbnailUrl":"https://nodallab.dev/explainers/wavelets/poster.jpg","uploadDate":"2026-11-11","duration":"PT2M1S","contentUrl":"https://nodallab.dev/explainers/wavelets/wavelets.mp4"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Explainers","item":"https://nodallab.dev/explainers/"},{"@type":"ListItem","position":2,"name":"Wavelets"}]}]}</script>
 </head>
 <body class="article">
 <div class="progress-bar" aria-hidden="true"></div>
@@ -50,17 +50,17 @@
   <section class="hero" style="padding-bottom:0">
     <p class="eyebrow"><a href="../">Explainers</a> · FFT series · Part 3</p>
     <h1>Wavelets: which frequency, <em>and when</em></h1>
-    <p class="meta">November 2026 · 1 min 41 s film, with music · interactive</p>
+    <p class="meta">November 2026 · 2 min film, with music · interactive</p>
   </section>
 
   <video class="video" controls playsinline preload="none" poster="poster.jpg" width="1920" height="1080">
     <source src="wavelets.mp4" type="video/mp4">
     Your browser can't play this video. <a href="wavelets.mp4">Download it</a> instead.
   </video>
-  <p class="meta">The film from the LinkedIn post. No voice: captions are on screen.</p>
+  <p class="meta">The film from the LinkedIn post. No voice: captions are on screen. Music: “Spread the Light” by Vocalista.</p>
 
   <div class="prose">
-    <p><b>What the film shows.</b> A fan knocks once every turn. Two different signals, one playing 10 Hz then 25 Hz and the other playing the same thing backwards, have exactly the same FFT spectrum: a spectrum says which frequencies, not when. Short FFTs slid along the signal bring time back, but one window size can't be sharp in time and in frequency at once. A wavelet is a short burst that is slid along the signal and stretched: short for fast things, long for slow ones. On the fan, the hum is a steady band and each knock is a flash, 40 ms apart.</p>
+    <p><b>What the film shows.</b> A fan knocks once every turn. Two different signals, one playing 10 Hz then 25 Hz and the other playing the same thing backwards, have exactly the same FFT spectrum: a spectrum says which frequencies, not when. Short FFTs slid along the signal bring time back, but every one paints the same box in time and frequency: squash one side and the other grows. Wavelets reshape the boxes, thin for fast notes and wide for slow ones. A wavelet is a short burst; multiply it by the signal and add up the area, and the score is high where the two are in step and near zero where they aren't. Slide it along and stretch it, and the scores make a map. On the fan, the hum is a steady band and each knock is a flash, 40 ms apart.</p>
 
     <div class="two">
       <div class="cap"><span class="cap-n">FFT</span><h3>Which frequencies</h3><p>One answer for the whole record. Anything that comes and goes is averaged away.</p></div>
@@ -124,10 +124,11 @@
 
     <h2>Downloads</h2>
     <ul class="downloads">
-      <li><a href="wavelets.py" download>wavelets.py</a> <span class="muted">· the Manim code for the film, including a numerical check of every claim in the captions</span></li>
-      <li><a href="film.py" download>film.py</a> <span class="muted">· the film finish: slow camera pushes, vignette and grain</span></li>
-      <li><a href="score.py" download>score.py</a> <span class="muted">· the music, synthesised in NumPy</span></li>
-      <li><a href="wavelets.mp4" download>wavelets.mp4</a> <span class="muted">· the film, 1080p60</span></li>
+      <li><a href="wavelets_film.py" download>wavelets_film.py</a> <span class="muted">· the film: <code>manim -qh wavelets_film.py WaveletsFilm</code> (needs wavelets.py beside it)</span></li>
+      <li><a href="wavelets.py" download>wavelets.py</a> <span class="muted">· the shared maths, look and mascot, with a numerical check of every claim in the captions</span></li>
+      <li><a href="film.py" download>film.py</a> <span class="muted">· an optional film finish: slow camera pushes and vignette</span></li>
+      <li><a href="score.py" download>score.py</a> <span class="muted">· a synthesised score, used when the music track isn't there</span></li>
+      <li><a href="wavelets.mp4" download>wavelets.mp4</a> <span class="muted">· the film, 1080p60 (the music track is not included in the code)</span></li>
     </ul>
 
     <h2>Further reading</h2>
