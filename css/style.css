@@ -622,3 +622,31 @@ main :is(p, li, h1, h2, h3, .lede, .what, .part, .label, .eyebrow, dd, dt),
 .now li .k { font: 14px/2 var(--sans); text-transform: none; letter-spacing: 0; }
 .skipper-head .tag, .card .tag { font-family: var(--sans); text-transform: none; letter-spacing: 0; font-size: 14px; }
 .cv-side { text-shadow: 0 0 3px var(--bg), 0 0 10px var(--bg), 0 0 22px var(--bg); }
+
+/* v3.2 fixes: overlaps and stray defaults */
+/* Headline lines no longer collide (comma descender ran into line 2) */
+.hp-copy h1 { line-height: 1; }
+h1 .ln, .kinetic .ln { padding-bottom: .12em; margin-bottom: 0; }
+.hero h1 { line-height: 1.04; }
+h2, h3 { line-height: 1.12; }
+/* About: single column on tablets and phones (the side column was squeezing the text off-screen) */
+@media (max-width: 900px) {
+  .cv-layout { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 32px; }
+  .cv-side { position: static; }
+  .cv-main { min-width: 0; }
+}
+.cv-main, .cv-main * { overflow-wrap: anywhere; }
+/* Plate controls were unstyled browser buttons */
+.chip { font: 500 14px/1 var(--sans); color: var(--ink); background: color-mix(in srgb, var(--bg) 70%, transparent);
+  border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; min-height: 30px; cursor: pointer; }
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+/* Softer halo: keep text clean instead of smudged */
+main :is(p, li, h1, h2, h3, .lede, .what, .part, .label, .eyebrow, dd, dt), .dir span, .dir b, .cv-side {
+  text-shadow: 0 0 2px var(--bg), 0 0 8px var(--bg);
+}
+@media (max-width: 720px) {
+  body:not(.home) .plate-bg { opacity: .55; }
+  .notes .katex-display > .katex, .nstep .katex-display > .katex { font-size: 1em; }
+}
+.hp-copy h1 { margin-top: .2em; }
