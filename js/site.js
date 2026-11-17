@@ -177,6 +177,8 @@
       return [[C.muted, 0.6 * a, 0.45], [C.blue, 0.6 * b]]; },
     wavelet: (x, t) => { const c = 0.15 + 0.7 * (0.5 - 0.5 * Math.cos(TAU * t * 0.25)), u = (x - c) / 0.07;
       return [[C.muted, 0.45 * Math.sin(TAU * (x < 0.5 ? 3 : 7.5) * x), 0.5], [C.orange, 0.8 * Math.exp(-u * u / 2) * Math.cos(6 * u)]]; },
+    sideband: (x, t) => { const e = 1 + 0.6 * Math.cos(TAU * (1.5 * x - 0.5 * t));
+      return [[C.orange, 0.42 * e, 0.6], [C.orange, -0.42 * e, 0.6], [C.ink, 0.42 * e * Math.sin(TAU * 11 * x)]]; },
     leak: (x, t) => { const f = 4 + 0.5 * (0.5 - 0.5 * Math.cos(TAU * t * 0.5)); return [[C.ink, 0.7 * Math.cos(TAU * f * x)]]; },
   };
   function sparkBars(ctx, w, h, t, kind) {

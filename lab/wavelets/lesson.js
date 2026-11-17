@@ -322,7 +322,7 @@
   Lab.lesson({
     work: WORK,
     heads: true,
-    next: '../',
+    next: '../sidebands/',
     state: { kap: 1, fw: 25, f0: 25, k6: 400, tile: 'wav', w0: 6, nrm: 'sqrt' },
     steps: [
       {
@@ -486,7 +486,7 @@
         part: 'Summary',
         title: 'On one card',
         text: `<p>Four boxed results. Scale is frequency; a tone is a band whose brightness gives its amplitude; a knock is a cone; and every mark has the same area, 0.88.</p>
-               <p>That is the end of the FFT series in the Lab.</p>`,
+               <p>Next: sidebands, the twins a slow wobble puts around a fast tone.</p>`,
         draw(g, s, t, api) { fanBoard(g, t, api, { widths: true }); },
       },
     ],

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#0c0c0b">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sidebands in Vibration, Explained · Nodal</title>
+  <link rel="canonical" href="https://nodallab.dev/explainers/sidebands/">
+  <meta name="description" content="Why a slow wobble on a fast tone puts twins either side of every peak, why they are evenly spaced, when they are normal and when to worry, and how their gap points to the gear, bearing or motor fault.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Sidebands: why every peak has twins">
+  <meta property="og:description" content="A slow wobble on a fast tone puts twins either side of every line. Why they are there, why they are so even, when they are normal and when they are a warning. A short film, a sideband board and the maths.">
+  <meta property="og:image" content="https://nodallab.dev/explainers/sidebands/og.jpg">
+  <meta property="og:url" content="https://nodallab.dev/explainers/sidebands/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    .video { width: 100%; border-radius: 12px; border: 1px solid var(--line); background: #000; display: block; margin: 28px 0 8px; aspect-ratio: 16 / 9; height: auto; }
+    .eq { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+    .series-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; font-size: 15px; }
+    .sim canvas { height: 150px; }
+    .sim canvas#spec { height: 190px; }
+    .readout { display: flex; gap: 8px 24px; flex-wrap: wrap; margin-top: 12px; font-size: 14px; color: var(--muted); }
+    .readout b { font-family: var(--mono); color: var(--accent); font-weight: 600; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .two .cap h3 { font: 400 26px/1.1 var(--serif); margin: 6px 0 8px; }
+    .two .cap .fix { color: var(--good); font-weight: 600; }
+    .two .cap .worry { color: var(--accent-2); font-weight: 600; }
+    .gaps { width: 100%; border-collapse: collapse; margin: 16px 0 8px; font-size: 15px; }
+    .gaps th, .gaps td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .gaps th { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+    .tablewrap { overflow-x: auto; }
+    @media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Sidebands: why every peak has twins","description":"Why a slow wobble on a fast tone puts twins either side of every peak, why they are evenly spaced, when they are normal and when to worry, and how their gap points to the fault.","author":{"@type":"Person","name":"Muhammad Yasir","url":"https://nodallab.dev/about.html"},"datePublished":"2026-11-17","dateModified":"2026-11-17","image":"https://nodallab.dev/explainers/sidebands/og.jpg","mainEntityOfPage":"https://nodallab.dev/explainers/sidebands/"},{"@type":"VideoObject","name":"Sidebands: why every peak has twins","description":"A short animated film with captions and music: a gearbox in slow motion, a swelling tone pulled apart into three tones, mirror arrows, twins on every harmonic, a waterfall of monthly spectra, a cracked tooth and its wavelet map.","thumbnailUrl":"https://nodallab.dev/explainers/sidebands/poster.jpg","uploadDate":"2026-11-17","duration":"PT2M37S","contentUrl":"https://nodallab.dev/explainers/sidebands/sidebands.mp4"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Explainers","item":"https://nodallab.dev/explainers/"},{"@type":"ListItem","position":2,"name":"Sidebands"}]}]}</script>
+</head>
+<body class="article">
+<div class="progress-bar" aria-hidden="true"></div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../" class="active">Explainers</a>
+      <a href="../../lab/">Lab</a>
+      <a href="../../tools/">Tools</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Explainers</a> · FFT series · Part 4</p>
+    <h1>Sidebands: why every peak <em>has twins</em></h1>
+    <p class="meta">November 2026 · 2½ min film, with music · interactive</p>
+  </section>
+
+  <video class="video" controls playsinline preload="none" poster="poster.jpg" width="1920" height="1080">
+    <source src="sidebands.mp4" type="video/mp4">
+    Your browser can't play this video. <a href="sidebands.mp4">Download it</a> instead.
+  </video>
+  <p class="meta">The film from the LinkedIn post. No voice: captions are on screen. Music: <a href="https://filmmusic.io/song/7242-fjeld">“Fjeld”</a> by Alexander Nakarada, <a href="https://filmmusic.io/standard-license">filmmusic.io Standard License</a>.</p>
+
+  <div class="prose">
+    <p><b>What the film shows.</b> A gearbox in slow motion: a 16-tooth pinion at 1,500 rpm whose shaft sits a hair off-centre, so the mesh bites harder, then softer, once per turn. A sensor hears 400 Hz swelling once per turn, and the spectrum shows a twin 25 Hz either side. Pulled apart in 3D, the swelling tone is three steady tones; seen end-on, each is one line of the spectrum, as in <a href="../what-the-fft-shows/">What the FFT actually shows</a>. The wobble is two arrows spinning opposite ways, so the twins are mirror images, and it rides on every harmonic. Small, steady twins are normal. A waterfall of monthly spectra shows them growing with wear, then multiplying when a tooth cracks; its knock is a flash every 40 ms on a wavelet map and a crowd of sidebands 25 Hz apart in the spectrum. The gap names the part that wobbles.</p>
+
+    <div class="two">
+      <div class="cap"><span class="cap-n">NORMAL</span><h3>Small and steady</h3><p>Nothing is made perfect. Every gear is a little off-centre and every load wobbles, so every gearbox shows some sidebands. <span class="fix">Trend them; don’t panic at them.</span></p></div>
+      <div class="cap"><span class="cap-n">WORTH A LOOK</span><h3>Growing or multiplying</h3><p>Taller twins: the wobble got stronger. More of them, spread wide: something has started to knock. <span class="worry">Their gap says which part.</span></p></div>
+    </div>
+
+    <h2>Why they are there</h2>
+    <p>Take a fast tone at \(\omega=2\pi f_c\), the gear mesh, and let its size rise and fall by a fraction \(m\) once per turn of \(\Omega=2\pi f_m\). That is a product, and a product of cosines is a sum of cosines:</p>
+    <div class="eq">$$(1+m\cos\Omega t)\cos\omega t=\cos\omega t+\tfrac m2\cos(\omega+\Omega)t+\tfrac m2\cos(\omega-\Omega)t.$$</div>
+    <p>Three steady tones: the carrier, and two twins at \(f_c\pm f_m\), each \(m/2\) as tall. Nothing extra is vibrating; the twins are the wobble, written as sines and cosines. Radio engineers call this amplitude modulation. In decibels each twin sits \(20\log_{10}(m/2)\) below the carrier: a 10% wobble puts them 26 dB down.</p>
+
+    <h2>Why so even</h2>
+    <p>The gap is \(f_m\), the frequency of whatever does the wobbling, and nothing else: move the carrier and the twins ride along at the same distance. They are equally tall because a cosine wobble is two equal arrows turning opposite ways,</p>
+    <div class="eq">$$1+m\cos\Omega t=1+\tfrac m2e^{i\Omega t}+\tfrac m2e^{-i\Omega t},$$</div>
+    <p>and multiplying by the carrier moves one arrow up to \(\omega+\Omega\) and the other down to \(\omega-\Omega\). This is the mirror half of the spectrum from <a href="../fft-phase/">Part 1</a>, carried up to the mesh frequency.</p>
+
+    <h2>When the timing wobbles</h2>
+    <p>An off-centre pinion also makes its teeth arrive a little early, then a little late. The tone’s angle swings by up to \(\beta\) radians, so its frequency swings by \(\pm\beta f_m\). That is frequency modulation, and its spectrum is a ladder:</p>
+    <div class="eq">$$\cos(\omega t+\beta\sin\Omega t)=\sum_{n}J_n(\beta)\cos(\omega+n\Omega)t,$$</div>
+    <p>where \(J_n\) are Bessel functions. The rungs are still \(f_m\) apart. A small wobble gives one pair, \(\beta/2\) tall, with one of them flipped; a large one gives many. A real off-centre gear does both at once, and for small wobbles the twins become \((m+\beta)/2\) and \((m-\beta)/2\): one side grows, the other shrinks. <b>Uneven twins mean both a size and a timing wobble.</b></p>
+
+    <h2>Every harmonic gets them</h2>
+    <p>A gear mesh is no pure sine: it repeats, so it has harmonics (<a href="../why-harmonics/">Harmonics, Part 2</a>). A size wobble multiplies all of it, so every harmonic gets twins \(f_m\) away in the same proportion. A timing wobble shifts time itself, so harmonic \(k\) swings \(k\) times the angle, \(\beta_k=k\beta\): higher harmonics grow wider ladders.</p>
+
+    <h3>Try it</h3>
+  </div>
+
+  <div class="sim" id="sb-sim">
+    <div class="sim-head">
+      <span class="sim-label" style="margin:0">Sideband board · a 400 Hz mesh with a wobble</span>
+    </div>
+    <p class="sim-label">The signal, over two turns of the wobble</p>
+    <canvas id="sig" role="img" aria-label="The 400 hertz signal over two turns of the wobble"></canvas>
+    <p class="sim-label">Its spectrum, in dB below the biggest line</p>
+    <canvas id="spec" role="img" aria-label="Spectrum lines around 400 hertz in decibels"></canvas>
+    <div class="controls">
+      <label><span>Wobble frequency: <span class="val" id="fmv">25 Hz</span></span>
+        <input type="range" id="fm" min="5" max="50" step="1" value="25" aria-label="Wobble frequency in hertz"></label>
+      <label><span>Size wobble m: <span class="val" id="mv">0.20</span></span>
+        <input type="range" id="m" min="0" max="1" step="0.01" value="0.2" aria-label="Size wobble depth"></label>
+      <label><span>Timing wobble β: <span class="val" id="bv">0.00 rad</span></span>
+        <input type="range" id="b" min="0" max="2" step="0.01" value="0" aria-label="Timing wobble in radians"></label>
+      <label><span>Cracked-tooth knock: <span class="val" id="kv">off</span></span>
+        <input type="range" id="k" min="0" max="1" step="0.05" value="0" aria-label="Strength of a knock once per turn"></label>
+    </div>
+    <div class="readout"><span>Twins at: <b id="rf">0</b></span><span>Lower / upper: <b id="rl">0</b></span><span>Sidebands above −40 dB: <b id="rn">0</b></span></div>
+  </div>
+
+  <div class="prose">
+    <p>Start with the size wobble alone: one even pair. Add a timing wobble and the pair goes uneven; push it up and the ladder grows. Turn on the knock, a 1 ms pulse once per turn like a cracked tooth: a short event in time spreads into a wide family of lines, all the wobble’s frequency apart. That is the wavelets trade-off from <a href="../wavelets/">Part 3</a>, short in time and wide in frequency.</p>
+
+    <h2>Reading sidebands on a machine</h2>
+    <p><b>Are they normal?</b> Yes, when they are small and steady. Nothing is made perfectly round or perfectly loaded, so a healthy gearbox shows a little modulation. A single spectrum says little on its own.</p>
+    <p><b>When to worry.</b> Trend the sideband levels, not just the mesh line. Twins that grow month by month mean the wobble is getting stronger (wear, eccentricity, looseness). A family that suddenly spreads wide, many lines at the same gap, means something has started to knock once per turn, such as a cracked or chipped tooth. Uneven twins mean the timing wobbles as well as the size.</p>
+    <p><b>Where to look.</b> The gap is the frequency of whatever wobbles:</p>
+    <div class="tablewrap"><table class="gaps">
+      <thead><tr><th>Around</th><th>Gap</th><th>Points to</th></tr></thead>
+      <tbody>
+        <tr><td>Gear mesh frequency (teeth × shaft speed)</td><td>Shaft speed of one gear</td><td>That gear: eccentricity, wear, a damaged tooth</td></tr>
+        <tr><td>Bearing inner-race frequency (BPFI)</td><td>Shaft speed</td><td>An inner-race defect turning in and out of the load zone</td></tr>
+        <tr><td>Supply frequency, in the motor <i>current</i></td><td>\(2sf\) (twice the slip frequency)</td><td>Broken rotor bars: lines at \(f(1\pm2s)\)</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Seeing them at all.</b> Twins \(f_m\) apart only separate when the record holds more than two turns of the wobble with a Hann window, \(T>2/f_m\); shorter, and leakage (<a href="../leakage-aliasing/">Part 2</a>) blurs them into one lump. Gear-shaft twins at 12.5 Hz need at least 0.16 s; broken-bar twins 2 Hz from a large 50 Hz line need far more than 1 s.</p>
+
+    <p class="callout">Derive the twins, the Bessel ladder, why real twins are uneven and how long a record must be, then work a gearbox and a broken rotor bar on a calculator, in <a href="../../lab/sidebands/">Lab lesson 7: Sidebands</a>.</p>
+
+    <h2>Downloads</h2>
+    <ul class="downloads">
+      <li><a href="sidebands.py" download>sidebands.py</a> <span class="muted">· the 2D shots, the shared maths and mascot, with a numerical check of every claim in the captions</span></li>
+      <li><a href="scenes3d.py" download>scenes3d.py</a> <span class="muted">· the 3D shots: the gearbox, the signal pulled apart, the waterfall, the cracked tooth (<code>manim -qh scenes3d.py Opener3D</code>, needs sidebands.py beside it)</span></li>
+      <li><a href="assemble.py" download>assemble.py</a>, <a href="score_edit.py" download>score_edit.py</a>, <a href="plan_fjeld.json" download>plan_fjeld.json</a>, <a href="film.py" download>film.py</a> <span class="muted">· joining the shots, cutting the music at bar lines to fit the picture, and the film finish (the track itself is not included: get “Fjeld” from filmmusic.io)</span></li>
+      <li><a href="sidebands.mp4" download>sidebands.mp4</a> <span class="muted">· the film, 1080p60</span></li>
+    </ul>
+
+    <h2>Further reading</h2>
+    <ul class="ref-list">
+      <li>R. B. Randall (1982). A new method of modeling gear faults. <i>Journal of Mechanical Design</i>, 104(2), 259–267.<span class="what">Gear vibration as amplitude and phase modulation of the mesh, and why real sidebands are uneven.</span></li>
+      <li>R. B. Randall (2011). <i>Vibration-based Condition Monitoring.</i> Wiley.<span class="what">Gears, bearings and modulation on real machines, with the signal processing behind it.</span></li>
+      <li>P. D. McFadden (1986). Detecting fatigue cracks in gears by amplitude and phase demodulation of the meshing vibration. <i>Journal of Vibration, Acoustics, Stress, and Reliability in Design</i>, 108(2), 165–170.<span class="what">A cracked tooth found from its sidebands.</span></li>
+      <li>R. B. Randall and J. Antoni (2011). Rolling element bearing diagnostics: a tutorial. <i>Mechanical Systems and Signal Processing</i>, 25(2), 485–520.<span class="what">Bearing fault frequencies, their sidebands and envelope analysis.</span></li>
+      <li>W. T. Thomson and M. Fenger (2001). Current signature analysis to detect induction motor faults. <i>IEEE Industry Applications Magazine</i>, 7(4), 26–34.<span class="what">Broken rotor bars and the \(f(1\pm2s)\) sidebands in the supply current.</span></li>
+    </ul>
+
+    <div class="series-nav">
+      <a href="../wavelets/">← Part 3: Wavelets</a>
+      <a href="../../lab/sidebands/">Derive it in the Lab: Lesson 7 →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Sideband board: x(t) = (1 + m cos Wt + k p(t)) cos(wt + b sin Wt), carrier 400 Hz, wobble W = 2 pi fm.
+// p(t) is a 1 ms (sigma) Gaussian knock once per turn. Lines from a 1 s record (fm is a whole number of Hz,
+// so every line sits on a bin): exact, no window needed.
+(function () {
+  const TAU = Math.PI * 2, FC = 400, FS = 8192, SIG = 0.001, N = 12;
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const el = (id) => document.getElementById(id);
+  const sig = el('sig'), spec = el('spec'), ins = ['fm', 'm', 'b', 'k'].map(el);
+  const knock = (t, fm) => { const P = 1 / fm, ph = ((t % P) + P) % P, d = Math.min(ph, P - ph); return Math.exp(-d * d / (2 * SIG * SIG)); };
+  const x = (t, p) => (1 + p.m * Math.cos(TAU * p.fm * t) + p.k * knock(t, p.fm)) * Math.cos(TAU * FC * t + p.b * Math.sin(TAU * p.fm * t));
+  let cacheKey = '', cacheLines = null;
+  function lines(p) {                                  // amplitude of the line at FC + n fm, n = -N..N
+    const key = [p.fm, p.m, p.b, p.k].join();
+    if (key === cacheKey) return cacheLines;
+    const xs = new Float64Array(FS);
+    for (let i = 0; i < FS; i++) xs[i] = x(i / FS, p);
+    const out = [];
+    for (let n = -N; n <= N; n++) {
+      const f = FC + n * p.fm; let re = 0, im = 0;
+      for (let i = 0; i < FS; i++) { const a = TAU * f * i / FS; re += xs[i] * Math.cos(a); im -= xs[i] * Math.sin(a); }
+      out.push([n, f, 2 * Math.hypot(re, im) / FS]);
+    }
+    cacheKey = key; cacheLines = out; return out;
+  }
+  function fit(c) { const d = Math.min(devicePixelRatio || 1, 2), w = c.clientWidth, h = c.clientHeight; c.width = w * d; c.height = h * d; const g = c.getContext('2d'); g.setTransform(d, 0, 0, d, 0, 0); return [g, w, h]; }
+  function draw() {
+    const p = { fm: +ins[0].value, m: +ins[1].value, b: +ins[2].value, k: +ins[3].value };
+    const ink = css('--ink'), muted = css('--muted'), line = css('--line'), blue = css('--blue'), orange = '#d95926', accent = css('--accent');
+    el('fmv').textContent = p.fm + ' Hz'; el('mv').textContent = p.m.toFixed(2); el('bv').textContent = p.b.toFixed(2) + ' rad';
+    el('kv').textContent = p.k ? p.k.toFixed(2) : 'off';
+    // the signal over two turns
+    let [g, w, h] = fit(sig);
+    const T = 2 / p.fm, X = (t) => 8 + (w - 16) * t / T, top = 1 + p.m + p.k + 0.1, Y = (y) => h / 2 - y / top * h * 0.45;
+    g.strokeStyle = line; g.lineWidth = 1; g.beginPath(); g.moveTo(X(0), Y(0)); g.lineTo(X(T), Y(0)); g.stroke();
+    g.strokeStyle = ink; g.lineWidth = 1.1; g.beginPath();
+    const n = Math.min(4000, Math.round(T * FC * 24));
+    for (let i = 0; i <= n; i++) { const t = T * i / n; i ? g.lineTo(X(t), Y(x(t, p))) : g.moveTo(X(t), Y(x(t, p))); }
+    g.stroke();
+    // the spectrum in dB
+    const L = lines(p), mx = Math.max(...L.map((l) => l[2]));
+    [g, w, h] = fit(spec);
+    const NS = w < 560 ? 8 : N, f0 = FC - (NS + 0.7) * p.fm, f1 = FC + (NS + 0.7) * p.fm, Xf = (f) => 44 + (w - 56) * (f - f0) / (f1 - f0), Yd = (d) => 10 + (h - 34) * (-d) / 60;
+    g.strokeStyle = line; g.lineWidth = 1; g.setLineDash([2, 4]);
+    [-20, -40].forEach((d) => { g.beginPath(); g.moveTo(44, Yd(d)); g.lineTo(w - 12, Yd(d)); g.stroke(); });
+    g.setLineDash([]); g.beginPath(); g.moveTo(44, Yd(-60)); g.lineTo(w - 12, Yd(-60)); g.stroke();
+    g.fillStyle = muted; g.font = '12px "JetBrains Mono", monospace'; g.textAlign = 'right'; g.textBaseline = 'middle';
+    [0, -20, -40].forEach((d) => g.fillText(d + ' dB', 40, Yd(d)));
+    g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    [FC - 4 * p.fm, FC, FC + 4 * p.fm].forEach((f, i) => g.fillText(f + (i === 2 ? ' Hz' : ''), Xf(f), h - 4));
+    let count = 0;
+    L.forEach(([k, f, a]) => {
+      const d = 20 * Math.log10(Math.max(a / mx, 1e-9));
+      if (k !== 0 && d > -40) count++;
+      if (d < -59.5 || Math.abs(k) > NS) return;
+      g.strokeStyle = k === 0 ? ink : k < 0 ? blue : orange; g.lineWidth = 4; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(Xf(f), Yd(-60)); g.lineTo(Xf(f), Yd(d)); g.stroke();
+    });
+    const dl = 20 * Math.log10(Math.max(L[N - 1][2] / mx, 1e-9)), du = 20 * Math.log10(Math.max(L[N + 1][2] / mx, 1e-9));
+    el('rf').textContent = `${FC - p.fm} and ${FC + p.fm} Hz`;
+    el('rl').textContent = `${dl < -99 ? '—' : dl.toFixed(1)} / ${du < -99 ? '—' : du.toFixed(1)} dB`;
+    el('rn').textContent = count;
+  }
+  ins.forEach((i) => i.addEventListener('input', draw));
+  addEventListener('resize', draw); draw();
+})();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<script src="../../js/plate.js" defer></script>
+<script defer src="../../js/site.js"></script>
+</body>
+</html>
