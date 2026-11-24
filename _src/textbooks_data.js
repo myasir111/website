@@ -88,4 +88,17 @@ module.exports = {
       'C. M. Harris (ed.), Harris’ Shock and Vibration Handbook (McGraw-Hill): ch. 2, basic vibration theory',
     ],
   },
+  'plates': {
+    adds: [
+      ['Chladni’s law', 'For round plates, acoustics textbooks give an old rule of thumb from Chladni’s own measurements: with \\(m\\) nodal diameters and \\(n\\) nodal circles, $$f\\approx C\\,(m+2n)^2$$ The busier the pattern, the higher the note, which is what the lesson’s shortening bending wave predicts.'],
+      ['Why fine powder does the opposite', 'Very light powder gathers at the places that move most, not on the lines. Faraday showed in 1831 that air currents over the shaking plate carry it there; heavy grains like sand are too heavy for the air to move.'],
+    ],
+    read: [
+      'T. D. Rossing and N. H. Fletcher, The Physics of Musical Instruments (Springer): ch. 3, vibrations of plates',
+      'A. W. Leissa, Vibration of Plates, NASA SP-160 (1969): free online, frequencies for every common edge condition',
+      'S. Timoshenko and S. Woinowsky-Krieger, Theory of Plates and Shells (McGraw-Hill): the plate equation',
+      'D. J. Ewins, Modal Testing: Theory, Practice and Application (Research Studies Press): choosing measurement points',
+      'OpenStax, University Physics Volume 1: ch. 16, standing waves, free online',
+    ],
+  },
 };

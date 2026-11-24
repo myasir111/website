@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+<!-- Nodal · Chladni film, the three.js plate shots. Serve this folder (python -m http.server) with three.js r170 in vendor/
+     (three.module.js and RoomEnvironment.js) and the sand data from shots_sim.py in data/; open plate_shots.html?shot=s1.
+     window.renderAt(t) draws frame t; capture with a headless browser. -->
+<head><meta charset="utf-8"><link rel="icon" href="data:,"><title>Chladni plate shots</title>
+<style>
+html,body{margin:0;background:#07090c;overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden}
+#gl{position:absolute;inset:0}
+</style></head>
+<body><div id="stage"><canvas id="gl" width="1920" height="1080"></canvas></div>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+<script type="module">
+// Plate shots for the Chladni film. One rig, many shots; ?shot=<name>. renderAt(t) is a pure function of t.
+// Truth: sand from shots_sim.py (plate.py modes), mode shape grid and nodal lines from the same solver.
+import * as THREE from 'three';
+import { RoomEnvironment } from './vendor/RoomEnvironment.js';
+const QS = new URLSearchParams(location.search), SHOT = QS.get('shot') || 's1';
+const RW = +(QS.get('w') || 1920), RH = Math.round(RW * 9 / 16), AA = QS.get('aa') !== '0', SM = +(QS.get('sm') || 4096), SOFT = QS.get('soft') !== '0', SHADOWS = QS.get('shadows') !== '0';
+const HALF = 1.2, TH = 0.01, Y0 = 0.6, TOP = Y0 + TH / 2;          // 240 mm plate, 1 mm thick; 1 unit = 100 mm
+
+const io = (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const seg = (t, a, b) => Math.min(Math.max((t - a) / (b - a), 0), 1);
+const mix = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
+const crit = (x) => x <= 0 ? 0 : x >= 1 ? 1 : 1 - Math.exp(-7.43 * x) * (1 + 7.43 * x);   // critically damped arrival
+
+// ---- shot table ----
+const SHOTS = {
+  s1: { plates: [{ data: 's1', at: [0, 0] }], cam: [[0, [1.75, 0.78, 1.45], [-0.2, 0.6, -0.25], 32], [1.6, [1.62, 0.76, 1.32], [-0.18, 0.6, -0.22], 32], [8.6, [0.3, 3.2, 1.05], [0, 0.6, 0.04], 32]] },
+  s2: { plates: [{ data: 's2', at: [0, 0], map: (t) => 1.45 + 0.3 * t }], fine: true, cam: [[0, [1.05, 0.80, 0.95], [0.25, 0.6, 0.12], 22], [10, [0.80, 0.84, 1.15], [0.12, 0.6, 0.16], 22]] },
+  s3: { plates: [{ data: 'settled', at: [0, 0] }], deform: true, points: true,
+        cam: [[0, [0.3, 3.2, 1.05], [0, 0.6, 0.04], 32], [1.2, [0.3, 3.2, 1.05], [0, 0.6, 0.04], 32], [7, [2.25, 1.55, 2.15], [0, 0.52, 0], 32], [16, [2.75, 1.35, -0.9], [0, 0.52, 0], 32]] },
+  s5: { plates: [{ data: 's5', at: [0, 0] }], dimPool: true, points: true, psize: 0.0135, cam: [[0, [1.36, 6.62, 0.004], [1.36, 0.6, 0], 32], [26.4, [1.30, 6.30, 0.004], [1.30, 0.6, 0], 32]] },
+  s7: { plates: [{ data: 'settled', at: [0, 0], jitter: true }], sensors: true, points: true,
+        cam: [[0, [3.75, 2.62, 2.30], [0.62, 0.52, -0.42], 34], [20, [3.45, 2.85, 2.62], [0.62, 0.52, -0.42], 34]] },
+  s8: { plates: [{ data: 's8a', at: [-1.32, 0], brace: 'node' }, { data: 's8b', at: [1.32, 0], brace: 'out' }], points: true,
+        cam: [[0, [0, 3.9, 5.7], [0, 0.40, 0.3], 34], [12, [0, 5.9, 3.9], [0, 0.5, 0.15], 34]] },     // both plates whole, braces in view
+  thumb: { plates: [{ data: 'settled', at: [0, 0] }], cam: [[0, [-1.08, 5.3, 2.75], [-1.08, 0.6, 0.12], 30]] },          // the thumbnail still: plate on the right
+  s9: { plates: [{ data: 'settled', at: [0, 0] }], points: true, cam: [[0, [0.3, 3.2, 1.05], [0, 0.6, 0.04], 32], [8, [3.4, 2.6, 4.6], [0, 0.45, 0], 32]], fade: [5.8, 8] },
+};
+const S = SHOTS[SHOT];
+const FRF = { node: [0.525, 0.0], anti: [0.275, 0.0], out: [0.735, 0.0] };   // the 967 Hz nodal ring; antinodes inside it (sensor) and outside it (brace)
+
+// ---- renderer, scene, environment ----
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: AA, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(RW, RH, false); document.getElementById('stage').style.width = RW + 'px'; document.getElementById('stage').style.height = RH + 'px';
+renderer.shadowMap.enabled = SHADOWS; renderer.shadowMap.type = SOFT ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+const scene = new THREE.Scene();
+{ const c = document.createElement('canvas'); c.width = 960; c.height = 540; const g = c.getContext('2d');
+  const r = g.createRadialGradient(560, 120, 20, 520, 220, 640); r.addColorStop(0, '#1b2430'); r.addColorStop(0.55, '#0c1016'); r.addColorStop(1, '#06080b');
+  g.fillStyle = r; g.fillRect(0, 0, 960, 540); const bg = new THREE.CanvasTexture(c); bg.colorSpace = THREE.SRGBColorSpace; scene.background = bg; }
+scene.fog = new THREE.Fog(0x07090c, 7, 16);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture; scene.environmentIntensity = S.dimPool ? 0.12 : 0.35;
+const cam = new THREE.PerspectiveCamera(32, 1920 / 1080, 0.02, 40);
+
+function brushed(seedv) {
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 1024; const g = c.getContext('2d');
+  let s0 = seedv; const r = () => (s0 = (Math.imul(s0, 1664525) + 1013904223) >>> 0) / 4294967296;
+  g.fillStyle = '#7a7a7a'; g.fillRect(0, 0, 1024, 1024);
+  for (let i = 0; i < 9000; i++) { const y = r() * 1024, v = 90 + r() * 80 | 0; g.strokeStyle = `rgba(${v},${v},${v},0.35)`; g.lineWidth = 0.6 + r();
+    g.beginPath(); const x = r() * 1024, L = 80 + r() * 500; g.moveTo(x, y); g.lineTo(x + L, y + (r() - 0.5) * 2); g.stroke(); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
+}
+const ROUGH = brushed(7);
+const DOT = (() => { const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d');
+  const r = g.createRadialGradient(13, 12, 1, 16, 16, 15); r.addColorStop(0, '#ffffff'); r.addColorStop(0.7, '#d8d8d8'); r.addColorStop(1, 'rgba(160,160,160,0)');
+  g.fillStyle = r; g.beginPath(); g.arc(16, 16, 15, 0, 6.283); g.fill(); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+const steel = new THREE.MeshStandardMaterial({ color: 0x8d949c, metalness: 0.9, roughness: 0.3 });
+const dark = new THREE.MeshStandardMaterial({ color: 0x1b1f25, metalness: 0.4, roughness: 0.55 });
+const bench = new THREE.Mesh(new THREE.BoxGeometry(12, 0.08, 7), new THREE.MeshStandardMaterial({ color: 0x0d1014, roughness: 0.9 }));
+bench.receiveShadow = !S.dimPool; scene.add(bench);
+
+// ---- light: raking key, cool rim, fill, a soft pool from above ----
+const key = new THREE.DirectionalLight(0xfff1e0, 3.2); key.position.set(-3.5, 1.6, 1.2); key.target.position.set(0, 0.6, 0);
+key.castShadow = true; key.shadow.mapSize.set(SM, SM);
+const span = S.plates.length > 1 ? 3.2 : 1.6; Object.assign(key.shadow.camera, { left: -span, right: span, top: span, bottom: -span, near: 0.5, far: 9 });
+key.shadow.bias = -0.0002; key.shadow.normalBias = 0.002; scene.add(key, key.target);
+const rim = new THREE.DirectionalLight(0x58c4dd, 1.1); rim.position.set(3, 1.2, -3); scene.add(rim);
+scene.add(new THREE.HemisphereLight(0x9fb4c8, 0x07090c, 0.25));
+const pool = new THREE.SpotLight(0xffffff, S.deform ? 7 : S.dimPool ? 0 : 18, 9, 0.42, 0.9, 1.6); pool.position.set(S.dimPool ? -1.6 : 0.6, 4.2, S.dimPool ? 2.2 : 0.9); pool.target.position.set(0, 0.6, 0); scene.add(pool, pool.target);
+
+// ---- mode shape for the reveal: W on a 401 x 401 grid, its nodal lines ----
+let W = null, WRES = 401;
+if (S.deform) W = new Float32Array(await (await fetch('data/w967.bin')).arrayBuffer());
+const Wat = (x, z) => {                                                   // bilinear W at plate coords in [-1, 1]
+  const fx = (x + 1) / 2 * (WRES - 1), fz = (z + 1) / 2 * (WRES - 1);
+  const i = Math.min(WRES - 2, Math.max(0, fx | 0)), j = Math.min(WRES - 2, Math.max(0, fz | 0)), tx = fx - i, tz = fz - j;
+  return (1 - tx) * (1 - tz) * W[j * WRES + i] + tx * (1 - tz) * W[j * WRES + i + 1] + (1 - tx) * tz * W[(j + 1) * WRES + i] + tx * tz * W[(j + 1) * WRES + i + 1];
+};
+
+// ---- build plates ----
+const plates = [];
+let sd = 1234567; const rnd = () => (sd = (Math.imul(sd, 1664525) + 1013904223) >>> 0) / 4294967296;
+for (const P of S.plates) {
+  const meta = await (await fetch(`data/${P.data}.json`)).json();
+  const POS = new Uint16Array(await (await fetch(`data/${P.data}.pos.bin`)).arrayBuffer());
+  const HOP = new Uint8Array(await (await fetch(`data/${P.data}.hop.bin`)).arrayBuffer());
+  const g = new THREE.Group(); g.position.set(P.at[0], 0, P.at[1]); scene.add(g);
+  const alu = new THREE.MeshStandardMaterial({ color: S.dimPool ? 0x7d858e : 0xc3c9d0, metalness: S.dimPool ? 0.75 : 0.9, roughness: 0.5, roughnessMap: ROUGH, vertexColors: !!S.deform });
+  let plateMesh;
+  if (S.deform) {                                                          // a fine sheet that can flex
+    const geo = new THREE.PlaneGeometry(2 * HALF, 2 * HALF, 200, 200); geo.rotateX(-Math.PI / 2);
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(new Float32Array(geo.attributes.position.count * 3).fill(1), 3));
+    plateMesh = new THREE.Mesh(geo, alu); plateMesh.position.y = TOP; alu.side = THREE.DoubleSide;
+  } else {
+    plateMesh = new THREE.Mesh(new THREE.BoxGeometry(2 * HALF, TH, 2 * HALF), alu); plateMesh.position.y = Y0;
+  }
+  plateMesh.receiveShadow = true; g.add(plateMesh);
+  const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.026, 6), new THREE.MeshStandardMaterial({ color: 0xc8ced6, metalness: 0.95, roughness: 0.25 }));
+  bolt.position.y = TOP + 0.013; bolt.castShadow = true; g.add(bolt);
+  const washer = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.008, 32), steel); washer.position.y = TOP + 0.004; g.add(washer);
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.22, 24), steel); post.position.y = Y0 - 0.11; g.add(post);
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.42, 0.34, 48), dark); body.position.y = 0.21; body.castShadow = true; g.add(body);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.39, 0.012, 12, 64), steel); ring.rotation.x = Math.PI / 2; ring.position.y = 0.38; g.add(ring);
+  if (P.brace) {                                                           // a brace: a rod from the bench to the plate's underside
+    const [bx, bz] = FRF[P.brace];
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, Y0 - 0.04, 20), new THREE.MeshStandardMaterial({ color: 0xd95926, metalness: 0.3, roughness: 0.5 }));
+    rod.position.set(bx * HALF, (Y0 - 0.04) / 2 + 0.04 - TH / 2, bz * HALF); rod.castShadow = true; g.add(rod);
+    const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.03, 32), dark); foot.position.set(bx * HALF, 0.055, bz * HALF); g.add(foot);
+    const head = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 0.022, 32), new THREE.MeshStandardMaterial({ color: 0xd95926, metalness: 0.3, roughness: 0.5 }));
+    head.position.set(bx * HALF, TOP + 0.011, bz * HALF); head.castShadow = true; g.add(head);               // the brace's head, seen from above
+  }
+  const rot = new Float32Array(meta.n), col = new THREE.Color();
+  let sand, shade = null;
+  if (S.points) {                                                          // wide shots: one vertex per grain (fast), plus a soft contact shadow
+    const geo = new THREE.BufferGeometry(), cols = new Float32Array(meta.n * 3);
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(meta.n * 3), 3));
+    for (let i = 0; i < meta.n; i++) { rot[i] = rnd() * 6.283; const v = 0.80 + 0.20 * rnd(); cols.set([0.95 * v, 0.88 * v, 0.74 * v], i * 3); }
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+    sand = new THREE.Points(geo, new THREE.PointsMaterial({ size: S.psize || 0.0105, vertexColors: true, map: DOT, alphaTest: 0.35, transparent: false, fog: true }));
+    shade = new THREE.Points(geo, new THREE.PointsMaterial({ size: (S.psize || 0.0105) * 1.4, color: 0x000000, map: DOT, transparent: true, opacity: 0.35, depthWrite: false }));
+    shade.position.set(0.0035, -0.0015, -0.0012); shade.renderOrder = 1; sand.renderOrder = 2; g.add(shade, sand);
+  } else {
+    const grain = S.fine ? new THREE.IcosahedronGeometry(0.0032, 1) : new THREE.OctahedronGeometry(0.0042, 0);
+    sand = new THREE.InstancedMesh(grain, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.92, metalness: 0 }), meta.n);
+    sand.castShadow = true; g.add(sand);
+    for (let i = 0; i < meta.n; i++) { rot[i] = rnd() * 6.283; const v = 0.78 + 0.22 * rnd(); col.setRGB(0.93 * v, 0.86 * v, 0.72 * v); sand.setColorAt(i, col); }
+    sand.instanceColor.needsUpdate = true;
+  }
+  plates.push({ P, meta, POS, HOP, sand, rot, plateMesh, g });
+}
+
+// ---- nodal lines (reveal): thin glowing tubes that stay put while the sheet flexes ----
+let nodal = null;
+if (S.deform) {
+  const nd = await (await fetch('data/w967_nodal.json')).json();
+  nodal = new THREE.Group(); const mat = new THREE.MeshBasicMaterial({ color: 0x9fe8f7, transparent: true, opacity: 0 });
+  for (const L of nd.lines) {
+    const pts = L.map(([x, z]) => new THREE.Vector3(x * HALF, TOP + 0.003, z * HALF));
+    nodal.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), L.length * 2, 0.0042, 6, false), mat));
+  }
+  nodal.userData.mat = mat; scene.add(nodal);
+}
+
+// ---- sensors (two accelerometers with cables) ----
+const sensors = [];
+if (S.sensors) {
+  const sMat = new THREE.MeshStandardMaterial({ color: 0x9aa2ab, metalness: 0.85, roughness: 0.32 });
+  const capCols = { anti: 0xd95926, node: 0x58c4dd };
+  for (const [k, t0] of [['anti', 1.0], ['node', 2.6]]) {
+    const grp = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.13, 6), sMat); body.position.y = 0.065; body.castShadow = true; grp.add(body);
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.03, 24), new THREE.MeshStandardMaterial({ color: capCols[k], roughness: 0.5 })); cap.position.y = 0.145; grp.add(cap);
+    const [x, z] = FRF[k];
+    const curve = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 0.16, 0), new THREE.Vector3(-0.08, 0.34, -0.22), new THREE.Vector3(-0.9, 0.5, -1.3), new THREE.Vector3(-2.4, 0.35, -3.2)]);
+    const cable = new THREE.Mesh(new THREE.TubeGeometry(curve, 60, 0.008, 8, false), new THREE.MeshStandardMaterial({ color: 0x15181d, roughness: 0.6 })); grp.add(cable);
+    grp.position.set(x * HALF, TOP, z * HALF); scene.add(grp); sensors.push({ grp, t0, x, z });
+  }
+}
+
+// ---- camera keyframes: eased per segment ----
+function camAt(t) {
+  const K = S.cam; let i = 0; while (i < K.length - 2 && t >= K[i + 1][0]) i++;
+  const [ta, pa, la, fa] = K[i], [tb, pb, lb, fb] = K[Math.min(i + 1, K.length - 1)];
+  const k = tb > ta ? io(seg(t, ta, tb)) : 1;
+  return [mix(pa, pb, k), mix(la, lb, k), fa + (fb - fa) * k];
+}
+
+const m4 = new THREE.Matrix4(), q4 = new THREE.Quaternion(), s4 = new THREE.Vector3(1, 1, 1), p4 = new THREE.Vector3(), ax = new THREE.Vector3(0.3, 1, 0.2).normalize();
+const cUp = new THREE.Color(0xd95926), cDn = new THREE.Color(0x3a86c8), cZero = new THREE.Color(0xffffff), cMid = new THREE.Color(0x8e97a1), tmp = new THREE.Color();
+const FVIS = 0.9;                                                           // the reveal's slowed-down flexing, cycles per second
+
+window.renderAt = (t) => {
+  // reveal: amplitude and colour ramps, nodal glow
+  const amp = S.deform ? 0.13 * io(seg(t, 1.2, 3.4)) : 0, colK = S.deform ? io(seg(t, 3.6, 5.6)) : 0;
+  const glow = S.deform ? io(seg(t, 8.0, 9.4)) : 0, ph = Math.cos(2 * Math.PI * FVIS * Math.max(0, t - 1.2));
+  for (const pl of plates) {
+    const { meta, POS, HOP, sand, rot, P } = pl;
+    const ts = P.map ? P.map(t) : t;
+    const f = Math.min(meta.frames - 1, Math.max(0, Math.round(ts * meta.fps)));
+    const o = f * meta.n * 2;
+    for (let i = 0; i < meta.n; i++) {
+      const x = POS[o + 2 * i] / 65535 * 2 - 1, z = POS[o + 2 * i + 1] / 65535 * 2 - 1;
+      let h = HOP[f * meta.n + i] / 255 * 0.3;
+      if (P.jitter) h = 0;
+      const jig = h > 0 ? 0.012 * h * (0.5 + 0.5 * Math.sin(rot[i] * 37 + f * 2.1)) : 0;
+      const wz = S.deform ? amp * ph * Wat(x, z) : 0;
+      if (S.points) { sand.geometry.attributes.position.setXYZ(i, x * HALF, TOP + 0.003 + jig + wz, z * HALF); continue; }
+      p4.set(x * HALF, TOP + 0.004 + jig + wz, z * HALF);
+      q4.setFromAxisAngle(ax, rot[i] + (h > 0 ? f * 0.7 : 0));
+      m4.compose(p4, q4, s4); sand.setMatrixAt(i, m4);
+    }
+    if (S.points) sand.geometry.attributes.position.needsUpdate = true; else sand.instanceMatrix.needsUpdate = true;
+    if (S.deform) {                                                         // flex the sheet; colour = displacement
+      const geo = pl.plateMesh.geometry, pa = geo.attributes.position, ca = geo.attributes.color;
+      for (let v = 0; v < pa.count; v++) {
+        const x = pa.getX(v) / HALF, z = pa.getZ(v) / HALF, Wv = Wat(x, z), d = Wv * ph;
+        pa.setY(v, amp * d);
+        tmp.copy(cZero).lerp(cMid, colK).lerp(d > 0 ? cUp : cDn, Math.min(1, Math.abs(d) * 1.6) * colK);
+        ca.setXYZ(v, tmp.r, tmp.g, tmp.b);
+      }
+      pa.needsUpdate = true; ca.needsUpdate = true; geo.computeVertexNormals();
+      pl.plateMesh.material.metalness = 0.9 - 0.55 * colK; pl.plateMesh.material.roughness = 0.5 + 0.1 * colK;
+    }
+  }
+  if (nodal) nodal.userData.mat.opacity = 0.6 * glow;
+  for (const s of sensors) {                                                // drop in, critically damped
+    const k = crit(seg(t, s.t0, s.t0 + 0.8));
+    s.grp.position.y = TOP + (1 - k) * 0.9; s.grp.visible = t >= s.t0 - 0.05;
+  }
+  const [p, l, fov] = camAt(t);
+  cam.position.set(...p); cam.lookAt(...l); cam.fov = fov; cam.updateProjectionMatrix();
+  renderer.toneMappingExposure = S.fade ? 1 - io(seg(t, S.fade[0], S.fade[1])) : 1;
+  renderer.render(scene, cam);
+};
+window.renderAt(0); window.__ready = true;
+</script></body></html>

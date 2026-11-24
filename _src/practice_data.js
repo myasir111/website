@@ -65,4 +65,12 @@ module.exports = {
     ['On site', 'A pump skid sinks 5 mm into its mounts. The motor runs at 1,480 rpm. How close is running speed to the natural frequency on the mounts?',
      'From the sag shortcut: \\(f_n\\approx15.76/\\sqrt5=7.05\\) Hz. Running speed: \\(1480/60=24.67\\) Hz, about 3.5 times higher. Well clear of the mount frequency.'],
   ],
+  'plates': [
+    ['Warm-up', 'A plate is shaken at 500 Hz. How far must it swing before sand leaves the surface?',
+     'The grains fly when \\(\\omega^2|W|>g\\). Here \\(\\omega=2\\pi\\times500=3142\\) rad/s, so $$|W|>\\frac{g}{\\omega^2}=\\frac{9.81}{3142^2}=9.9\\times10^{-7}\\ \\text{m}$$ About one micrometre. At the film’s 967 Hz it is a quarter of that.'],
+    ['Stretch', 'You cut a plate from the same aluminium sheet, twice as long and twice as wide. Where does the film’s 967 Hz ring go? And on a sheet twice as thick, at the original size?',
+     'From the panel formula, \\(f\\propto\\sqrt{D/\\rho h}/L^2\\), and \\(D\\propto h^3\\), so \\(\\sqrt{D/\\rho h}\\propto h\\): $$f\\propto\\frac{h}{L^2}$$ Twice the size: \\(967/4=242\\) Hz, same ring. Twice as thick: \\(2\\times967=1934\\) Hz.'],
+    ['On site', 'Two accelerometers on one duct panel, 30 mm apart. At one mode, one reads 24 dB below the other. What share of the swing does it see, and what do you do?',
+     'It sees \\(10^{-24/20}=0.063\\), about one sixteenth: it sits on or near that mode’s nodal line. Move it off the line, or measure at two or more points away from the middle and the symmetry lines, so no mode can hide.'],
+  ],
 };

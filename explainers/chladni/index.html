@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#0c0c0b">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chladni Plates and Mode Shapes, Explained · Nodal</title>
+  <link rel="canonical" href="https://nodallab.dev/explainers/chladni/">
+  <meta name="description" content="Why sand on a vibrating plate draws lines, why only some frequencies make a pattern, and what nodal lines mean for where a sensor or a brace goes.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Chladni plates: every peak has a shape">
+  <meta property="og:description" content="Sand on a shaken plate gathers where the plate does not move. Why, why only at some frequencies, and what it means for sensors and braces. A short film, a plate board and the maths.">
+  <meta property="og:image" content="https://nodallab.dev/explainers/chladni/og.jpg">
+  <meta property="og:url" content="https://nodallab.dev/explainers/chladni/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    .video { width: 100%; border-radius: 12px; border: 1px solid var(--line); background: #000; display: block; margin: 28px 0 8px; aspect-ratio: 16 / 9; height: auto; }
+    .eq { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+    .series-nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 40px; font-size: 15px; }
+    .readout { display: flex; gap: 8px 24px; flex-wrap: wrap; margin-top: 12px; font-size: 14px; color: var(--muted); }
+    .readout b { font-family: var(--mono); color: var(--accent); font-weight: 600; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+    .two .cap h3 { font: 400 26px/1.1 var(--serif); margin: 6px 0 8px; }
+    .two .cap .fix { color: var(--good); font-weight: 600; }
+    .two .cap .worry { color: var(--accent-2); font-weight: 600; }
+    .board { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; align-items: start; }
+    .board .plate-wrap { position: relative; }
+    .sim canvas#plate { width: 100%; height: auto; aspect-ratio: 1 / 1; cursor: crosshair; touch-action: none; }
+    .sim canvas#resp { height: 230px; }
+    .peaks { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .peaks button { font: 500 13px var(--mono); padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+    .peaks button:hover, .peaks button:focus-visible { border-color: var(--accent); }
+    .tablewrap { overflow-x: auto; }
+    .gaps { width: 100%; border-collapse: collapse; margin: 16px 0 8px; font-size: 15px; }
+    .gaps th, .gaps td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .gaps th { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+    @media (max-width: 760px) { .board { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Chladni plates: every peak has a shape","description":"Why sand on a vibrating plate draws lines, why only some frequencies make a pattern, and what nodal lines mean for where a sensor or a brace goes.","author":{"@type":"Person","name":"Muhammad Yasir","url":"https://nodallab.dev/about.html"},"datePublished":"2026-11-18","dateModified":"2026-11-18","image":"https://nodallab.dev/explainers/chladni/og.jpg","mainEntityOfPage":"https://nodallab.dev/explainers/chladni/"},{"@type":"VideoObject","name":"Chladni plates: every peak has a shape","description":"A film with captions and music: sand on a shaken aluminium plate gathering into a ring and curved lines, then the reasons built up one at a time: a grain leaving the plate, echoes lining up into a ladder of frequencies, a frequency sweep through the plate's figures, and two sensors, one on a still line.","thumbnailUrl":"https://nodallab.dev/explainers/chladni/poster.jpg","uploadDate":"2026-11-24","duration":"PT2M2S","contentUrl":"https://nodallab.dev/explainers/chladni/chladni.mp4"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Explainers","item":"https://nodallab.dev/explainers/"},{"@type":"ListItem","position":2,"name":"Chladni plates"}]}]}</script>
+</head>
+<body class="article">
+<div class="progress-bar" aria-hidden="true"></div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../" class="active">Explainers</a>
+      <a href="../../lab/">Lab</a>
+      <a href="../../tools/">Tools</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0">
+    <p class="eyebrow"><a href="../">Explainers</a> · Resonance</p>
+    <h1>Chladni plates: every peak <em>has a shape</em></h1>
+    <p class="meta">November 2026 · 2 min film, with music · four boards to play with</p>
+  </section>
+
+  <video class="video" controls playsinline preload="none" poster="poster.jpg" width="1920" height="1080">
+    <source src="chladni.mp4" type="video/mp4">
+    Your browser can't play this video. <a href="chladni.mp4">Download it</a> instead.
+  </video>
+  <p class="meta">The same film as the LinkedIn post. No voice: captions are on screen. Music: “Interstellar Piano” by Ivan_Luzan (<a href="https://pixabay.com/music/">Pixabay</a>).</p>
+
+  <div class="prose">
+    <p><b>What the film shows.</b> A square aluminium plate, 240 mm across and 1 mm thick, bolted at its centre to a shaker and covered in sand. At 967 Hz the sand runs off almost everywhere and gathers into a ring and four curved lines. Then the film builds the reason, one piece at a time: why a grain leaves the plate, why only some frequencies make a pattern, why every peak has a shape, and why a sensor on a still line misses it. This page does the same, with a board for each step.</p>
+
+    <div class="two">
+      <div class="cap"><span class="cap-n">ON A SAND LINE</span><h3>Sees nothing</h3><p>The plate does not move there in that mode. A sensor there misses the mode’s peak, and a brace there leaves the mode exactly where it was. <span class="worry">Easy to miss, easy to waste a brace on.</span></p></div>
+      <div class="cap"><span class="cap-n">OFF THE LINES</span><h3>Sees it, moves it</h3><p>Where the mode moves, a sensor reads its peak and a brace changes it: the mode no longer fits and its frequency moves. <span class="fix">Measure at more than one point; brace where it moves most.</span></p></div>
+    </div>
+
+    <h2>1. Why the sand moves</h2>
+    <p>Put one grain on the plate and shake it gently. The grain rides along: going up, the plate pushes it; going down, gravity keeps it pressed on. Now shake harder. On the way down the plate can start falling <i>faster than gravity can pull the grain after it</i>, and the grain is left in the air. Drag the board past 1 g and watch the moment it happens, where the plate’s acceleration (right) dips below −g.</p>
+  </div>
+
+  <div class="sim">
+    <p class="sim-label" style="margin-top:0">A grain on a shaking plate · slowed right down</p>
+    <canvas id="jump" style="height:220px" role="img" aria-label="Side view of a grain on a plate moving up and down, beside a trace of the plate's acceleration against the minus g line"></canvas>
+    <div class="controls"><label><span>How hard the plate shakes (peak acceleration): <span class="val" id="jgv">0.6 g</span></span>
+      <input type="range" id="jg" min="0.2" max="4" step="0.05" value="0.6" aria-label="Peak acceleration of the plate in g"></label></div>
+    <div class="readout"><span>Grain: <b id="jr">…</b></span></div>
+  </div>
+
+  <div class="prose">
+    <p>Now the formula, which only says what the board shows. A point of the plate moves as \(w=W\cos\omega t\); differentiate twice and its acceleration peaks at \(\omega^2|W|\). The grain leaves when that beats gravity:</p>
+    <div class="eq">$$\omega^2|W|>g\quad\Longleftrightarrow\quad|W|>\frac{g}{\omega^2}.$$</div>
+    <p>At 967 Hz that is \(9.81/(2\pi\times967)^2=0.27\ \mu\text{m}\), a few hundredths of a hair’s width; one micrometre is already \(3.8\,g\). So almost the whole plate throws its sand. Where the plate moves a lot the grains hop far, where it barely moves they hardly hop, so they wander until they land somewhere still and stay there. The stillest places are the lines where \(W=0\), the <i>nodal lines</i>. The sand draws them.</p>
+
+    <h2>2. Two waves, one fixed shape</h2>
+    <p>The shaker sends bending waves out to the edges, and they bounce back. A wave and its echo travelling the other way add up, with \(\sin(a-b)+\sin(a+b)=2\sin a\cos b\), to</p>
+    <div class="eq">$$\begin{aligned}&\sin(kx-\omega t)+\sin(kx+\omega t)\\&\qquad=2\sin kx\,\cos\omega t:\end{aligned}$$</div>
+    <p>a shape that stays put, times a clock. Nothing travels any more, and wherever \(\sin kx=0\) the plate never moves at all. That is the same “shape times clock” split as the harmonics in <a href="../what-the-fft-shows/">What the FFT actually shows</a>, spread over a plate instead of over time.</p>
+
+    <h2>3. Why only some frequencies</h2>
+    <p>A wave doesn’t bounce once: it goes back and forth, and every round trip leaves another copy on top of the last. If each copy comes back <i>in step</i> with the one before, they pile up into a big standing wave. If not, they land out of step and cancel. Slide the wavelength and watch the white total: it only grows big when a whole number of half-waves fits between the edges.</p>
+  </div>
+
+  <div class="sim">
+    <p class="sim-label" style="margin-top:0">Echoes on a strip held at both ends · orange: each round trip · white: their total</p>
+    <canvas id="echo" style="height:260px" role="img" aria-label="Eight echoes of a wave on a strip and their total, above a graph of how big the total gets for each wavelength, peaking where a whole number of half-waves fits"></canvas>
+    <div class="controls"><label><span>Wavelength (half-waves across the strip): <span class="val" id="ekv">2.37 half-waves</span></span>
+      <input type="range" id="ek" min="0.5" max="4.5" step="0.01" value="2.37" aria-label="Number of half-waves across the strip"></label></div>
+    <div class="readout"><span>The echoes: <b id="er">…</b></span></div>
+  </div>
+
+  <div class="prose">
+    <p>In formulas: a round trip is a distance \(2L\), which shifts the wave’s phase by \(2kL\). Back in step means a whole number of turns:</p>
+    <div class="eq">$$\begin{gathered}2kL=2\pi m\\\Downarrow\\k_m=\frac{m\pi}{L},\qquad m=1,2,3,\dots\end{gathered}$$</div>
+    <p>The plate decides how fast each of those waves rings. Newton’s law for a small patch of plate, with the bending stiffness \(D=Eh^3/12(1-\nu^2)\) and the mass per square metre \(\rho h\), gives the plate equation; put in a wave \(W=\sin kx\) and its four derivatives bring back \(k^4\):</p>
+    <div class="eq">$$\begin{gathered}D\nabla^4W=\rho h\,\omega^2W\\\Downarrow\\Dk^4=\rho h\,\omega^2\\\Downarrow\\\omega_m=\Big(\frac{m\pi}{L}\Big)^2\sqrt{\frac{D}{\rho h}}.\end{gathered}$$</div>
+    <p>So the fits ring at a ladder of frequencies, \(1, 4, 9, 16\dots\) times the first, with the gaps growing. It also explains why higher patterns are busier: the wavelength only shrinks as \(1/\sqrt f\), from 100 mm at 967 Hz to 53 mm at 3,447 Hz on the film’s plate (\(D=6.45\) N m, \(\rho h=2.7\) kg/m²). A real plate with free edges and a bolted centre has no neat formula, but the idea is the same, and its fits are 2D shapes. Walther Ritz first computed them accurately in 1909, with the method this film’s solver still uses.</p>
+
+    <h2>4. Why a peak</h2>
+    <p>Each of those fits, a <i>mode</i>, behaves like a mass on a spring with a damper. Push it slowly and it just follows the push. Push it too fast and it can’t keep up. Push it in time with its own swing and every push adds a little energy, until the damper takes out as much as each push puts in. Drag the push rate and watch the dot draw the peak.</p>
+  </div>
+
+  <div class="sim">
+    <p class="sim-label" style="margin-top:0">One mode, pushed · damping 0.08 here so the peak fits on screen</p>
+    <canvas id="push" style="height:230px" role="img" aria-label="A mass on a spring with a damper, pushed back and forth, beside the curve of its swing against the push rate, peaking at its natural frequency"></canvas>
+    <div class="controls"><label><span>Push rate: <span class="val" id="prv">0.45 × ωn</span></span>
+      <input type="range" id="pr" min="0.1" max="2" step="0.01" value="0.45" aria-label="Push rate as a fraction of the natural frequency"></label></div>
+    <div class="readout"><span>Swing: <b id="prr">…</b></span></div>
+  </div>
+
+  <div class="prose">
+    <p>The same in one line of maths: the mode’s motion \(q\) obeys \(\ddot q+2\zeta\omega_n\dot q+\omega_n^2q=f\cos\omega t\). Try \(q\) swinging at the push rate and the size of the swing comes out as</p>
+    <div class="eq">$$|Q|=\frac{f}{\sqrt{(\omega_n^2-\omega^2)^2+(2\zeta\omega_n\omega)^2}},$$</div>
+    <p>and right at the mode’s own rate the first bracket vanishes:</p>
+    <div class="eq">$$\omega=\omega_n:\quad|Q|=\frac{1}{2\zeta}\,\frac{f}{\omega_n^2}.$$</div>
+    <p>In time, only the damping holds it back. The film’s plate has \(\zeta\approx0.005\), so its peaks stand \(1/2\zeta=100\) times above the push. A whole plate is many modes at once, each weighted by its own shape \(W_n\) at the point you look at:</p>
+    <div class="eq">$$a(x,\omega)\propto\sum_n\frac{\Gamma_n\,W_n(x)\,\omega^2}{\omega_n^2-\omega^2+2i\zeta\omega_n\omega}.$$</div>
+    <p>Near each \(\omega_n\) one term is huge: a peak in the spectrum, and that mode’s shape on the plate. Between peaks every term is small and the sand sits still. That is the whole film in one line: <b>every peak in a spectrum is a shape somewhere</b>.</p>
+
+    <h2>5. Every peak has a shape: the real plate</h2>
+    <p>Everything together, on the film’s plate: the modal sum above, with the sand rule from step 1 (it settles wherever the plate stays under 1 g).</p>
+  </div>
+
+  <div class="sim" id="ch-sim">
+    <div class="sim-head">
+      <span class="sim-label" style="margin:0">Plate board · the film’s plate on a shaker</span>
+    </div>
+    <div class="board">
+      <div class="plate-wrap">
+        <p class="sim-label">Sand on the plate · tap to move the sensor</p>
+        <canvas id="plate" width="420" height="420" role="img" aria-label="The square plate seen from above, with sand where the plate's acceleration stays below one g"></canvas>
+      </div>
+      <div>
+        <p class="sim-label">Acceleration at the sensor, dB re 1 g, against frequency in Hz</p>
+        <canvas id="resp" role="img" aria-label="Acceleration at the sensor against frequency, from 100 to 2,500 hertz"></canvas>
+        <div class="peaks" id="peaks" aria-label="Jump to a peak"></div>
+      </div>
+    </div>
+    <div class="controls">
+      <label><span>Frequency: <span class="val" id="fv">967 Hz</span></span>
+        <input type="range" id="f" min="100" max="2500" step="0.5" value="967.1" aria-label="Drive frequency in hertz"></label>
+      <label><span>Shaker level: <span class="val" id="av">0.30 g</span></span>
+        <input type="range" id="a" min="0.05" max="1" step="0.01" value="0.3" aria-label="Shaker acceleration in g"></label>
+      <label><span>Sensor across: <span class="val" id="xv">+63 mm</span></span>
+        <input type="range" id="sx" min="-115" max="115" step="1" value="63" aria-label="Sensor position across the plate in millimetres from the centre"></label>
+      <label><span>Sensor up: <span class="val" id="yv">0 mm</span></span>
+        <input type="range" id="sy" min="-115" max="115" step="1" value="0" aria-label="Sensor position up the plate in millimetres from the centre"></label>
+    </div>
+    <div class="readout"><span>Plate’s largest: <b id="rmax">0</b></span><span>Sand jumps on: <b id="rj">0</b></span><span>At the sensor: <b id="rs">0</b></span></div>
+  </div>
+
+  <div class="prose">
+    <p>At 967 Hz, with the sensor 63 mm out, it sits on the ring: its spectrum has no peak at 967 Hz at all, while 30 mm further in it reads a tall one. Slide the frequency into a gap between peaks, around 800 Hz, and nowhere on the plate reaches 1 g: the sand sits still. Step through the peaks and watch the figures get busier, and turn the shaker down until only the sharpest peaks still throw sand.</p>
+
+    <h2>6. Where you measure, where you brace</h2>
+    <p><b>The sensor.</b> The plate’s motion is a sum of modes, \(w(x,t)=\sum_n W_n(x)\,q_n(t)\), so a sensor at \(x\) reads every mode multiplied by that mode’s shape where it sits. On a nodal line of the 967 Hz mode, \(W_{967}(x)=0\): that term is zero at every frequency, and the 967 Hz peak is simply not there. On the film’s plate, two points 30 mm apart read 24 dB apart at 967 Hz.</p>
+    <p><b>The brace.</b> Take a strip held at both ends and pin its middle. Its second mode already has a still point there, so the pin changes nothing: same shape, same frequency. Its first mode moved most right there, so it can’t keep its shape; it has to become two half-length humps, and its frequency jumps to four times what it was. A brace on a nodal line does nothing for that mode; a brace where the mode moves most moves it.</p>
+    <p>Duct walls, enclosure panels, skid decks and machine covers are plates. The same sums apply, with different edges.</p>
+    <div class="tablewrap"><table class="gaps">
+      <thead><tr><th>On site</th><th>Why</th><th>So</th></tr></thead>
+      <tbody>
+        <tr><td>One sensor misses a mode</td><td>On a nodal line \(W_n=0\): that term of the sum is zero at every frequency</td><td>Take more than one point, away from the middle and the obvious symmetry lines</td></tr>
+        <tr><td>Two points 180° apart at a peak</td><td>Either side of a nodal line the same mode moves up on one side, down on the other</td><td>A nodal line runs between them; phase maps the shape</td></tr>
+        <tr><td>A brace that changes nothing</td><td>A mode with \(W_n=0\) at the brace already obeys \(w=0\) there: still a mode, same frequency</td><td>Brace where the troublesome mode moves most</td></tr>
+        <tr><td>A brace that moves the peak</td><td>Off the line, the mode no longer fits; the film’s plate goes from 967 Hz to 913 and 989 Hz, with a quarter of the response at 967 Hz</td><td>Check the new frequencies are clear of what drives the panel</td></tr>
+      </tbody>
+    </table></div>
+
+    <p class="callout">Derive why grains jump, the standing wave, why only some waves fit, the plate equation and the resonance peak, then work the film’s plate and a steel duct panel on a calculator, in <a href="../../lab/plates/">Lab lesson P5: Plate modes</a>.</p>
+
+    <h2>Downloads</h2>
+    <ul class="downloads">
+      <li><a href="plate.py" download>plate.py</a> <span class="muted">· the plate’s modes by the Ritz method (Legendre polynomials, free edges, a pinned centre), checked against the published free-plate values</span></li>
+      <li><a href="gallery.py" download>gallery.py</a>, <a href="frf.py" download>frf.py</a> <span class="muted">· which modes a centre drive can reach, and the response at two sensor spots by modal sum</span></li>
+      <li><a href="sand.py" download>sand.py</a>, <a href="shots_sim.py" download>shots_sim.py</a> <span class="muted">· the sand: grains hop wherever the plate moves faster than gravity allows</span></li>
+      <li><a href="truth.py" download>truth.py</a> <span class="muted">· every number in the captions, computed and checked</span></li>
+      <li><a href="cfilm.py" download>cfilm.py</a>, <a href="cfilm2.py" download>cfilm2.py</a>, <a href="cfilm3.py" download>cfilm3.py</a>, <a href="cfilm4.py" download>cfilm4.py</a>, <a href="proj.py" download>proj.py</a>, <a href="plate_shots.html" download>plate_shots.html</a>, <a href="compose.py" download>compose.py</a>, <a href="compose4.py" download>compose4.py</a>, <a href="fx.py" download>fx.py</a>, <a href="fx4.py" download>fx4.py</a> <span class="muted">· the Manim maths scenes (needs <a href="../sidebands/sidebands.py">sidebands.py</a> beside it), where the 3D plate lands on screen, the three.js plate shots, the sand sound and the assembly (compose4.py builds this film; the music is not included: get “Interstellar Piano” from Pixabay, and the CC0 Kenney impact sounds from kenney.nl)</span></li>
+      <li><a href="chladni.mp4" download>chladni.mp4</a> <span class="muted">· the film, 1080p</span></li>
+    </ul>
+
+    <h2>Further reading</h2>
+    <ul class="ref-list">
+      <li>E. F. F. Chladni (1787). <i>Entdeckungen über die Theorie des Klanges.</i> Leipzig: Weidmanns Erben und Reich.<span class="what">The original sand figures: 11 plates of drawings, from bowing plates by hand.</span></li>
+      <li>A. W. Leissa (1969). <i>Vibration of Plates.</i> NASA SP-160.<span class="what">Frequencies, nodal patterns and mode shapes for plates of every shape and edge; the free square plate’s values used to check this film’s solver.</span></li>
+      <li>M. J. Gander and F. Kwok (2012). Chladni figures and the Tacoma Bridge: motivating PDE eigenvalue problems via vibrating plates. <i>SIAM Review</i>, 54(3), 573–596.<span class="what">How Ritz computed Chladni’s figures, and how to do it yourself.</span></li>
+      <li>D. J. Ewins (2000). <i>Modal Testing: Theory, Practice and Application</i>, 2nd ed. Research Studies Press.<span class="what">Measuring modes on real structures, including where to put the sensors and the exciter.</span></li>
+    </ul>
+
+    <div class="series-nav">
+      <a href="../sidebands/">← FFT series, Part 4: Sidebands</a>
+      <a href="../../lab/plates/">Derive it in the Lab: Lesson P5 →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
+  </div>
+</footer>
+
+<script src="modes.js"></script>
+<script src="boards.js" defer></script>
+<script>
+// Plate board. The film's plate (aluminium, 240 mm square, 1 mm, free edges, pinned at the centre on a shaker).
+// Absolute acceleration at a point, for a shaker acceleration aB: a = aB |1 + sum_n P_n w_n(x,y) w^2 / (wn^2 - w^2 + 2i zeta wn w)|.
+// Sand jumps where a > 1 g and settles where a < 1 g, most of all on the nodal lines.
+(function () {
+  const C = window.CHLADNI, TAU = Math.PI * 2, GN = 61, RES = 150, L = 240;
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const el = (id) => document.getElementById(id);
+  const ins = ['f', 'a', 'sx', 'sy'].map(el), plate = el('plate'), resp = el('resp');
+  const modes = C.modes.map((m) => { const b = atob(m.g), g = new Float32Array(b.length); for (let i = 0; i < b.length; i++) g[i] = ((b.charCodeAt(i) << 24) >> 24) / 127; return { f: m.f, P: m.P, g }; });
+  const at = (G, x, y) => {                                   // bilinear, x and y in [-1, 1]
+    const fx = (x + 1) / 2 * (GN - 1), fy = (y + 1) / 2 * (GN - 1);
+    const i = Math.min(GN - 2, Math.max(0, fx | 0)), j = Math.min(GN - 2, Math.max(0, fy | 0)), u = fx - i, v = fy - j;
+    return (1 - u) * (1 - v) * G[j * GN + i] + u * (1 - v) * G[j * GN + i + 1] + (1 - u) * v * G[(j + 1) * GN + i] + u * v * G[(j + 1) * GN + i + 1];
+  };
+  const H = (f) => modes.map((m) => {                         // complex modal factor P w^2 / (wn^2 - w^2 + 2i z wn w)
+    const w = TAU * f, wn = TAU * m.f, dr = wn * wn - w * w, di = 2 * C.zeta * wn * w, d = dr * dr + di * di;
+    return [m.P * w * w * dr / d, -m.P * w * w * di / d];
+  });
+  const accel = (h, x, y) => { let re = 1, im = 0; modes.forEach((m, n) => { const v = at(m.g, x, y); re += h[n][0] * v; im += h[n][1] * v; }); return Math.hypot(re, im); };
+  const noise = new Float32Array(RES * RES); { let s = 12345; for (let i = 0; i < noise.length; i++) { s = (s * 1664525 + 1013904223) >>> 0; noise[i] = (s >>> 8) / 16777216; } }
+  const FS = []; for (let f = 100; f <= 2500; f += 2) FS.push(f);
+  modes.forEach((m) => { if (m.f > 100) FS.push(m.f - 1, m.f, m.f + 1); }); FS.sort((a, b) => a - b);   // sample every peak at its top
+  el('peaks').innerHTML = modes.filter((m) => m.f >= 100).map((m) => `<button type="button" data-f="${m.f}">${Math.round(m.f).toLocaleString('en')} Hz</button>`).join('');
+  el('peaks').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { ins[0].value = b.dataset.f; draw(); } });
+  function fit(c, square) {
+    const d = Math.min(devicePixelRatio || 1, 2), w = c.clientWidth, h = square ? w : c.clientHeight;
+    c.width = Math.round(w * d); c.height = Math.round(h * d); const g = c.getContext('2d'); g.setTransform(d, 0, 0, d, 0, 0); return [g, w, h];
+  }
+  const rgb = (s) => { const m = s.match(/^#([0-9a-f]{6})$/i); return m ? [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)) : (s.match(/\d+/g) || [128, 128, 128]).slice(0, 3).map(Number); };
+  const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+  const off = document.createElement('canvas'); off.width = off.height = RES;
+  let specKey = '', spec = null;
+  function draw() {
+    const f = +ins[0].value, aB = +ins[1].value, sx = +ins[2].value, sy = +ins[3].value;
+    el('fv').textContent = `${Math.round(f).toLocaleString('en')} Hz`; el('av').textContent = `${aB.toFixed(2)} g`;
+    el('xv').textContent = `${sx > 0 ? '+' : ''}${sx} mm`; el('yv').textContent = `${sy > 0 ? '+' : ''}${sy} mm`;
+    const ink = rgb(css('--ink')), bg = rgb(css('--surface') || '#141414'), line = css('--line'), muted = css('--muted'), orange = css('--accent-2') || '#d95926', blue = css('--blue'), accent = css('--accent');
+    // the plate: sand where a < 1 g, heaviest on the stillest lines
+    const h = H(f), ctx = off.getContext('2d'), img = ctx.createImageData(RES, RES);
+    let amax = 0, jump = 0; const A = new Float32Array(RES * RES);
+    for (let j = 0; j < RES; j++) for (let i = 0; i < RES; i++) { const a = aB * accel(h, -1 + 2 * (i + 0.5) / RES, 1 - 2 * (j + 0.5) / RES); A[j * RES + i] = a; amax = Math.max(amax, a); if (a > 1) jump++; }
+    const still = amax <= 1, metal = mix(bg, ink, 0.16), sandc = mix([233, 220, 192], ink, 0.15);
+    for (let k = 0; k < RES * RES; k++) {
+      const a = A[k], dens = still ? 0.42 : a > 1 ? 0 : 0.3 + 0.7 * Math.exp(-((a / 0.35) ** 2));
+      const grain = dens * (0.55 + 0.45 * noise[k]), c = mix(metal, sandc, Math.min(1, grain));
+      img.data.set([c[0], c[1], c[2], 255], 4 * k);
+    }
+    ctx.putImageData(img, 0, 0);
+    let [g, w] = fit(plate, true);
+    g.imageSmoothingEnabled = true; g.drawImage(off, 0, 0, w, w);
+    g.strokeStyle = line; g.lineWidth = 1; g.strokeRect(0.5, 0.5, w - 1, w - 1);
+    g.fillStyle = muted; g.beginPath(); g.arc(w / 2, w / 2, 4, 0, TAU); g.fill();            // the bolt
+    const px = w / 2 + sx / (L / 2) * w / 2, py = w / 2 - sy / (L / 2) * w / 2;
+    g.fillStyle = orange; g.strokeStyle = css('--bg') || '#000'; g.lineWidth = 2; g.beginPath(); g.arc(px, py, 7, 0, TAU); g.fill(); g.stroke();
+    // the sensor's spectrum, dB re 1 g
+    const key = [aB, sx, sy].join();
+    if (key !== specKey) { const x = sx / (L / 2), y = sy / (L / 2); spec = FS.map((ff) => 20 * Math.log10(Math.max(1e-6, aB * accel(H(ff), x, y)))); specKey = key; }
+    let hh; [g, w, hh] = fit(resp, false);
+    const X = (ff) => 46 + (w - 58) * (ff - 100) / 2400, Y = (d) => 10 + (hh - 36) * (40 - Math.max(-30, Math.min(40, d))) / 70;
+    g.strokeStyle = line; g.lineWidth = 1; g.setLineDash([2, 4]);
+    [20, -20].forEach((d) => { g.beginPath(); g.moveTo(46, Y(d)); g.lineTo(w - 12, Y(d)); g.stroke(); });
+    g.setLineDash([]); g.beginPath(); g.moveTo(46, Y(-30)); g.lineTo(w - 12, Y(-30)); g.stroke();
+    g.strokeStyle = accent; g.setLineDash([6, 4]); g.beginPath(); g.moveTo(46, Y(0)); g.lineTo(w - 12, Y(0)); g.stroke(); g.setLineDash([]);
+    g.fillStyle = muted; g.font = '12px "JetBrains Mono", monospace'; g.textAlign = 'right'; g.textBaseline = 'middle';
+    [[20, '+20'], [0, '0'], [-20, '−20']].forEach(([d, s]) => g.fillText(s, 40, Y(d)));
+    g.fillStyle = accent; g.textAlign = 'left'; g.fillText('1 g', 50, Y(0) - 9);
+    g.fillStyle = muted; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    (w < 420 ? [[500, '500'], [1500, '1,500'], [2500, '2,500']] : [[500, '500'], [1000, '1,000'], [1500, '1,500'], [2000, '2,000'], [2500, '2,500']]).forEach(([ff, s]) => { g.textAlign = ff === 2500 ? 'right' : 'center'; g.fillText(s, Math.min(X(ff), w - 12), hh - 4); });
+    g.strokeStyle = css('--ink'); g.lineWidth = 1.6; g.lineJoin = 'round'; g.beginPath();
+    FS.forEach((ff, i) => (i ? g.lineTo(X(ff), Y(spec[i])) : g.moveTo(X(ff), Y(spec[i])))); g.stroke();
+    g.strokeStyle = orange; g.lineWidth = 2; g.beginPath(); g.moveTo(X(f), 6); g.lineTo(X(f), hh - 26); g.stroke();
+    const as = aB * accel(h, sx / (L / 2), sy / (L / 2));
+    g.fillStyle = orange; g.beginPath(); g.arc(X(f), Y(20 * Math.log10(as)), 5, 0, TAU); g.fill();
+    // readouts: amplitude in micrometres from a = w^2 W
+    const um = (a) => a * 9.81 / (TAU * f) ** 2 * 1e6;
+    el('rmax').textContent = `${amax.toFixed(1)} g (${um(amax).toFixed(2)} µm)`;
+    el('rj').textContent = still ? 'nowhere: the sand sits still' : `${Math.round(100 * jump / (RES * RES))}% of the plate`;
+    el('rs').textContent = `${as.toFixed(2)} g`;
+  }
+  ins.forEach((i) => i.addEventListener('input', draw));
+  const pick = (e) => {
+    const r = plate.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * 2 - 1, y = 1 - (e.clientY - r.top) / r.height * 2;
+    ins[2].value = Math.round(Math.max(-0.96, Math.min(0.96, x)) * L / 2); ins[3].value = Math.round(Math.max(-0.96, Math.min(0.96, y)) * L / 2); draw();
+  };
+  plate.addEventListener('pointerdown', (e) => { pick(e); plate.setPointerCapture(e.pointerId); });
+  plate.addEventListener('pointermove', (e) => { if (e.buttons) pick(e); });
+  addEventListener('resize', draw); draw();
+})();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+<script src="../../js/plate.js" defer></script>
+<script defer src="../../js/site.js"></script>
+</body>
+</html>

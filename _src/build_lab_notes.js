@@ -31,7 +31,10 @@ function loadLesson(dir) {
     location: { hash: '' }, history: { replaceState() {} },
   });
   ctx.window = ctx;
+  // a lesson may keep precomputed data next to it (lab/plates/data.js sets window.PLATE)
+  const data = path.join(dir, 'data.js');
   const src = labSrc + '\nLab.lesson = (cfg) => { globalThis.__cfg = cfg; };\n'
+    + (fs.existsSync(data) ? fs.readFileSync(data, 'utf8') + '\n' : '')
     + fs.readFileSync(path.join(dir, 'lesson.js'), 'utf8');
   vm.runInContext(src, ctx, { filename: path.join(dir, 'lesson.js') });
   return ctx.__cfg;
