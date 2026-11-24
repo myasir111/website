@@ -201,3 +201,15 @@
 .prob-a > summary { cursor: pointer; color: var(--accent); min-height: 24px; }
 .prob-a > div { margin-top: 10px; overflow-x: auto; }
 @media (max-width: 600px) { .prob { padding: 14px; } }
+.lesson-row.soon { cursor: default; }
+.lesson-row.soon .n { color: var(--muted); }
+.lesson-row.soon .what { color: var(--accent); }
+
+/* Maths map (lab/map/) */
+.mapgrid { display: grid; gap: 0; }
+.maprow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 2fr); gap: 0 28px; padding: 26px 0; border-bottom: 1px solid var(--line); }
+.maprow h3 { margin: 0; font: 400 clamp(26px, 3vw, 36px)/1.1 var(--serif); }
+.mapcell p { margin: 0; }
+.mapcell .label { margin-bottom: 6px; }
+.mapcell .soon { color: var(--muted); }
+@media (max-width: 760px) { .maprow { grid-template-columns: minmax(0, 1fr); gap: 12px; } }

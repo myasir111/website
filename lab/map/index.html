@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#0c0c0b">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Maths Map: School to Spectrum · Nodal</title>
+  <link rel="canonical" href="https://nodallab.dev/lab/map/">
+  <meta name="description" content="Where the maths behind vibration analysis starts: school trigonometry and physics, then calculus, Fourier series and differential equations, then what each one means on site.">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="The maths map">
+  <meta property="og:description" content="Where the maths behind vibration analysis starts: school trigonometry and physics, then calculus, Fourier series and differential equations, then what each one means on site.">
+  <meta property="og:image" content="https://nodallab.dev/assets/og.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../lab/lab.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../">nodal<span>.</span></a>
+    <nav class="nav">
+      <a href="../../explainers/">Explainers</a>
+      <a href="../../lab/" class="active">Lab</a>
+      <a href="../../tools/">Tools</a>
+      <a href="../../resources.html">Resources</a>
+      <a href="../../about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" data-plate-top>
+    <p class="eyebrow"><a href="../">Lab</a> · Map</p>
+    <h1>From school maths to the spectrum</h1>
+    <p class="lede">Most of the maths behind a vibration spectrum, you have already met. Find the row you last studied, and the lessons pick up from there.</p>
+  </section>
+
+  <section class="block" data-mode="2,3,1">
+    <div class="mapgrid">
+      <div class="maprow">
+        <h3>At school</h3>
+        <div class="mapcell"><p class="label">Signals</p><p>Right-angled triangles: sin, cos and Pythagoras. Angles in degrees and radians. <a href="../sines-and-cosines/">Lesson 1</a></p></div>
+        <div class="mapcell"><p class="label">Physics</p><p>Hooke’s law, <i>F</i> = <i>kx</i>, and Newton’s second law, <i>F</i> = <i>ma</i>. Waves: frequency, wavelength and speed. <span class="soon">Lesson 8, coming next</span></p></div>
+      </div>
+      <div class="maprow">
+        <h3>Ages 16 to 18</h3>
+        <div class="mapcell"><p class="label">Signals</p><p>Graphs of sine and cosine, the angle-sum rule, differentiating and integrating sin and cos. <a href="../sines-and-cosines/">Lesson 1</a>, <a href="../build-a-signal/">Lesson 2</a></p></div>
+        <div class="mapcell"><p class="label">Physics</p><p>Simple harmonic motion. Standing waves on a string. Resonance, described in words. <span class="soon">Lessons 8 and 11, coming</span></p></div>
+      </div>
+      <div class="maprow">
+        <h3>At university</h3>
+        <div class="mapcell"><p class="label">Signals</p><p>Fourier series and its coefficients: <a href="../build-a-signal/">Lesson 2</a>. Odd and even symmetry: <a href="../why-evens-vanish/">Lesson 3</a>. Complex numbers and the discrete Fourier transform: <a href="../fft-by-hand/">Lesson 4</a>. Windows: <a href="../leakage-and-windows/">Lesson 5</a>. The wavelet transform: <a href="../wavelets/">Lesson 6</a>. Modulation and Bessel functions: <a href="../sidebands/">Lesson 7</a>.</p></div>
+        <div class="mapcell"><p class="label">Physics</p><p>The second-order differential equation, damping ratio, forced response, the wave equation and plate bending modes. <span class="soon">Lessons 8 to 12, coming</span></p></div>
+      </div>
+      <div class="maprow">
+        <h3>On site</h3>
+        <div class="mapcell"><p class="label">Signals</p><p>Orders and 1X, 2X; looseness and clipping; setting lines and Fmax (<a href="../../tools/fft-setup/">FFT setup planner</a>); leakage and the Hann correction; knocks and impacts; gearbox and motor sidebands (<a href="../../tools/gear-belt/">gear mesh calculator</a>).</p></div>
+        <div class="mapcell"><p class="label">Physics</p><p>Natural frequency checks (<a href="../../tools/sdof/">SDOF</a>, <a href="../../tools/beam-frequency/">pipe span</a>, <a href="../../tools/plate-frequency/">plate</a>); damping (<a href="../../tools/damping/">converter</a>); where to brace a vibrating panel; vortex shedding (<a href="../../tools/vortex-shedding/">calculator</a>).</p></div>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:28px;max-width:60em">The physics lessons are being written now. Each one will be linked here when it's ready.</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="foot-mark" aria-hidden="true">nodal<span>.</span></p>
+    <div class="foot-row">
+      <span>© 2026 Muhammad Yasir</span>
+      <a href="https://www.linkedin.com/in/muhammad-yasir-ali-khan/">LinkedIn</a>
+      <span class="sp"></span>
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">Motion: on</button>
+    </div>
+  </div>
+</footer>
+<script defer src="../../js/plate.js"></script>
+<script defer src="../../js/site.js"></script>
+</body>
+</html>
