@@ -1,4 +1,4 @@
-// Lesson 5: leakage and windows. Derive why a tone between two bins leaks (a geometric series),
+// Lesson S5: leakage and windows. Derive why a tone between two bins leaks (a geometric series),
 // what a Hann window does to it (three shifted copies), and the amplitude correction; then
 // solve the same pump signal twice on a calculator, with and without the window.
 (function () {
@@ -101,7 +101,7 @@
 
   // 2. Tools
   WORK.push([
-    ['>From Lesson 4, (25): the DFT of \\(N\\) samples, and the peak an analyser shows:'],
+    ['>From Lesson S4, (25): the DFT of \\(N\\) samples, and the peak an analyser shows:'],
     [r`X_k=\frac{1}{N}\sum_{n=0}^{N-1}x_n\,e^{-i2\pi kn/N},\qquad \text{peak}=2\,|X_k|`, '', 'A'],
     ['>Euler’s formula, turned round to give a cosine as two arrows:'],
     [r`\cos\theta=\tfrac12\,e^{i\theta}+\tfrac12\,e^{-i\theta}`, '', 'B'],
@@ -156,9 +156,9 @@
 
   // 6. What it means: the seam
   WORK.push([
-    ['>Why does a tone that doesn’t fit behave so differently? The DFT treats the record as one period of a repeating signal (Lesson 4). Compare the two ends of the record in (1), with \\(\\varphi=0\\):'],
+    ['>Why does a tone that doesn’t fit behave so differently? The DFT treats the record as one period of a repeating signal (Lesson S4). Compare the two ends of the record in (1), with \\(\\varphi=0\\):'],
     [r`x_0=A,\qquad x_N=A\cos(2\pi f)`, '', 13],
-    ['>If \\(f\\) is a whole number, \\(\\cos(2\\pi f)=1\\) and the ends meet. Otherwise there is a jump at every seam. A jump is a sharp edge, and by Lesson 2, (14), sharp edges need harmonics that fall off only like \\(1/n\\). That is the same slow \\(1/|f-k|\\) as in (11).'],
+    ['>If \\(f\\) is a whole number, \\(\\cos(2\\pi f)=1\\) and the ends meet. Otherwise there is a jump at every seam. A jump is a sharp edge, and by Lesson S2, (14), sharp edges need harmonics that fall off only like \\(1/n\\). That is the same slow \\(1/|f-k|\\) as in (11).'],
   ]);
 
   // 7. The Hann window as three arrows
@@ -205,7 +205,7 @@
     const rows = ks.map((k) => { const d = f - k; return [r`k=${k}:\quad \delta=${f}-${k}=${F(d, 2)},\qquad 2|X_{${k}}|\approx${A}\times\frac{${F(S)}}{\pi\times${F(Math.abs(d), 2)}}=${A}\times\frac{${F(S)}}{${F(PI * Math.abs(d))}}=${F(rect(A, d), 3)}\ \text{mm/s}`, k === 25 ? '← the tallest bin' : k === 30 ? '← 5 bins away' : '']; });
     WORK.push([
       ['>Worked example 1. A pump runs at 1490 rpm with a 1X vibration of \\(A=5\\) mm/s. The analyser takes a 1-second record with no window. What does the spectrum show?'],
-      ['>The bins are \\(1/T=1\\) Hz apart, so the number of cycles in the record equals the frequency in hertz. From Lesson 1, (13):'],
+      ['>The bins are \\(1/T=1\\) Hz apart, so the number of cycles in the record equals the frequency in hertz. From Lesson S1, (13):'],
       [r`f=\frac{1490}{60}=24.83\ \text{cycles in the record}`, '← between bins 24 and 25', 26],
       ['>The top of (11) is the same for every bin, since moving one bin only flips the sign of the sine. Work it out once (calculator in radians, or \\(0.17\\times180^\\circ=30.6^\\circ\\)):'],
       [r`|\sin\pi(24.83-25)|=|\sin(-0.17\pi)|=\sin(30.6^\circ)=${F(S)}`, '', 27],
@@ -412,7 +412,7 @@
         part: 'Summary',
         title: 'On one card',
         text: `<p>Four boxed results, each derived above. A tone on a bin is exact; a tone between bins leaks like \\(1/\\delta\\); a Hann window turns that into \\(1/\\delta^3\\) and is corrected by ×2.</p>
-               <p>Next: <a href="../wavelets/">Lesson 6, wavelets</a>, for signals that change over time.</p>`,
+               <p>Next: <a href="../wavelets/">Lesson S6, wavelets</a>, for signals that change over time.</p>`,
         controls: [{ type: 'choice', key: 'w9', options: [['rect', 'No window'], ['hann', 'Hann window']] }],
         draw(g, s, t, api) { recordAndBins(g, 4.5, s.w9 === 'hann', api, { formula: true }); },
       },

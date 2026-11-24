@@ -1,4 +1,4 @@
-// Lesson 6: wavelets for engineers. Derive the Morlet wavelet transform of a steady tone and of a sharp
+// Lesson S6: wavelets for engineers. Derive the Morlet wavelet transform of a steady tone and of a sharp
 // knock, the width of each mark on a wavelet map, and how to read an amplitude off one; then work the
 // fan from the video (a 25 Hz hum and a knock once per turn) on a calculator.
 (function () {
@@ -168,9 +168,9 @@
 
   // 2. Tools
   WORK.push([
-    ['>The Fourier transform, the continuous form of Lesson 4’s DFT: the signal is matched against an arrow turning at \\(f\\):'],
+    ['>The Fourier transform, the continuous form of Lesson S4’s DFT: the signal is matched against an arrow turning at \\(f\\):'],
     [r`X(f)=\int_{-\infty}^{\infty}x(t)\,e^{-i2\pi ft}\,dt`, '', 'A'],
-    ['>Euler, as in Lesson 5: a cosine is two arrows, and an arrow has length 1:'],
+    ['>Euler, as in Lesson S5: a cosine is two arrows, and an arrow has length 1:'],
     [r`\cos\theta=\tfrac12e^{i\theta}+\tfrac12e^{-i\theta},\qquad |e^{i\theta}|=1`, '', 'B'],
     ['>A change of variable. If \\(u=(t-b)/a\\), then'],
     [r`t=b+au,\qquad dt=a\,du`, '', 'C'],
@@ -216,7 +216,7 @@
     [r`W_+=\frac{A}{2}e^{i\varphi}\frac{1}{\sqrt a}\int e^{i\Omega(b+au)}\,e^{-u^2/2}\,e^{-i\omega_0u}\,a\,du=\frac{A}{2}e^{i\varphi}e^{i\Omega b}\sqrt a\int e^{-u^2/2}\,e^{i(a\Omega-\omega_0)u}\,du`, '', 9],
     ['>The integral is (E) with \\(\\kappa=a\\Omega-\\omega_0\\):'],
     [r`W_+=\frac{A}{2}e^{i\varphi}e^{i\Omega b}\sqrt{2\pi a}\;e^{-(a\Omega-\omega_0)^2/2}`, '', 10],
-    ['>The backward arrow gives the same with \\(\\kappa=-a\\Omega-\\omega_0\\). Near the peak \\(a\\Omega\\approx\\omega_0\\), so \\(\\kappa\\approx-12\\) and \\(e^{-72}\\) is nothing. Set it aside, as in Lesson 5. Take the size, with \\(|e^{i\\varphi}|=|e^{i\\Omega b}|=1\\):'],
+    ['>The backward arrow gives the same with \\(\\kappa=-a\\Omega-\\omega_0\\). Near the peak \\(a\\Omega\\approx\\omega_0\\), so \\(\\kappa\\approx-12\\) and \\(e^{-72}\\) is nothing. Set it aside, as in Lesson S5. Take the size, with \\(|e^{i\\varphi}|=|e^{i\\Omega b}|=1\\):'],
     [r`|W(a,b)|\approx\frac{A}{2}\sqrt{2\pi a}\;e^{-(a\Omega-\omega_0)^2/2}`, '← a tone', 11, 'box'],
     ['>No \\(b\\) is left in (11): a steady tone is a steady band across the map. It is brightest where \\(a\\Omega=\\omega_0\\), that is where the row’s frequency (5) equals the tone’s. There the exponential is 1:'],
     [r`|W|_{\text{peak}}=\frac{A}{2}\sqrt{2\pi a}\qquad\Rightarrow\qquad A=\frac{2\,|W|_{\text{peak}}}{\sqrt{2\pi a}}`, '← reading an amplitude off the map', 12, 'box'],
@@ -269,7 +269,7 @@
       ['>The band each row hears, by (17) and (18):'],
       [r`25\pm0.196\times25=25\pm${F(0.196 * 25, 1)}\ \text{Hz},\qquad 400\pm0.196\times400=400\pm${F(0.196 * 400, 0)}\ \text{Hz}`, '', 25],
       [`>At 400 Hz each knock is a flash ${F(dtFull(FR) * 1000, 1)} ms wide, and the knocks are 40 ms apart: ${F(GAP / dtFull(FR), 0)} times the width, so they show as separate flashes, one per turn. In the 25 Hz row the same knocks would each last ${F(dtFull(F1) * 1000, 0)} ms, more than twice the gap, and run together. But that row pins the hum to 25 Hz ± 5 Hz.`],
-      ['>No single short-time FFT does both. To split knocks 40 ms apart it needs a window shorter than 40 ms, and then by Lesson 5 its bins are at least \\(1/0.040=25\\) Hz apart: the hum sits in bin 1, next to DC, with nothing around it.'],
+      ['>No single short-time FFT does both. To split knocks 40 ms apart it needs a window shorter than 40 ms, and then by Lesson S5 its bins are at least \\(1/0.040=25\\) Hz apart: the hum sits in bin 1, next to DC, with nothing around it.'],
     ]);
   }
 

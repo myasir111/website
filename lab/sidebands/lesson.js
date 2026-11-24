@@ -1,4 +1,4 @@
-// Lesson 7: sidebands. Derive why a slow wobble on a fast tone makes twins (amplitude modulation), why they
+// Lesson S7: sidebands. Derive why a slow wobble on a fast tone makes twins (amplitude modulation), why they
 // are evenly spaced and equally tall, the ladder a timing wobble makes (frequency modulation), why every
 // harmonic gets its own, why real twins are uneven, and how long a record must be to see them; then use
 // them on a gearbox and on a motor's current.
@@ -155,7 +155,7 @@
   WORK.push([
     ['>Add \\(\\cos(a+b)=\\cos a\\cos b-\\sin a\\sin b\\) and \\(\\cos(a-b)=\\cos a\\cos b+\\sin a\\sin b\\), then halve. A product of cosines is a sum of cosines:'],
     [r`\cos a\cos b=\tfrac12\cos(a+b)+\tfrac12\cos(a-b)`, '← check it on the board', 'A'],
-    ['>Euler, as in Lessons 4 and 5: a cosine is two arrows of half its size, turning opposite ways:'],
+    ['>Euler, as in Lessons S4 and S5: a cosine is two arrows of half its size, turning opposite ways:'],
     [r`\cos\theta=\tfrac12e^{i\theta}+\tfrac12e^{-i\theta}`, '', 'B'],
     ['>The one fact we accept rather than derive (it is the Fourier series of \\(e^{i\\beta\\sin\\theta}\\), which repeats every turn of \\(\\theta\\)). Its coefficients are the Bessel functions \\(J_n\\):'],
     [r`e^{i\beta\sin\theta}=\sum_{n=-\infty}^{\infty}J_n(\beta)\,e^{in\theta},\qquad J_{-n}(\beta)=(-1)^nJ_n(\beta)`, '← Jacobi–Anger', 'C'],
@@ -163,7 +163,7 @@
     [r`J_0(\beta)\approx1-\frac{\beta^2}{4},\qquad J_1(\beta)\approx\frac{\beta}{2},\qquad J_2(\beta)\approx\frac{\beta^2}{8}`, '', 'D'],
     ['>Decibels compare two sizes:'],
     [r`L=20\log_{10}\frac{A}{A_{\text{ref}}}\iff\frac{A}{A_{\text{ref}}}=10^{L/20}`, '', 'E'],
-    ['>From Lesson 5: with a Hann window on a record \\(T\\) seconds long, a steady tone’s peak is \\(4/T\\) wide at its base:'],
+    ['>From Lesson S5: with a Hann window on a record \\(T\\) seconds long, a steady tone’s peak is \\(4/T\\) wide at its base:'],
     [r`\text{main lobe: }f_0\pm\frac{2}{T}`, '', 'F'],
   ]);
 
@@ -209,7 +209,7 @@
 
   // 6. Every harmonic
   WORK.push([
-    ['>A real gear mesh is no pure cosine. It repeats, so it has harmonics (Lessons 1 and 2):'],
+    ['>A real gear mesh is no pure cosine. It repeats, so it has harmonics (Lessons S1 and S2):'],
     [r`c(t)=\sum_ka_k\cos k\omega t`, '', 15],
     ['>A size wobble multiplies all of it. By (4), term by term:'],
     [r`(1+m\cos\Omega t)\,a_k\cos k\omega t=a_k\cos k\omega t+\tfrac{a_km}{2}\cos(k\omega\pm\Omega)t`, '← twins around every harmonic (one term each way)', 16, 'box'],
@@ -408,7 +408,7 @@
       {
         part: 'What it means',
         title: 'Seeing them: record at least two turns',
-        text: `<p>The FFT of a short record smears every line into a lobe \\(\\pm2/T\\) wide (Lesson 5). Twins 25 Hz apart need the lobes narrower than the gap: a record of more than two turns.</p>
+        text: `<p>The FFT of a short record smears every line into a lobe \\(\\pm2/T\\) wide (Lesson S5). Twins 25 Hz apart need the lobes narrower than the gap: a record of more than two turns.</p>
                <p>Shorten the record and watch three peaks become one lump.</p>`,
         controls: [{ type: 'range', key: 'T', label: 'Record length', min: 0.04, max: 0.4, step: 0.005, fmt: (v) => `${(v * 1000).toFixed(0)} ms` }],
         draw(g, s, t, api) {

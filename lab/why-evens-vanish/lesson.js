@@ -52,7 +52,7 @@
       [r`b_n=-b_n\ \Rightarrow\ 2b_n=0\ \Rightarrow\ b_n=0\qquad(n\ \text{even})`, '← the same holds for aₙ', 10],
     ],
     [
-      ['>Another way to see it. From Lesson 2, equation (8):'],
+      ['>Another way to see it. From Lesson S2, equation (8):'],
       [r`b_n=\frac{2}{T}\int_0^{T} f(t)\sin(n\omega_0 t)\,dt`, '← the area of f × harmonic', 11],
       ['>Split (11) into the two halves of the turn:'],
       [r`b_n=\frac{2}{T}\Big[\int_0^{T/2}\!f\sin\,dt+\int_{T/2}^{T}\!f\sin\,dt\Big]`, '', 12],
@@ -61,7 +61,7 @@
       [r`=(-1)^{n+1}\!\int_0^{T/2}\!f\sin\,ds`, '← (−1)·(−1)ⁿ = (−1)ⁿ⁺¹', 13],
       ['>Substituting (13) in (12):'],
       [r`b_n=\frac{2}{T}\,\big(1-(-1)^n\big)\int_0^{T/2}\!f\sin\,ds`, '← even n: 1 − 1 = 0', 14],
-      ['>For the square wave, \\(f=1\\) on the first half; for odd \\(n\\) the bracket is 2, and by Lesson 2, (11):'],
+      ['>For the square wave, \\(f=1\\) on the first half; for odd \\(n\\) the bracket is 2, and by Lesson S2, (11):'],
       [r`b_n=\frac{4}{T}\int_0^{T/2}\!\sin(n\omega_0 s)\,ds=\frac{4}{T}\cdot\frac{2}{n\omega_0}=\frac{4}{\pi n}`, '← the second half doubles the first', 15],
     ],
     [
@@ -95,11 +95,11 @@
     [r`\omega_0T=2\pi\quad\Rightarrow\quad \omega_0\tfrac{T}{2}=\pi`, '', 'B'],
     ['>Powers of \\(-1\\):'],
     [r`(-1)^n=+1\ \ (n\ \text{even}),\qquad (-1)^n=-1\ \ (n\ \text{odd})`, '', 'C'],
-    ['>From Lesson 2, (15) to (17): the Fourier series and its coefficients:'],
+    ['>From Lesson S2, (15) to (17): the Fourier series and its coefficients:'],
     [r`f=a_0+\sum_n\big[a_n\cos(n\omega_0t)+b_n\sin(n\omega_0t)\big],\quad a_0=\tfrac1T\!\int_0^T\!f,\quad a_n,b_n=\tfrac2T\!\int_0^T\!f\cos,\ f\sin`, '', 'D'],
     ['>Product-to-sum rules:'],
     [r`\sin x\cos y=\tfrac12\big[\sin(x{+}y)+\sin(x{-}y)\big],\qquad \sin x\sin y=\tfrac12\big[\cos(x{-}y)-\cos(x{+}y)\big]`, '', 'E'],
-    ['>From Lesson 2, (11): the area of one harmonic over half a turn:'],
+    ['>From Lesson S2, (11): the area of one harmonic over half a turn:'],
     [r`\int_0^{T/2}\!\sin(k\omega_0t)\,dt=\frac{1-\cos k\pi}{k\,\omega_0}`, '← 2/(kω₀) for odd k, 0 for even k', 'F'],
   ];
   const EX1 = [
@@ -162,7 +162,7 @@
     if (!s.showSol) return given;
     return [
       ...given,
-      ['>We use the coefficient formulas (D), from Lesson 2. Since \\(f=0\\) on the second half, only \\(0\\) to \\(T/2\\) counts.'],
+      ['>We use the coefficient formulas (D), from Lesson S2. Since \\(f=0\\) on the second half, only \\(0\\) to \\(T/2\\) counts.'],
       ['>DC. Substituting (31) in (D):'],
       [r`a_0=\frac{A}{T}\int_0^{T/2}\!\sin(\omega_0 t)\,dt=\frac{A}{T}\cdot\frac{1-\cos\pi}{\omega_0}=\frac{2A}{\omega_0 T}`, ''],
       ['>We know that \\(\\omega_0 T=2\\pi\\):'],

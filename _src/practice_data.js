@@ -31,7 +31,7 @@ module.exports = {
     ['Stretch', 'Four samples: \\(x = [1,\\,0,\\,-1,\\,0]\\). Compute \\(X_1\\) with \\(X_n=\\frac1N\\sum_k x_k e^{-i2\\pi nk/N}\\).',
      'With \\(N=4\\), \\(e^{-i2\\pi k/4}\\) is \\(1,\\,-i,\\,-1,\\,i\\) for \\(k=0..3\\): $$X_1=\\tfrac14\\big(1\\cdot1+0\\cdot(-i)+(-1)(-1)+0\\cdot i\\big)=\\tfrac14(2)=0.5$$ Real, so the phase is 0, and \\(2|X_1|=1\\): it is one cosine of amplitude 1, which is exactly what the samples are.'],
     ['On site', 'An analyser is set to Fmax 1,000 Hz with 800 lines. A fan’s 1X is at 24.6 Hz. Does it land on a line?',
-     'Line spacing: \\(1000/800 = 1.25\\) Hz. \\(24.6/1.25 = 19.68\\), so 1X falls between lines 19 and 20. It will leak (Lesson 5), and the peak will read a little low.'],
+     'Line spacing: \\(1000/800 = 1.25\\) Hz. \\(24.6/1.25 = 19.68\\), so 1X falls between lines 19 and 20. It will leak (Lesson S5), and the peak will read a little low.'],
   ],
   'leakage-and-windows': [
     ['Warm-up', 'A record is exactly 1 s long. Which tone lands on a bin: 50 Hz or 50.5 Hz?',

@@ -1,4 +1,4 @@
-// Lesson 4: an FFT by hand. Derive the formula from the Fourier series, see what it means,
+// Lesson S4: an FFT by hand. Derive the formula from the Fourier series, see what it means,
 // then solve two examples on a calculator with every operation shown, like class notes.
 (function () {
   const { TAU, ease, integral } = Lab;

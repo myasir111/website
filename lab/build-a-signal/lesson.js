@@ -88,13 +88,13 @@
   const TOOLS = [
     ['>A sine repeats every full turn, and only after whole turns:'],
     [r`\sin(\theta+2\pi m)=\sin\theta\quad\text{for every }\theta\iff m\ \text{is a whole number}`, '', 'A'],
-    ['>From Lesson 1, (12): a cosine and a sine at the same frequency make one shifted sine:'],
+    ['>From Lesson S1, (12): a cosine and a sine at the same frequency make one shifted sine:'],
     [r`a\cos\theta+b\sin\theta=c\sin(\theta+\varphi),\qquad c=\sqrt{a^2+b^2},\quad \tan\varphi=\frac{a}{b}`, '', 'B'],
     ['>Two antiderivatives, for any constant \\(k\\neq0\\):'],
     [r`\int\sin(kt)\,dt=-\frac{\cos(kt)}{k},\qquad \int\cos(kt)\,dt=\frac{\sin(kt)}{k}`, '', 'C'],
     ['>For a whole number \\(n\\):'],
     [r`\cos n\pi=(-1)^n,\qquad \sin n\pi=0`, '← cos π = −1, cos 2π = 1, …', 'D'],
-    ['>Orthogonality: over one turn, two different harmonics (or a sine and a cosine) multiply to zero area. Derived line by line in Lesson 4:'],
+    ['>Orthogonality: over one turn, two different harmonics (or a sine and a cosine) multiply to zero area. Derived line by line in Lesson S4:'],
     [r`\int_0^T\!\sin(n\omega_0t)\sin(m\omega_0t)\,dt=\int_0^T\!\cos(n\omega_0t)\cos(m\omega_0t)\,dt=\begin{cases}T/2,&n=m\\0,&n\neq m\end{cases},\quad \int_0^T\!\sin\cos\,dt=0`, '', 'E'],
     ['>Integration by parts, for example 2:'],
     [r`\int u\,dv=uv-\int v\,du`, '', 'F'],
@@ -106,7 +106,7 @@
     [r`b_n=2\times\frac{4}{\pi n}=\frac{8}{\pi n}\ \ (n\ \text{odd}),\qquad b_n=0\ \ (n\ \text{even})`, '', 19],
     ['>Put \\(n=1,3,5\\) in (19), with \\(\\pi=3.1416\\):'],
     [r`b_1=\frac{8}{3.1416}=2.546,\qquad b_3=\frac{8}{3\times3.1416}=\frac{8}{9.4248}=0.849,\qquad b_5=\frac{8}{15.708}=0.509\ \ \text{mm/s}`, '', 20],
-    ['>Frequencies, from Lesson 1, (13) and (14):'],
+    ['>Frequencies, from Lesson S1, (13) and (14):'],
     [r`f_1=\frac{1480}{60}=24.67\ \text{Hz},\qquad f_3=3\times24.67=74.00\ \text{Hz},\qquad f_5=5\times24.67=123.33\ \text{Hz}`, '', 21],
     ['>Check the \\(1/n\\) law from (14):'],
     [r`\frac{b_3}{b_1}=\frac{0.849}{2.546}=0.333=\frac{1}{3}\ \checkmark,\qquad b_2=b_4=0`, '← no even harmonics'],
@@ -128,7 +128,7 @@
     [r`a_n=0`, '← the sawtooth is all sines', 28],
     ['>The numbers from (27):'],
     [r`b_1=\frac{2}{\pi}=0.637,\quad b_2=-\frac{2}{2\pi}=-0.318,\quad b_3=\frac{2}{3\pi}=0.212,\quad b_4=-\frac{2}{4\pi}=-0.159`, '', 29],
-    ['>The peaks \\(|b_n|=2/(\\pi n)\\) fall like \\(1/n\\), as for the square wave, but this time every harmonic is there, the even ones too. Lesson 3 explains why.'],
+    ['>The peaks \\(|b_n|=2/(\\pi n)\\) fall like \\(1/n\\), as for the square wave, but this time every harmonic is there, the even ones too. Lesson S3 explains why.'],
   ];
   const SUMMARY = [
     ['>Everything in this lesson on one card:'],

@@ -69,7 +69,7 @@
     [r`v=\frac{dx}{dt},\qquad a=\frac{dv}{dt}=\frac{d^2x}{dt^2}`, '', 'C'],
     ['>Differentiating a sine twice, from calculus:'],
     [r`\frac{d}{dt}\cos(\omega t)=-\omega\sin(\omega t),\qquad \frac{d^2}{dt^2}\cos(\omega t)=-\omega^2\cos(\omega t)`, '', 'D'],
-    ['>And from Lesson 1, (4): one full turn of a sine takes \\(T\\), with'],
+    ['>And from Lesson S1, (4): one full turn of a sine takes \\(T\\), with'],
     [r`\omega=2\pi f=\frac{2\pi}{T}`, '', 'E'],
   ];
   const DERIV = [
@@ -114,7 +114,7 @@
       [r`\tfrac12kx^2+\tfrac12mv^2=\tfrac12kA^2\left(\cos^2\omega t+\sin^2\omega t\right)=\tfrac12kA^2`, '← the same at every instant', 12],
       ['>So the energy only swaps between spring and mass. Turned round, this is Rayleigh’s method: set the largest motion energy equal to the largest spring energy, and the frequency comes out without solving any equation:'],
       [r`\tfrac12m\,(\omega A)^2=\tfrac12kA^2\quad\Rightarrow\quad\omega^2=\frac km`, '← (5) again, a second way', 13],
-      ['>Pull it to \\(x_0\\) and also give it a push \\(v_0\\). A cosine plus a sine fits both starting values, and from Lesson 1 it is one sine of size'],
+      ['>Pull it to \\(x_0\\) and also give it a push \\(v_0\\). A cosine plus a sine fits both starting values, and from Lesson S1 it is one sine of size'],
       [r`x(t)=x_0\cos\omega t+\frac{v_0}{\omega}\sin\omega t,\qquad A=\sqrt{x_0^2+\left(\frac{v_0}{\omega}\right)^2}`, '← the start sets the size, never the rhythm', 14],
     ],
     [
@@ -137,9 +137,9 @@
     [r`f_n=\frac{63.25}{2\pi}=\frac{63.25}{6.2832}=10.07\ \text{Hz}`, '', 19],
     ['>Period:'],
     [r`T=\frac{1}{f_n}=\frac{1}{10.07}=0.0993\ \text{s}=99.3\ \text{ms}`, '', 20],
-    ['>Running speed, from Lesson 1:'],
+    ['>Running speed, from Lesson S1:'],
     [r`f_{1X}=\frac{1480}{60}=24.67\ \text{Hz},\qquad \frac{f_{1X}}{f_n}=\frac{24.67}{10.07}=2.45`, '', 21],
-    ['>The pump runs at 2.45 times the natural frequency of its mounts, well clear of it. Lesson 10 shows why that ratio matters.'],
+    ['>The pump runs at 2.45 times the natural frequency of its mounts, well clear of it. Lesson P3 shows why that ratio matters.'],
   ];
   const EX2 = [
     ['>Worked example 2. An 800 kg fan is set down on its mounts and they compress 3 mm. What is its natural frequency on the mounts, and how stiff are they?'],
