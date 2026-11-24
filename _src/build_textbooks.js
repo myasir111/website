@@ -10,18 +10,18 @@ const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 for (const [slug, d] of Object.entries(DATA)) {
   const page = path.join(__dirname, '..', 'lab', slug, 'index.html');
   let html = fs.readFileSync(page, 'utf8');
-  const adds = d.adds.map(([h, t]) => `        <div class="tb-add"><h3>${esc(h)}</h3><p>${math(t)}</p></div>`).join('\n');
+  const adds = d.adds.map(([h, t]) => `        <p class="tb-note"><b>${esc(h)}.</b> ${math(t)}</p>`).join('\n');
   const read = d.read.map((r) => `          <li>${esc(r)}</li>`).join('\n');
   const block = `<!-- textbooks:start (built by _src/build_textbooks.js, do not edit by hand) -->
   <div class="wrap">
-    <section class="textbooks" id="textbooks">
-      <h2>From the textbooks</h2>
-      <p class="muted">Checked against school, A-level and university texts. What they add to this lesson:</p>
-${adds}
-      <h3 class="tb-read">Read more</h3>
-      <ul>
+    <section class="textbooks" id="further-reading">
+      <h2 class="tb-h">Further reading</h2>
+      <ul class="tb-books">
 ${read}
       </ul>
+      <div class="tb-notes">
+${adds}
+      </div>
     </section>
   </div>
   <!-- textbooks:end -->`;
