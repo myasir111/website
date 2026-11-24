@@ -39,6 +39,14 @@
     // the trace: the newest point sits at the left edge of the plot, older points to the right
     P.curve((s) => x(now - s), { color: c.blue, width: 2.8, glow: true, n: 900 });
     if (o.accel) P.curve((s) => -x(now - s), { color: c.orange, width: 1.8, dash: [6, 5], n: 900 });
+    if (o.vel) P.curve((s) => -o.A * Math.sin(w * (now - s)), { color: c.good, width: 2, n: 900 });
+    if (o.energy) {                                            // spring energy ∝ x², motion energy ∝ v²
+      const pe = Math.pow(Math.cos(w * now), 2), ke = 1 - pe, bw = Math.max(10, g.w * 0.025);
+      const bx = cx + box * 1.9, by = P.Y(-1.4), bh = U * 2.6;
+      ctx.fillStyle = c.orange; ctx.fillRect(bx, by - bh * pe, bw, bh * pe);
+      ctx.fillStyle = c.good; ctx.fillRect(bx + bw * 1.6, by - bh * ke, bw, bh * ke);
+      ctx.strokeStyle = c.muted; ctx.lineWidth = 1; ctx.strokeRect(bx, by - bh, bw, bh); ctx.strokeRect(bx + bw * 1.6, by - bh, bw, bh);
+    }
     ctx.setLineDash([3, 4]); ctx.strokeStyle = c.muted; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(cx + box / 2, y); ctx.lineTo(P.X(0), y); ctx.stroke(); ctx.setLineDash([]);
     return { w, f };
@@ -92,34 +100,55 @@
       [r`f_n'=\frac{1}{2\pi}\sqrt{\frac{k}{2m}}=\frac{1}{\sqrt2}\,f_n\approx0.71\,f_n`, '← about 29% lower, not half', 7],
     ],
     [
+      ['>Differentiate (3) once with (D) for the velocity, and once more for the acceleration:'],
+      [r`v=\frac{dx}{dt}=-\omega A\sin(\omega t),\qquad a=\frac{d^2x}{dt^2}=-\omega^2A\cos(\omega t)`, '', 8],
+      ['>The biggest values come when the sine or cosine is ±1:'],
+      [r`v_{\max}=\omega A,\qquad a_{\max}=\omega^2A`, '← the A-level pair', 9, 'box'],
+      ['>Velocity peaks as the mass passes rest; acceleration peaks at the ends of the swing, pointing back. At one frequency the three readings an analyser can give are tied together:'],
+      [r`a_{\max}=\omega\,v_{\max}=\omega^2A`, '← how displacement, velocity and acceleration convert', 10],
+    ],
+    [
+      ['>The spring stores \\(\\tfrac12kx^2\\) and the moving mass carries \\(\\tfrac12mv^2\\). Add them, using (3) and (8):'],
+      [r`\tfrac12kx^2+\tfrac12mv^2=\tfrac12kA^2\cos^2\omega t+\tfrac12m\omega^2A^2\sin^2\omega t`, '', 11],
+      ['>From (5), \\(m\\omega^2=k\\), and \\(\\sin^2+\\cos^2=1\\):'],
+      [r`\tfrac12kx^2+\tfrac12mv^2=\tfrac12kA^2\left(\cos^2\omega t+\sin^2\omega t\right)=\tfrac12kA^2`, '← the same at every instant', 12],
+      ['>So the energy only swaps between spring and mass. Turned round, this is Rayleigh’s method: set the largest motion energy equal to the largest spring energy, and the frequency comes out without solving any equation:'],
+      [r`\tfrac12m\,(\omega A)^2=\tfrac12kA^2\quad\Rightarrow\quad\omega^2=\frac km`, '← (5) again, a second way', 13],
+      ['>Pull it to \\(x_0\\) and also give it a push \\(v_0\\). A cosine plus a sine fits both starting values, and from Lesson 1 it is one sine of size'],
+      [r`x(t)=x_0\cos\omega t+\frac{v_0}{\omega}\sin\omega t,\qquad A=\sqrt{x_0^2+\left(\frac{v_0}{\omega}\right)^2}`, '← the start sets the size, never the rhythm', 14],
+    ],
+    [
       ['>At rest, the spring holds the weight. If that weight stretches it by \\(\\delta\\), from (A) the stretch force equals the weight:'],
-      [r`k\,\delta=m\,g\quad\Rightarrow\quad \frac{k}{m}=\frac{g}{\delta}`, '', 8],
-      ['>Put (8) in (6). The mass and the stiffness drop out; only the sag is left:'],
-      [r`f_n=\frac{1}{2\pi}\sqrt{\frac{g}{\delta}}`, '', 9, 'box'],
+      [r`k\,\delta=m\,g\quad\Rightarrow\quad \frac{k}{m}=\frac{g}{\delta}`, '', 15],
+      ['>Put (15) in (6). The mass and the stiffness drop out; only the sag is left:'],
+      [r`v_{\max}=\omega_nA,\qquad a_{\max}=\omega_n^2A`, '← from (9)', '', 'box'],
+    [r`f_n=\frac{1}{2\pi}\sqrt{\frac{g}{\delta}}`, '', 16, 'box'],
       ['>With \\(g=9.81\\) m/s² and \\(\\delta\\) in millimetres, \\(\\sqrt{9810}/2\\pi=15.76\\):'],
-      [r`f_n\approx\frac{15.76}{\sqrt{\delta_{\text{mm}}}}\ \text{Hz}`, '← sag 1 mm: 15.8 Hz', 10],
+      [r`f_n\approx\frac{15.76}{\sqrt{\delta_{\text{mm}}}}\ \text{Hz}`, '← sag 1 mm: 15.8 Hz', 17],
     ],
   ];
   const EX1 = [
     ['>Worked example 1. A 500 kg pump sits on mounts with a combined stiffness \\(k=2.0\\times10^6\\) N/m. Find \\(\\omega_n\\), \\(f_n\\) and the period, and compare with 1X at 1480 rpm.'],
+    ['>The pump stands on four identical mounts of \\(0.5\\times10^6\\) N/m. They all move together, so they work in parallel and their stiffnesses add (stacked one on another, they would be in series, and \\(1/k\\) would add instead):'],
+    [r`k=4\times0.5\times10^6=2.0\times10^6\ \text{N/m}`, ''],
     ['>Angular frequency, from (6):'],
-    [r`\omega_n=\sqrt{\frac{2.0\times10^6}{500}}=\sqrt{4000}=63.25\ \text{rad/s}`, '', 11],
+    [r`\omega_n=\sqrt{\frac{2.0\times10^6}{500}}=\sqrt{4000}=63.25\ \text{rad/s}`, '', 18],
     ['>In hertz, from (E):'],
-    [r`f_n=\frac{63.25}{2\pi}=\frac{63.25}{6.2832}=10.07\ \text{Hz}`, '', 12],
+    [r`f_n=\frac{63.25}{2\pi}=\frac{63.25}{6.2832}=10.07\ \text{Hz}`, '', 19],
     ['>Period:'],
-    [r`T=\frac{1}{f_n}=\frac{1}{10.07}=0.0993\ \text{s}=99.3\ \text{ms}`, '', 13],
+    [r`T=\frac{1}{f_n}=\frac{1}{10.07}=0.0993\ \text{s}=99.3\ \text{ms}`, '', 20],
     ['>Running speed, from Lesson 1:'],
-    [r`f_{1X}=\frac{1480}{60}=24.67\ \text{Hz},\qquad \frac{f_{1X}}{f_n}=\frac{24.67}{10.07}=2.45`, '', 14],
+    [r`f_{1X}=\frac{1480}{60}=24.67\ \text{Hz},\qquad \frac{f_{1X}}{f_n}=\frac{24.67}{10.07}=2.45`, '', 21],
     ['>The pump runs at 2.45 times the natural frequency of its mounts, well clear of it. Lesson 10 shows why that ratio matters.'],
   ];
   const EX2 = [
     ['>Worked example 2. An 800 kg fan is set down on its mounts and they compress 3 mm. What is its natural frequency on the mounts, and how stiff are they?'],
-    ['>From (9), with \\(\\delta=0.003\\) m:'],
-    [r`f_n=\frac{1}{2\pi}\sqrt{\frac{9.81}{0.003}}=\frac{\sqrt{3270}}{6.2832}=\frac{57.18}{6.2832}=9.10\ \text{Hz}`, '', 15],
-    ['>Check with the shortcut (10):'],
+    ['>From (16), with \\(\\delta=0.003\\) m:'],
+    [r`f_n=\frac{1}{2\pi}\sqrt{\frac{9.81}{0.003}}=\frac{\sqrt{3270}}{6.2832}=\frac{57.18}{6.2832}=9.10\ \text{Hz}`, '', 22],
+    ['>Check with the shortcut (17):'],
     [r`f_n\approx\frac{15.76}{\sqrt3}=\frac{15.76}{1.732}=9.10\ \text{Hz}\ \checkmark`, ''],
-    ['>Stiffness, from (8):'],
-    [r`k=\frac{m\,g}{\delta}=\frac{800\times9.81}{0.003}=2.62\times10^6\ \text{N/m}`, '', 16],
+    ['>Stiffness, from (15):'],
+    [r`k=\frac{m\,g}{\delta}=\frac{800\times9.81}{0.003}=2.62\times10^6\ \text{N/m}`, '', 23],
     ['>Check with (6): \\(\\sqrt{2.616\\times10^6/800}/2\\pi=\\sqrt{3270}/2\\pi=9.10\\) Hz ✓. A ruler and the sag were enough: no mass or stiffness needed.'],
   ];
   const SUMMARY = [
@@ -127,7 +156,8 @@
     [r`m\,\ddot x=-k\,x`, '← from (2)', '', 'box'],
     [r`x(t)=A\cos(\omega_n t),\qquad \omega_n=\sqrt{k/m}`, '← from (3), (5)', '', 'box'],
     [r`f_n=\frac{1}{2\pi}\sqrt{\frac{k}{m}}\ \ \text{and the amplitude doesn’t change it}`, '← from (6)', '', 'box'],
-    [r`f_n=\frac{1}{2\pi}\sqrt{\frac{g}{\delta}}\approx\frac{15.76}{\sqrt{\delta_{\text{mm}}}}\ \text{Hz}`, '← from (9), (10)', '', 'box'],
+    [r`v_{\max}=\omega_nA,\qquad a_{\max}=\omega_n^2A`, '← from (9)', '', 'box'],
+    [r`f_n=\frac{1}{2\pi}\sqrt{\frac{g}{\delta}}\approx\frac{15.76}{\sqrt{\delta_{\text{mm}}}}\ \text{Hz}`, '← from (16), (17)', '', 'box'],
   ];
   const WORK = [GOAL, TOOLS, ...DERIV, EX1, EX2];
 
@@ -143,14 +173,14 @@
     const { m, k } = s.ex, w = Math.sqrt(k / m), f = w / TAU, d = m * 9.81 / k * 1000;
     return [
       ['>Worked solution. Angular frequency, from (6):'],
-      [r`\omega_n=\sqrt{\frac{${F(k / 1e6, 1)}\times10^6}{${m}}}=\sqrt{${F(k / m, 1)}}=${F(w)}\ \text{rad/s}`, '', 17],
+      [r`\omega_n=\sqrt{\frac{${F(k / 1e6, 1)}\times10^6}{${m}}}=\sqrt{${F(k / m, 1)}}=${F(w)}\ \text{rad/s}`, '', 24],
       ['>In hertz:'],
       [r`f_n=\frac{${F(w)}}{2\pi}=\frac{${F(w)}}{6.2832}=${F(f)}\ \text{Hz}`, ''],
       ['>Period:'],
       [r`T=\frac{1}{${F(f)}}=${F(1 / f, 4)}\ \text{s}=${F(1000 / f, 1)}\ \text{ms}`, ''],
-      ['>Sag at rest, from (8):'],
+      ['>Sag at rest, from (15):'],
       [r`\delta=\frac{m\,g}{k}=\frac{${m}\times9.81}{${F(k / 1e6, 1)}\times10^6}=${F(d / 1000, 6)}\ \text{m}=${F(d, 2)}\ \text{mm}`, ''],
-      ['>Check with (10): \\(15.76/\\sqrt{' + F(d, 2) + '}=' + F(15.76 / Math.sqrt(d)) + '\\) Hz ✓'],
+      ['>Check with (17): \\(15.76/\\sqrt{' + F(d, 2) + '}=' + F(15.76 / Math.sqrt(d)) + '\\) Hz ✓'],
     ];
   });
   WORK.push(SUMMARY);
@@ -210,9 +240,23 @@
       },
       {
         part: 'Derivation',
+        title: 'How fast, how hard',
+        text: `<p>Differentiate the cosine and you get the velocity (green), then the acceleration (orange, dashed). The mass moves fastest as it passes rest and pulls hardest at the ends.</p>
+               <p>This is why displacement, velocity and acceleration readings convert into each other at one frequency. The <a href="../../tools/vibration-units/">unit converter</a> does exactly this.</p>`,
+        draw(g, s, t, api) { springBoard(g, t, { m: 1, k: 40, A: 1, vel: true, accel: true }); api.legend([['x', g.col.blue], ['v, scaled', g.col.good], ['a, scaled', g.col.orange]]); },
+      },
+      {
+        part: 'Derivation',
+        title: 'The energy only swaps',
+        text: `<p>The orange bar is the energy stored in the spring; the green bar is the energy of the moving mass. One fills as the other empties, and the total never changes.</p>
+               <p>Setting the two maxima equal gives the natural frequency a second way, with no differential equation. Engineers call it Rayleigh's method; it is how beams and plates get their frequencies later in this track.</p>`,
+        draw(g, s, t, api) { springBoard(g, t, { m: 1, k: 40, A: 1, energy: true }); api.legend([['height', g.col.blue], ['spring energy', g.col.orange], ['motion energy', g.col.good]]); },
+      },
+      {
+        part: 'Derivation',
         title: 'The sag shortcut',
         text: `<p>On site you rarely know \\(k\\) and \\(m\\), but you can measure how far a machine sinks into its mounts. That sag alone gives the natural frequency.</p>
-               <p>1 mm of sag means about 15.8 Hz. Four times the sag halves the frequency.</p>`,
+               <p>1 mm of sag means about 15.8 Hz. Four times the sag halves the frequency.</p><p class="hint">One catch from the textbooks: rubber mounts are stiffer when they vibrate than under a slow load, so on rubber the real frequency is usually higher than the sag suggests. Use it as a first estimate.</p>`,
         controls: [{ type: 'range', key: 'mm', label: 'Sag at rest, δ', min: 0.25, max: 25, step: 0.25, fmt: (v) => v + ' mm' }],
         draw(g, s, t, api) {
           const fn = Math.sqrt(9.81 / (s.mm / 1000)) / TAU;
