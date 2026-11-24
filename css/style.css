@@ -657,3 +657,5 @@ main :is(p, li, h1, h2, h3, .lede, .what, .part, .label, .eyebrow, dd, dt), .dir
 #projects .job:hover { background: transparent; }
 .rail { transition: opacity .25s; }
 .rail.away { opacity: 0; pointer-events: none; }
+.facts .now-note { grid-column: 1 / span 5; margin: 0; color: var(--muted); font-size: 17px; line-height: 1.6; }
+@media (max-width: 900px) { .facts .now-note { grid-column: 1 / -1; } }
