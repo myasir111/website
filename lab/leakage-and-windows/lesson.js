@@ -92,11 +92,11 @@
 
   // 1. Goal
   WORK.push([
-    ['>By the end of this lesson we will have derived why a tone that falls between two FFT bins leaks into all of them, and by how much:'],
-    [r`2\,|X_k|\approx A\,\left|\frac{\sin\pi(f-k)}{\pi\,(f-k)}\right|`, '← no window', '', 'box'],
-    ['>what a Hann window does to the same tone (after the ×2 correction every analyser applies):'],
-    [r`\text{reading}_k\approx A\,\frac{|\sin\pi(f-k)|}{\pi\,|f-k|\;\big|(f-k)^2-1\big|}`, '← Hann window', '', 'box'],
-    ['>Here \\(f\\) is the number of cycles of the tone in the record, and \\(k\\) is the bin. Then we solve one pump signal twice on a calculator, with and without the window.'],
+    ['>By the end of this lesson we will have answered:'],
+    ['>Why does a tone between two bins spill into all of them, and by how much?'],
+    ['>What does a Hann window change, and why does the analyser then multiply by 2?'],
+    ['>How far off can a reading be, and how do you correct it?'],
+    ['>Then we solve two examples with every operation shown, and you try one yourself.'],
   ]);
 
   // 2. Tools
@@ -270,9 +270,9 @@
     state: { d: 0.5, f6: 4.5, w6: 'rect', fm: 4, f9: 4.5, w9: 'hann', e1: 'hann' },
     steps: [
       {
-        part: 'Goal',
-        title: 'Where we are going',
-        text: `<p>One clean tone should give one clean line in a spectrum. Often it gives a blurred hill instead. This lesson derives exactly why, and what a window does about it, then works one pump signal through both ways.</p>
+        part: 'The puzzle',
+        title: 'Where did the clean line go?',
+        text: `<p>A pump runs at a perfectly steady speed: one pure tone. Its spectrum should be one thin line. Instead you get a hill that spills into every bin, and the peak reads low.</p><p>The pump didn't change, so something in the measurement did this. What? And why does multiplying the record by a smooth bump, a window, fix most of it?</p>
                <p class="hint">The working builds up below the board. Click any heading there to fold it away.</p>`,
         draw(g, s, t, api) { recordAndBins(g, 4 + 0.5 * ease(t / 2.5), false, api); },
       },

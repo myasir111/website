@@ -82,9 +82,11 @@
   ];
 
   const GOAL = [
-    ['>By the end of this lesson we will have proved, in a few lines, why a square wave has no 2X, 4X, 6X:'],
-    [r`f\!\left(t+\tfrac{T}{2}\right)=-f(t)\iff a_0=0\ \text{and}\ a_n=b_n=0\ \text{for every even } n`, '← half-wave symmetry', '', 'box'],
-    ['>and what breaks it: a one-sided distortion brings the evens back. Then we test two signals, with numbers.'],
+    ['>By the end of this lesson we will have answered:'],
+    ['>What symmetry does a square wave have that a sawtooth doesn’t?'],
+    ['>Why does that symmetry force every even harmonic to zero, exactly?'],
+    ['>What breaks it on a real machine, and which peaks come back?'],
+    ['>Then we solve two examples with every operation shown, and you try one yourself.'],
   ];
   const TOOLS = [
     ['>Half a turn flips a sine and a cosine:'],
@@ -214,9 +216,9 @@
     state: { shift: 0.5, n: 2, b2: 0.3, clip: 1, e1: 'sym' },
     steps: [
       {
-        part: 'Goal',
-        title: 'Where we are going',
-        text: `<p>A square wave has peaks at 1X, 3X, 5X… and exactly nothing at 2X, 4X, 6X. This lesson proves why, with one idea, symmetry, then tests two signals with numbers.</p>
+        part: 'The puzzle',
+        title: 'Where did 2X go?',
+        text: `<p>Build a square wave from harmonics and something strange happens. 1X, 3X and 5X all show up. 2X, 4X and 6X come out as exactly zero, not just small.</p><p>An exact zero usually means a symmetry is hiding somewhere. What is it here? And what would it take to break it and bring the evens back?</p>
                <p class="hint">The working builds up below the board. Click any heading there to fold it away.</p>`,
         draw(g, s, t, api) {
           const P = wavePlot(g), c = g.col;

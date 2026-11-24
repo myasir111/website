@@ -78,10 +78,11 @@
   ];
 
   const GOAL = [
-    ['>By the end of this lesson we will have derived, from a point going round a circle:'],
-    [r`x(t)=A\sin(\omega t+\varphi),\qquad \omega=2\pi f=\frac{2\pi}{T}`, '← amplitude, frequency, phase', '', 'box'],
-    [r`a\cos\omega t+b\sin\omega t=c\sin(\omega t+\varphi),\qquad c=\sqrt{a^2+b^2}`, '← one peak from two parts', '', 'box'],
-    [r`f_n=n\times\frac{\text{rpm}}{60}`, '← orders in hertz', '', 'box'],
+    ['>By the end of this lesson we will have answered:'],
+    ['>What shape does a point going round trace over time?'],
+    ['>What do amplitude, frequency and phase mean on that picture?'],
+    ['>Why does a cosine plus a sine at the same speed give one peak, and how big is it?'],
+    ['>How does rpm turn into hertz?'],
     ['>Then we solve two examples with every operation shown, and you try one yourself.'],
   ];
   const TOOLS = [
@@ -231,9 +232,9 @@
     state: { A: 1, k: 1, phd: 0, a: 0.6, b: 0.8, rpm: 1490, order: 1, th: 35, ex2: 'a' },
     steps: [
       {
-        part: 'Goal',
-        title: 'Where we are going',
-        text: `<p>Every vibration spectrum is built from sines and cosines. This lesson derives them from a point going round a shaft, the way you would in a maths class, then solves two examples on a calculator.</p>
+        part: 'The puzzle',
+        title: 'Why sines?',
+        text: `<p>Bolt a sensor to a bearing housing and the analyser hands back a row of peaks, every one of them a sine or a cosine. Why those shapes? Why not triangles, or little square pulses?</p><p>Follow one point on a turning shaft and watch its height. What shape does it trace?</p>
                <p class="hint">The working builds up below the board. Click any heading there to fold it away.</p>`,
         draw(g, s, t, api) { phasor(g, s, t, { A: 1, k: 1, ph: 0, color: g.col.blue }); api.legend([['height of a point on the shaft', g.col.blue]]); },
       },

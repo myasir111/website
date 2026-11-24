@@ -79,11 +79,11 @@
   ];
 
   const GOAL = [
-    ['>By the end of this lesson we will have shown why a repeating signal contains only whole orders, and derived the formulas that measure each one:'],
-    [r`f(t)=a_0+\sum_{n=1}^{\infty}\big[a_n\cos(n\omega_0 t)+b_n\sin(n\omega_0 t)\big]`, '← the Fourier series', '', 'box'],
-    [r`a_n=\frac{2}{T}\int_0^T f(t)\cos(n\omega_0 t)\,dt,\qquad b_n=\frac{2}{T}\int_0^T f(t)\sin(n\omega_0 t)\,dt`, '', '', 'box'],
-    [r`\text{square wave:}\quad b_n=\frac{4}{\pi n}\ (n\ \text{odd}),\qquad 0\ (n\ \text{even})`, '', '', 'box'],
-    ['>Then two shapes worked out in full: a square wave with real numbers, and a sawtooth.'],
+    ['>By the end of this lesson we will have answered:'],
+    ['>Why can only whole multiples of running speed live inside a signal that repeats every turn?'],
+    ['>How do you measure how much of each harmonic a shape contains?'],
+    ['>What does that give for a square wave and a sawtooth, with real numbers?'],
+    ['>Then we solve two examples with every operation shown, and you try one yourself.'],
   ];
   const TOOLS = [
     ['>A sine repeats every full turn, and only after whole turns:'],
@@ -202,9 +202,9 @@
     state: { m: 2.3, b1: 1, b2: 0.5, b3: 0.3, a2: 0.4, s2: 0.3, N: 1, shape: 'square', Nm: 3, ia: 1, Ns: 4, N1: 5 },
     steps: [
       {
-        part: 'Goal',
-        title: 'Where we are going',
-        text: `<p>Any repeating vibration can be built from sines and cosines at whole multiples of running speed. This lesson proves it, derives the formulas that measure each harmonic, and works two shapes out in full.</p>
+        part: 'The puzzle',
+        title: 'Why only whole multiples?',
+        text: `<p>Look at the spectrum of any running machine. The peaks sit at 1X, 2X, 3X, lined up like fence posts. Never at 2.3X.</p><p>Why should a machine care about whole numbers? And if a repeating signal is made of sines and cosines, how would you find out how much of each is inside it?</p>
                <p class="hint">The working builds up below the board. Click any heading there to fold it away.</p>`,
         draw(g, s, t, api) {
           const c = g.col, P = g.plot(WAVE);

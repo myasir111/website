@@ -159,13 +159,11 @@
 
   // 1. Goal
   WORK.push([
-    ['>By the end of this lesson we will have derived what a wavelet map shows for the two things a machine signal is made of. A steady tone of amplitude \\(A\\) at \\(f_0\\) gives a band, the same at every time \\(b\\):'],
-    [r`|W(a,b)|\approx\frac{A}{2}\sqrt{2\pi a}\;e^{-(2\pi f_0a-\omega_0)^2/2}`, '← a tone', '', 'box'],
-    ['>A sharp knock at \\(t_0\\) gives a flash whose length is set by the row:'],
-    [r`|W(a,b)|=\frac{I}{\sqrt a}\;e^{-(t_0-b)^2/(2a^2)}`, '← a knock', '', 'box'],
-    ['>and every mark on the map has the same area, whatever its frequency:'],
-    [r`\Delta t\cdot\Delta f=\frac{4\ln2}{\pi}\approx0.88`, '← short and tall at high f, long and flat at low f', '', 'box'],
-    ['>Then we size the marks for the fan in the video, and read an amplitude off a map by hand.'],
+    ['>By the end of this lesson we will have answered:'],
+    ['>What does a wavelet map show for a steady tone, and for a sharp knock?'],
+    ['>Why does every mark on the map have the same area?'],
+    ['>How do you read an amplitude off the map by hand?'],
+    ['>Then we solve two examples with every operation shown, and you try one yourself.'],
   ]);
 
   // 2. Tools
@@ -326,10 +324,10 @@
     state: { kap: 1, fw: 25, f0: 25, k6: 400, tile: 'wav', w0: 6, nrm: 'sqrt' },
     steps: [
       {
-        part: 'Goal',
-        title: 'Where we are going',
-        text: `<p>A spectrum says which frequencies are in a signal, not when. A wavelet map says both. This is the map of the fan from the video: a steady hum along the bottom, and a flash each time it knocks.</p>
-               <p>This lesson derives what that map shows and how to read it. The working builds up below the board; click any heading there to fold it away.</p>`,
+        part: 'The puzzle',
+        title: 'Which frequency, and when?',
+        text: `<p>Play 10 Hz, then 25 Hz. Now play the same thing backwards. Two different signals, and their amplitude spectra are identical. How can that be?</p><p>A spectrum adds up the whole record, so it knows which frequencies are there but never when. What would a map that shows both look like? And why can't it be sharp in time and in frequency at once?</p>
+               <p class="hint">The working builds up below the board. Click any heading there to fold it away.</p>`,
         draw(g, s, t, api) { fanBoard(g, t, api); },
       },
       {

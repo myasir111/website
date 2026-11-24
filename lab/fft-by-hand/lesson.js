@@ -136,11 +136,11 @@
 
   // 1. Goal
   WORK.push([
-    ['>By the end of this lesson we will have derived, line by line, the formula an FFT computes for every frequency bin:'],
-    [r`X_n=\frac{1}{N}\sum_{k=0}^{N-1}x_k\,e^{-i\,2\pi nk/N}`, '← where we are heading', '', 'box'],
-    ['>and what its two parts mean for a vibration: the real and imaginary parts, the size you read on an analyser, and the phase.'],
-    [r`X_n=\tfrac12\,(a_n-i\,b_n),\qquad 2|X_n|=c_n,\qquad \theta_n=\arg X_n`, '', '', 'box'],
-    ['>Then we use it twice on a calculator, with every operation shown.'],
+    ['>By the end of this lesson we will have answered:'],
+    ['>Where does the FFT formula come from, starting from the Fourier series?'],
+    ['>What are the real and imaginary parts of a line, in terms of the vibration?'],
+    ['>Why does half the spectrum mirror the other half?'],
+    ['>Then we solve two examples with every operation shown, and you try one yourself.'],
   ]);
 
   // 2. What we already know
@@ -366,10 +366,9 @@
     state: { n: 1, pf: 'cos', pp: 1, on: 1, om: 2, oc: 'cc', pn: 1, pt: 'cos', n2: 1 },
     steps: [
       {
-        part: 'Goal',
-        title: 'Where we are going',
-        text: `<p>An analyser turns 8, 1024 or 65 536 samples into a spectrum. This lesson derives the formula it uses, from scratch, the way you would in a maths class.</p>
-               <p>Then we solve two examples on a calculator, every operation written out, and you try one yourself.</p>
+        part: 'The puzzle',
+        title: 'What is the analyser actually computing?',
+        text: `<p>Feed an analyser 8 samples, or 1024, or 65 536, and a spectrum comes back. What happens in between?</p><p>It's one formula, run once for every line. Could you do it yourself, on a calculator? And why does every line hide two numbers, and half the spectrum mirror the other half?</p>
                <p class="hint">The working builds up below the board. Click any heading there to fold it away.</p>`,
         draw(g, s, t, api) {
           waveWithSamples(g, f1, x1.map((v, k) => (k <= Math.floor(t * 4) ? v : null)));

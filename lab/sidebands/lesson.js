@@ -144,13 +144,11 @@
 
   // 1. Goal
   WORK.push([
-    ['>By the end of this lesson we will have derived where sidebands come from and what they tell us. A slow wobble in the size of a fast tone, \\((1+m\\cos\\Omega t)\\cos\\omega t\\), is three steady tones, the outer two twins:'],
-    [r`\cos\omega t+\tfrac m2\cos(\omega+\Omega)t+\tfrac m2\cos(\omega-\Omega)t`, '← a size wobble: amplitude modulation', '', 'box'],
-    ['>A wobble in its timing gives a ladder of them, spaced the same way:'],
-    [r`\cos(\omega t+\beta\sin\Omega t)=\sum_{n}J_n(\beta)\cos(\omega+n\Omega)t`, '← a timing wobble: frequency modulation', '', 'box'],
-    ['>In both, the gap between the lines is the frequency of whatever does the wobbling. And to see twins \\(f_m\\) apart at all, the record must hold more than two turns of the wobble:'],
-    [r`T>\frac{2}{f_m}`, '← with a Hann window', '', 'box'],
-    ['>Then we use them on a gearbox and on a motor’s current.'],
+    ['>By the end of this lesson we will have answered:'],
+    ['>Why does a slow wobble on a fast tone make two extra lines?'],
+    ['>Why is the gap exactly the wobble’s frequency, and what does a timing wobble do instead?'],
+    ['>How long must a record be to see twins at all?'],
+    ['>Then we solve two examples with every operation shown, and you try one yourself.'],
   ]);
 
   // 2. Tools
@@ -306,10 +304,10 @@
     state: { ph: 'am', fb: 5, m: 0.5, fmv: 25, beta: 0.4, hm: 'am', hv: 0.5, mb: 0.3, bb: 0.3, T: 0.4 },
     steps: [
       {
-        part: 'Goal',
-        title: 'Where we are going',
-        text: `<p>A gearbox’s spectrum: the gear mesh at 400 Hz and its harmonics, and around every one of them a pair of smaller lines, the same gap apart. Those are sidebands.</p>
-               <p>This lesson derives why they are there, why they are so even, when they mean trouble and where to look. The working builds up below the board; click any heading there to fold it away.</p>`,
+        part: 'The puzzle',
+        title: 'Why does every peak have twins?',
+        text: `<p>A gearbox spectrum: the gear mesh at 400 Hz and its harmonics, and around every one of them a pair of smaller lines, the same gap apart. Nobody put them there.</p><p>Why twins? Why so evenly spaced? What is that 25 Hz gap telling you, and when do twins mean a tooth is in trouble?</p>
+               <p class="hint">The working builds up below the board. Click any heading there to fold it away.</p>`,
         draw(g, s, t, api) { gearBoard(g, t, api); api.verdict('twins 25 Hz either side of every line', 'good'); },
       },
       {
