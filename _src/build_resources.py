@@ -51,7 +51,7 @@ page = f'''<!doctype html>
   <section class="hero" style="padding-bottom:0">
     <p class="eyebrow">Resources</p>
     <h1>What I read and recommend</h1>
-    <p class="lede">{count} books, standards, papers and free tools, most of them gathered while building and verifying the calculations in <a href="tools/#skipper">Skipper</a> and the <a href="tools/">tools</a> on this site.</p>
+    <p class="lede">{count} books, standards, papers and free tools, most of them gathered while building and checking the <a href="tools/">tools</a> on this site.</p>
     <p class="jump">{jump}</p>
   </section>
 
