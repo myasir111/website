@@ -57,4 +57,12 @@ module.exports = {
     ['On site', 'You want to see twins 2 Hz apart around a motor’s line, with a Hann window. How long must the record be?',
      'From the lesson, \\(T > 2/f_m = 2/2 = 1\\) s. Longer than 1 s, and in practice twice that, to separate them clearly.'],
   ],
+  'mass-on-a-spring': [
+    ['Warm-up', 'A 2 kg mass hangs on a spring of 800 N/m. What is its natural frequency?',
+     '$$\\omega_n=\\sqrt{\\frac{800}{2}}=\\sqrt{400}=20\\ \\text{rad/s},\\qquad f_n=\\frac{20}{2\\pi}=3.18\\ \\text{Hz}$$'],
+    ['Stretch', 'You double the mass on the same spring. By what factor does \\(f_n\\) change? What mass would halve it?',
+     'From \\(f_n\\propto1/\\sqrt m\\): doubling the mass multiplies \\(f_n\\) by \\(1/\\sqrt2\\approx0.71\\). To halve it you need \\(\\sqrt{m\\prime/m}=2\\), so four times the mass.'],
+    ['On site', 'A pump skid sinks 5 mm into its mounts. The motor runs at 1,480 rpm. How close is running speed to the natural frequency on the mounts?',
+     'From the sag shortcut: \\(f_n\\approx15.76/\\sqrt5=7.05\\) Hz. Running speed: \\(1480/60=24.67\\) Hz, about 3.5 times higher. Well clear of the mount frequency.'],
+  ],
 };
