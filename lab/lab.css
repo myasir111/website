@@ -189,3 +189,15 @@
 }
 .lesson:fullscreen { height: 100vh !important; padding: 14px; background: var(--bg); max-width: none; }
 .lesson:fullscreen .sketch { position: static; }
+
+/* Practice problems under each lesson (built by _src/build_practice.js) */
+.practice { margin: 28px 0 8px; }
+.practice h2 { margin: 0 0 6px; }
+.probs { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 14px; }
+.prob { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); padding: 16px 20px; min-width: 0; }
+.prob-kind { margin: 0 0 6px; font-family: var(--mono, ui-monospace, monospace); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.prob-q { margin: 0; }
+.prob-a { margin-top: 12px; }
+.prob-a > summary { cursor: pointer; color: var(--accent); min-height: 24px; }
+.prob-a > div { margin-top: 10px; overflow-x: auto; }
+@media (max-width: 600px) { .prob { padding: 14px; } }

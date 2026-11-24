@@ -1,0 +1,60 @@
+// Practice problems for each Lab lesson: a warm-up, a stretch and one from site.
+// Every answer was checked numerically (Nov 2026). Maths: \( inline \), $$ display $$.
+module.exports = {
+  'sines-and-cosines': [
+    ['Warm-up', 'A fan runs at 1,200 rpm. What is 1X in hertz, and how long is one turn?',
+     'Turns per second: \\(f = 1200/60 = 20\\) Hz. One turn takes \\(T = 1/f = 1/20 = 0.05\\) s, so 50 ms.'],
+    ['Stretch', 'Write \\(3\\cos\\omega t + 4\\sin\\omega t\\) as one shifted sine, \\(c\\sin(\\omega t+\\varphi)\\).',
+     'Here \\(a=3\\) and \\(b=4\\). $$c=\\sqrt{3^2+4^2}=\\sqrt{25}=5,\\qquad \\tan\\varphi=\\frac{a}{b}=\\frac34\\ \\Rightarrow\\ \\varphi\\approx36.9^\\circ$$ So it is \\(5\\sin(\\omega t+36.9^\\circ)\\): one peak of 5, not two peaks of 3 and 4.'],
+    ['On site', 'A pinion with 19 teeth turns at 1,485 rpm. At what frequency do its teeth mesh?',
+     'Shaft speed: \\(1485/60 = 24.75\\) Hz. Each turn brings 19 teeth into mesh, so the gear mesh frequency is \\(19\\times24.75 = 470.25\\) Hz, order 19X.'],
+  ],
+  'build-a-signal': [
+    ['Warm-up', 'A machine turns at 25 Hz and its signal repeats once per turn. Which of these can appear in its spectrum: 50, 62.5, 75 and 100 Hz?',
+     '50, 75 and 100 Hz: they are 2X, 3X and 4X. 62.5 Hz is 2.5X. A sine at 2.5X is upside down after one turn, so it cannot fit a signal that repeats every turn.'],
+    ['Stretch', 'A square wave of height 1 has \\(b_n = 4/(\\pi n)\\) for odd \\(n\\) and 0 for even \\(n\\). Find \\(b_3\\) and \\(b_4\\), and the size of 3X compared with 1X.',
+     '$$b_3=\\frac{4}{3\\pi}\\approx0.424,\\qquad b_4=0,\\qquad \\frac{b_3}{b_1}=\\frac{4/3\\pi}{4/\\pi}=\\frac13$$'],
+    ['On site', 'A signal looks close to a square wave, and its 1X reads 6 mm/s. If it were an ideal square wave, what would 3X and 5X read?',
+     'Each odd harmonic is \\(1/n\\) of 1X: 3X reads \\(6/3 = 2\\) mm/s and 5X reads \\(6/5 = 1.2\\) mm/s. Real signals have rounded corners, so expect a bit less at the higher orders.'],
+  ],
+  'why-evens-vanish': [
+    ['Warm-up', 'Check with a calculator that half a turn flips a sine: compare \\(\\sin 30^\\circ\\) and \\(\\sin 210^\\circ\\).',
+     '\\(\\sin30^\\circ = 0.5\\) and \\(\\sin210^\\circ = -0.5\\). Half a turn later, same size, opposite sign: \\(\\sin(\\theta+\\pi)=-\\sin\\theta\\).'],
+    ['Stretch', 'Does a symmetric triangle wave pass the half-turn test \\(f(t+T/2)=-f(t)\\)? What does that say about its harmonics?',
+     'Yes. Slide it half a turn and every peak lands where a trough was, so flipping it puts it back on itself. It passes, so every even harmonic is exactly zero: a triangle has only 1X, 3X, 5X…'],
+    ['On site', 'A loose part hits a stop, so its motion is cut off on one side, like a sine with its negative half removed (height \\(A\\)). Which peaks should you expect?',
+     'It fails the half-turn test (it never goes negative), so the evens come back. For a half-wave clipped sine: $$\\text{DC}=\\frac{A}{\\pi}\\approx0.32A,\\quad 1\\text{X}=\\frac A2,\\quad 2\\text{X}=\\frac{2A}{3\\pi}\\approx0.21A,\\quad 4\\text{X}=\\frac{2A}{15\\pi}\\approx0.04A$$ and no 3X or 5X. A DC offset plus 2X and 4X is the one-sided looseness signature.'],
+  ],
+  'fft-by-hand': [
+    ['Warm-up', 'You sample at 2,048 Hz and take 1,024 samples. How far apart are the lines, and what is the highest frequency you can trust?',
+     'Line spacing: \\(\\Delta f = f_s/N = 2048/1024 = 2\\) Hz. Highest frequency (Nyquist): \\(f_s/2 = 1024\\) Hz, and in practice an analyser only shows up to about 80% of that.'],
+    ['Stretch', 'Four samples: \\(x = [1,\\,0,\\,-1,\\,0]\\). Compute \\(X_1\\) with \\(X_n=\\frac1N\\sum_k x_k e^{-i2\\pi nk/N}\\).',
+     'With \\(N=4\\), \\(e^{-i2\\pi k/4}\\) is \\(1,\\,-i,\\,-1,\\,i\\) for \\(k=0..3\\): $$X_1=\\tfrac14\\big(1\\cdot1+0\\cdot(-i)+(-1)(-1)+0\\cdot i\\big)=\\tfrac14(2)=0.5$$ Real, so the phase is 0, and \\(2|X_1|=1\\): it is one cosine of amplitude 1, which is exactly what the samples are.'],
+    ['On site', 'An analyser is set to Fmax 1,000 Hz with 800 lines. A fan’s 1X is at 24.6 Hz. Does it land on a line?',
+     'Line spacing: \\(1000/800 = 1.25\\) Hz. \\(24.6/1.25 = 19.68\\), so 1X falls between lines 19 and 20. It will leak (Lesson 5), and the peak will read a little low.'],
+  ],
+  'leakage-and-windows': [
+    ['Warm-up', 'A record is exactly 1 s long. Which tone lands on a bin: 50 Hz or 50.5 Hz?',
+     'With a 1 s record the bins are 1 Hz apart, and a tone lands on a bin when it fits a whole number of cycles. 50 Hz fits 50 cycles: no leakage. 50.5 Hz fits 50.5 cycles, halfway between two bins: the worst case.'],
+    ['Stretch', 'A tone sits exactly halfway between two bins (\\(f-k=0.5\\)). How much of its true size does the peak read with no window, and with a Hann window?',
+     '$$\\text{no window: } \\frac{\\sin(\\pi/2)}{\\pi/2}=\\frac{2}{\\pi}\\approx0.637,\\qquad \\text{Hann: } \\frac{\\sin(\\pi/2)}{\\pi\\cdot0.5\\cdot|0.25-1|}=\\frac{1}{0.375\\pi}\\approx0.849$$ So 36% low without a window, 15% low with Hann.'],
+    ['On site', 'With a Hann window, a pump peak reads 5.9 mm/s, and it sits halfway between two lines. Roughly what is the true amplitude?',
+     'Halfway between lines, Hann reads 0.849 of the truth: \\(5.9/0.849\\approx6.95\\), so about 7.0 mm/s. A flat-top window, or a longer record, would read it directly.'],
+  ],
+  'wavelets': [
+    ['Warm-up', 'Every mark on a wavelet map has \\(\\Delta t\\cdot\\Delta f\\approx0.88\\). If a mark is 0.1 s long, how wide is it in frequency?',
+     '\\(\\Delta f\\approx0.88/0.1 = 8.8\\) Hz.'],
+    ['Stretch', 'At 200 Hz a mark is 10 ms long. How long is it at 50 Hz, and how wide?',
+     'A mark’s length grows in step with the scale, so it is 4 times longer at a quarter of the frequency: 40 ms. Its width: \\(0.88/0.040 = 22\\) Hz, against \\(0.88/0.010 = 88\\) Hz at 200 Hz. Same area, different shape.'],
+    ['On site', 'A fan at 1,500 rpm knocks once per turn. Using the same map (10 ms at 200 Hz), above what frequency does each knock show as its own flash?',
+     'One turn takes \\(60/1500 = 0.04\\) s, so the flashes must be shorter than 40 ms. Length here is \\(\\Delta t = 2/f\\) seconds, so \\(2/f < 0.04\\) gives \\(f > 50\\) Hz. Look for the knocks in the rows above 50 Hz.'],
+  ],
+  'sidebands': [
+    ['Warm-up', 'A gear mesh at 400 Hz has twins at 375 and 425 Hz. The pinion turns at 1,500 rpm. What is doing the wobbling?',
+     'The gap is \\(425-400 = 25\\) Hz, and \\(1500/60 = 25\\) Hz. The twins are spaced at the pinion’s 1X, so the pinion is the one whose mesh force wobbles once per turn.'],
+    ['Stretch', 'A tone is wobbled in size by \\((1+m\\cos\\Omega t)\\) with \\(m=0.2\\). How big is each twin, compared with the main line, and in dB?',
+     'Each twin is \\(m/2 = 0.1\\) of the main line. In decibels: \\(20\\log_{10}0.1=-20\\) dB.'],
+    ['On site', 'You want to see twins 2 Hz apart around a motor’s line, with a Hann window. How long must the record be?',
+     'From the lesson, \\(T > 2/f_m = 2/2 = 1\\) s. Longer than 1 s, and in practice twice that, to separate them clearly.'],
+  ],
+};
